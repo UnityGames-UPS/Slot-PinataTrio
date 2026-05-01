@@ -81,6 +81,7 @@ public class SlotBehaviour : MonoBehaviour
   private UIManager uiManager;
 
   private int tweenHeight = 0;
+  [SerializeField] private float reelRestY = 0f;
 
   [Header("Animation List")]
   [SerializeField]
@@ -108,9 +109,9 @@ public class SlotBehaviour : MonoBehaviour
   internal bool socketConnected = false;
   private int[,] initialMatrix = new int[,]
 {
-  { 7, 6, 5, 4, 3 },  // row 0 (top):    grand, mega, major, minor, mini
-  { 0, 0, 0, 0, 0 },  // row 1 (middle): yellow bubbles
-  { 0, 0, 0, 0, 0 }   // row 2 (bottom): yellow bubbles
+  { 0, 0, 7, 0, 0 },  // row 0 (top):    grand, mega, major, minor, mini
+  { 0, 6, 0, 5, 0 },  // row 1 (middle): yellow bubbles
+  { 3, 0, 0, 0, 4 }   // row 2 (bottom): yellow bubbles
 };
 
   private void Start()
@@ -370,7 +371,7 @@ public class SlotBehaviour : MonoBehaviour
     if (StopSpin_Button) StopSpin_Button.gameObject.SetActive(false);
     for (int i = 0; i < numberOfSlots; i++)
     {
-      yield return StopTweening(5, Slot_Transform[i], i, StopSpinToggle);
+      yield return StopTweening(Slot_Transform[i], i, StopSpinToggle);
     }
     StopSpinToggle = false;
     yield return alltweens[^1].WaitForCompletion();
@@ -464,28 +465,23 @@ public class SlotBehaviour : MonoBehaviour
   #region TweeningCode
   private void InitializeTweening(Transform slotTransform)
   {
-    slotTransform.localPosition = new Vector2(slotTransform.localPosition.x, 0);
-    Tweener tweener = slotTransform.DOLocalMoveY(-tweenHeight, 0.2f).SetLoops(-1, LoopType.Restart).SetDelay(0);
+    slotTransform.localPosition = new Vector2(slotTransform.localPosition.x, reelRestY);
+    Tweener tweener = slotTransform.DOLocalMoveY(reelRestY - tweenHeight, 0.2f).SetLoops(-1, LoopType.Restart).SetDelay(0);
     tweener.Play();
     alltweens.Add(tweener);
   }
 
 
 
-  private IEnumerator StopTweening(int reqpos, Transform slotTransform, int index, bool isStop)
+  private IEnumerator StopTweening(Transform slotTransform, int index, bool isStop)
   {
     alltweens[index].Kill();
-    int tweenpos = (reqpos * IconSizeFactor) - IconSizeFactor;
-    slotTransform.localPosition = new Vector2(slotTransform.localPosition.x, 0);
-    alltweens[index] = slotTransform.DOLocalMoveY(-tweenpos + 100, 0.5f).SetEase(Ease.OutElastic);
+    slotTransform.localPosition = new Vector2(slotTransform.localPosition.x, reelRestY + IconSizeFactor);
+    alltweens[index] = slotTransform.DOLocalMoveY(reelRestY, 0.5f).SetEase(Ease.OutElastic);
     if (!isStop)
-    {
       yield return new WaitForSeconds(0.2f);
-    }
     else
-    {
       yield return null;
-    }
   }
 
 
