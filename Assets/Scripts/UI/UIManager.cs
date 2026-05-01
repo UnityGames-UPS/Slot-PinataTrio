@@ -358,11 +358,11 @@ public class UIManager : MonoBehaviour
 
   internal void CheckAndClosePopups()
   {
-    if (ReconnectPopup_Object.activeInHierarchy)
+    if (ReconnectPopup_Object != null && ReconnectPopup_Object.activeInHierarchy)
     {
       ClosePopup(ReconnectPopup_Object);
     }
-    if (DisconnectPopup_Object.activeInHierarchy)
+    if (DisconnectPopup_Object != null && DisconnectPopup_Object.activeInHierarchy)
     {
       ClosePopup(DisconnectPopup_Object);
     }
@@ -394,7 +394,7 @@ public class UIManager : MonoBehaviour
     // if (MainPopup_Object) MainPopup_Object.SetActive(false);
     if (FreeSpinPopup_Object) FreeSpinPopup_Object.SetActive(false);
     
-    slotManager.FreeSpin(spins);
+    // slotManager.FreeSpin(spins); // TODO: wire up Pinata free spin
   }
 
   internal void FreeSpinProcess(int spins)

@@ -401,7 +401,7 @@ private void OnError(Error err)
 #if UNITY_WEBGL && !UNITY_EDITOR
     JSManager.SendCustomMessage("OnEnter");
 #endif
-    RaycastBlocker.SetActive(false);
+    if (RaycastBlocker) RaycastBlocker.SetActive(false);
   }
 
   // VIKING GAME - LINES-BASED SOCKET POPULATION - NOT USED IN THIS GAME
@@ -544,7 +544,7 @@ public class SpinPayload
 [Serializable]
 public class WaysWin
 {
-  public List<int> positions { get; set; }
+  public List<List<int>> positions { get; set; }
   public double amount { get; set; }
 }
 
@@ -589,7 +589,7 @@ public class Symbol
 {
   public int id { get; set; }
   public string name { get; set; }
-  public List<int> multiplier { get; set; }
+  public List<double?> multiplier { get; set; }
   public string description { get; set; }
 }
 
