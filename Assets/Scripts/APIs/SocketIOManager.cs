@@ -339,7 +339,7 @@ private void OnError(Error err)
 
   private void ParseResponse(string jsonObject)
   {
-    Debug.LogWarning(jsonObject);
+    Debug.Log(jsonObject);
     ServerResponse myData = JsonConvert.DeserializeObject<ServerResponse>(jsonObject);
     if (myData == null) return;
     string id = myData.id;

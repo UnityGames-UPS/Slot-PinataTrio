@@ -256,7 +256,7 @@ public class SlotBehaviour : MonoBehaviour
         if (animScript != null)
         {
           PopulateAnimationSprites(animScript, val);
-          if (animScript.textureArray.Count > 0)
+          if (animScript.textureArray.Count > 0 && val >= 3)
           {
             animScript.StartAnimation();
             TempList.Add(animScript);
