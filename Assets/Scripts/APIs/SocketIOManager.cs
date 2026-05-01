@@ -341,7 +341,7 @@ private void OnError(Error err)
   {
     Debug.Log(jsonObject);
     ServerResponse myData = JsonConvert.DeserializeObject<ServerResponse>(jsonObject);
-
+    if (myData == null) return;
     string id = myData.id;
 
     switch (id)
@@ -517,9 +517,9 @@ public class PinataMeters
 [Serializable]
 public class MeterCurrentState
 {
-  public int greenMeter { get; set; }
-  public int redMeter { get; set; }
-  public int blueMeter { get; set; }
+  [JsonConverter(typeof(BoolOrIntConverter))] public int greenMeter { get; set; }
+  [JsonConverter(typeof(BoolOrIntConverter))] public int redMeter { get; set; }
+  [JsonConverter(typeof(BoolOrIntConverter))] public int blueMeter { get; set; }
   public int greenThreshold { get; set; }
   public int redThreshold { get; set; }
   public int blueThreshold { get; set; }
@@ -558,9 +558,9 @@ public class CoinValue
 [Serializable]
 public class MetersUpdate
 {
-  public int greenMeter { get; set; }
-  public int redMeter { get; set; }
-  public int blueMeter { get; set; }
+  [JsonConverter(typeof(BoolOrIntConverter))] public int greenMeter { get; set; }
+  [JsonConverter(typeof(BoolOrIntConverter))] public int redMeter { get; set; }
+  [JsonConverter(typeof(BoolOrIntConverter))] public int blueMeter { get; set; }
 }
 
 [Serializable]
@@ -605,4 +605,19 @@ public class AuthTokenData
   public string cookie;
   public string socketURL;
   public string nameSpace;
+}
+
+public class BoolOrIntConverter : JsonConverter<int>
+{
+  public override int ReadJson(JsonReader reader, Type objectType, int existingValue, bool hasExistingValue, JsonSerializer serializer)
+  {
+    if (reader.TokenType == JsonToken.Boolean)
+      return (bool)reader.Value ? 1 : 0;
+    return Convert.ToInt32(reader.Value);
+  }
+
+  public override void WriteJson(JsonWriter writer, int value, JsonSerializer serializer)
+  {
+    writer.WriteValue(value);
+  }
 }
