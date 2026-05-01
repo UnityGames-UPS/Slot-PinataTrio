@@ -436,18 +436,26 @@ public class SlotBehaviour : MonoBehaviour
   #region GameAnimation
   private void CheckForFeaturesAnimation()
   {
+    var coinPositions = SocketManager.ResultData.payload?.coinWins;
+
     for (int row = 0; row < 3; row++)
     {
       for (int col = 0; col < 5; col++)
       {
         int val = int.Parse(SocketManager.ResultData.matrix[row][col]);
-        if (val < 3 || val > 10) continue;
+
+        bool isJackpotOrPinata = val >= 3 && val <= 10;
+        bool hasCoinValue = coinPositions != null &&
+          coinPositions.Exists(c => c.position[0] == row && c.position[1] == col);
+
+        if (!isJackpotOrPinata && !hasCoinValue) continue;
 
         ImageAnimation animScript = Tempimages[col].slotImages[row]
           .GetComponent<ImageAnimation>();
         if (animScript != null && animScript.textureArray.Count > 0)
         {
           animScript.StartAnimation();
+          animScript.transform.SetAsLastSibling();
           TempList.Add(animScript);
         }
       }
@@ -473,7 +481,7 @@ public class SlotBehaviour : MonoBehaviour
 
   private void SpawnCoinOverlays()
   {
-    var coins = SocketManager.ResultData.payload.coinValues;
+    var coins = SocketManager.ResultData.payload.coinWins;
     if (coins == null || CoinValuePrefab == null || CoinValueParent == null) return;
     foreach (var coin in coins)
     {

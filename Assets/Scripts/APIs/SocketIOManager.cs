@@ -339,7 +339,7 @@ private void OnError(Error err)
 
   private void ParseResponse(string jsonObject)
   {
-    Debug.Log(jsonObject);
+    Debug.LogWarning(jsonObject);
     ServerResponse myData = JsonConvert.DeserializeObject<ServerResponse>(jsonObject);
     if (myData == null) return;
     string id = myData.id;
@@ -530,7 +530,7 @@ public class SpinPayload
 {
   public double winAmount { get; set; }
   public List<WaysWin> waysWins { get; set; }
-  public List<CoinValue> coinValues { get; set; }
+  public List<CoinValue> coinWins { get; set; }
   public MetersUpdate meters { get; set; }
   public List<string> triggeredFeatures { get; set; }
   public List<PendingFeature> pendingFeatures { get; set; }
