@@ -346,6 +346,7 @@ public class SlotBehaviour : MonoBehaviour
     {
       StopGameAnimation();
     }
+    uiManager.ShowTicker();
     tweenroutine = StartCoroutine(TweenRoutine());
   }
 

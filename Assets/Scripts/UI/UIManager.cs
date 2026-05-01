@@ -55,6 +55,15 @@ public class UIManager : MonoBehaviour
   [SerializeField] private TMP_Text RedMeterText;
   [SerializeField] private TMP_Text BlueMeterText;
 
+  [Header("Ticker UI")]
+  [SerializeField] private RectTransform TickerContainer;
+  [SerializeField] private TMP_Text TickerText;
+  [SerializeField] private float TickerDuration = 3f;
+
+  private readonly string[] tickerMessages = { "GOOD LUCK", "ALL THE BEST" };
+  private int tickerIndex = 0;
+  private Tween tickerTween;
+
   private List<double> betAmounts;
   private double[] jackpotMultipliers = new double[5];
   internal int BetCount => betAmounts?.Count ?? 0;
@@ -644,6 +653,23 @@ public class UIManager : MonoBehaviour
   internal void SetBet(int betIndex)
   {
     UpdateBetDisplay(betAmounts[betIndex]);
+  }
+
+  internal void ShowTicker()
+  {
+    if (TickerContainer == null || TickerText == null) return;
+
+    tickerTween?.Kill();
+
+    TickerText.text = tickerMessages[tickerIndex];
+    tickerIndex = (tickerIndex + 1) % tickerMessages.Length;
+
+    float containerWidth = TickerContainer.rect.width;
+    float startX = containerWidth / 2f + TickerText.preferredWidth / 2f;
+    float endX = -(containerWidth / 2f + TickerText.preferredWidth / 2f);
+
+    TickerText.rectTransform.anchoredPosition = new Vector2(startX, TickerText.rectTransform.anchoredPosition.y);
+    tickerTween = TickerText.rectTransform.DOAnchorPosX(endX, TickerDuration).SetEase(Ease.Linear);
   }
 
   private void UpdateBetDisplay(double bet)
