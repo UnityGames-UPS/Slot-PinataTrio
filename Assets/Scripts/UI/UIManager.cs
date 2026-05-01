@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
@@ -54,8 +55,9 @@ public class UIManager : MonoBehaviour
   [SerializeField] private TMP_Text RedMeterText;
   [SerializeField] private TMP_Text BlueMeterText;
 
-  private readonly double[] betAmounts = { 0.10, 0.50, 1.00, 2.00, 3.00, 5.00, 10.00, 15.00, 20.00 };
-  internal int BetCount => betAmounts.Length;
+  private List<double> betAmounts;
+  private double[] jackpotMultipliers = new double[5];
+  internal int BetCount => betAmounts?.Count ?? 0;
   internal double GetBetAmount(int index) => betAmounts[index];
 
   [Header("Information UI")]
@@ -208,9 +210,6 @@ public class UIManager : MonoBehaviour
   [SerializeField]
   private SlotBehaviour slotManager;
 
-  [SerializeField]
-  private SocketIOManager socketManager;
-
   private bool isMusic = true;
   private bool isSound = true;
   private Tween WinPopupTextTween;
@@ -335,7 +334,6 @@ public class UIManager : MonoBehaviour
     if (SkipWinAnimation) SkipWinAnimation.onClick.RemoveAllListeners();
     if (SkipWinAnimation) SkipWinAnimation.onClick.AddListener(SkipWin);
 
-    UpdateBetDisplay(betAmounts[0]);
   }
 
   internal void LowBalPopup()
@@ -632,6 +630,17 @@ public class UIManager : MonoBehaviour
     if (BlueMeterText) BlueMeterText.text = blue.ToString();
   }
 
+  internal void InitialiseUI(List<double> bets, List<Symbol> symbols)
+  {
+    betAmounts = bets;
+    foreach (var symbol in symbols)
+    {
+      if (symbol.id >= 3 && symbol.id <= 7 && symbol.multiplier?[0] != null)
+        jackpotMultipliers[symbol.id - 3] = symbol.multiplier[0].Value;
+    }
+    UpdateBetDisplay(betAmounts[0]);
+  }
+
   internal void SetBet(int betIndex)
   {
     UpdateBetDisplay(betAmounts[betIndex]);
@@ -640,11 +649,11 @@ public class UIManager : MonoBehaviour
   private void UpdateBetDisplay(double bet)
   {
     if (TotalBetAmountText) TotalBetAmountText.text = bet.ToString("F2");
-    if (MiniPayoutText) MiniPayoutText.text = (bet * 5).ToString("F2");
-    if (MinorPayoutText) MinorPayoutText.text = (bet * 10).ToString("F2");
-    if (MajorPayoutText) MajorPayoutText.text = (bet * 20).ToString("F2");
-    if (MegaPayoutText) MegaPayoutText.text = (bet * 40).ToString("F2");
-    if (GrandPayoutText) GrandPayoutText.text = (bet * 500).ToString("F2");
+    if (MiniPayoutText) MiniPayoutText.text = (bet * jackpotMultipliers[0]).ToString("F2");
+    if (MinorPayoutText) MinorPayoutText.text = (bet * jackpotMultipliers[1]).ToString("F2");
+    if (MajorPayoutText) MajorPayoutText.text = (bet * jackpotMultipliers[2]).ToString("F2");
+    if (MegaPayoutText) MegaPayoutText.text = (bet * jackpotMultipliers[3]).ToString("F2");
+    if (GrandPayoutText) GrandPayoutText.text = (bet * jackpotMultipliers[4]).ToString("F2");
   }
 
   private void ShowSlide(int index)

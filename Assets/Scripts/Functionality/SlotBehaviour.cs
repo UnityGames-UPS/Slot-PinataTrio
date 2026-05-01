@@ -130,7 +130,7 @@ public class SlotBehaviour : MonoBehaviour
   if (MaxBet_Button) MaxBet_Button.onClick.AddListener(() => MaxBet());
 
   if (StopSpin_Button) StopSpin_Button.onClick.RemoveAllListeners();
-  if (StopSpin_Button) StopSpin_Button.onClick.AddListener(() => { StopSpinToggle = true; StopSpin_Button.gameObject.SetActive(false); });
+  if (StopSpin_Button) StopSpin_Button.onClick.AddListener(OnStopSpinPressed);
 
   if (AutoSpin_Button) AutoSpin_Button.onClick.RemoveAllListeners();
   if (AutoSpin_Button) AutoSpin_Button.onClick.AddListener(AutoSpin);
@@ -177,6 +177,12 @@ public class SlotBehaviour : MonoBehaviour
     if (AutoSpin_Button) AutoSpin_Button.gameObject.SetActive(true);
   }
   #endregion
+
+  private void OnStopSpinPressed()
+  {
+    StopSpinToggle = true;
+    if (StopSpin_Button) StopSpin_Button.gameObject.SetActive(false);
+  }
 
   private void MaxBet()
   {
@@ -250,6 +256,7 @@ public class SlotBehaviour : MonoBehaviour
   internal void SetInitialUI()
   {
     BetCounter = 0;
+    uiManager.InitialiseUI(SocketManager.InitialData.bets, SocketManager.UIData.paylines.symbols);
     if (TotalBet_text)
       TotalBet_text.text = SocketManager.InitialData.bets[BetCounter].ToString();
     if (TotalWin_text) TotalWin_text.text = "0.000";
