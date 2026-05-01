@@ -49,6 +49,11 @@ public class UIManager : MonoBehaviour
   [SerializeField] private TMP_Text MegaPayoutText;
   [SerializeField] private TMP_Text GrandPayoutText;
 
+  [Header("Pinata Meters UI")]
+  [SerializeField] private TMP_Text GreenMeterText;
+  [SerializeField] private TMP_Text RedMeterText;
+  [SerializeField] private TMP_Text BlueMeterText;
+
   private readonly double[] betAmounts = { 0.10, 0.50, 1.00, 2.00, 3.00, 5.00, 10.00, 15.00, 20.00 };
   internal int BetCount => betAmounts.Length;
   internal double GetBetAmount(int index) => betAmounts[index];
@@ -617,6 +622,14 @@ public class UIManager : MonoBehaviour
       if (audioController) audioController.ToggleMute(true, "button");
       if (audioController) audioController.ToggleMute(true, "wl");
     }
+  }
+
+  internal void UpdateMeters(int green, int red, int blue)
+  {
+    // NULL GUARDS SINCE METER UI OBJECTS ARE NOT YET WIRED. WIRE ONCE METER DISPLAY IS BUILT IN SCENE.
+    if (GreenMeterText) GreenMeterText.text = green.ToString();
+    if (RedMeterText) RedMeterText.text = red.ToString();
+    if (BlueMeterText) BlueMeterText.text = blue.ToString();
   }
 
   internal void SetBet(int betIndex)

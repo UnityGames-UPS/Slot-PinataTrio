@@ -16,9 +16,13 @@ public class SocketIOManager : MonoBehaviour
   [SerializeField] private GameObject RaycastBlocker;
   internal GameData InitialData = null;
   internal UiData UIData = null;
+  internal Features GameFeatures = null;
+  internal MeterCurrentState CurrentMeterState = null;
   internal ServerResponse ResultData = null;
   internal Player PlayerData = null;
   internal bool isResultdone = false;
+  internal bool isWheelBonusDone = false;
+  internal bool isPickJackpotDone = false;
   internal bool SetInit = false;
 
   private SocketManager manager;
@@ -347,6 +351,8 @@ private void OnError(Error err)
           InitialData = myData.gameData;
           UIData = myData.uiData;
           PlayerData = myData.player;
+          GameFeatures = myData.features;
+          CurrentMeterState = myData.features?.pinataMeters?.currentState;
 
           if (!SetInit)
           {
@@ -359,6 +365,7 @@ private void OnError(Error err)
         {
           ResultData = myData;
           PlayerData = myData.player;
+          UpdateMeterState(myData.payload?.meters);
           isResultdone = true;
           break;
         }
@@ -366,17 +373,25 @@ private void OnError(Error err)
         {
           ResultData = myData;
           PlayerData = myData.player;
-          isResultdone = true;
+          isWheelBonusDone = true;
           break;
         }
       case "PickJackpotResult":
         {
           ResultData = myData;
           PlayerData = myData.player;
-          isResultdone = true;
+          isPickJackpotDone = true;
           break;
         }
     }
+  }
+
+  private void UpdateMeterState(MetersUpdate meters)
+  {
+    if (meters == null || CurrentMeterState == null) return;
+    CurrentMeterState.greenMeter = meters.greenMeter;
+    CurrentMeterState.redMeter = meters.redMeter;
+    CurrentMeterState.blueMeter = meters.blueMeter;
   }
 
   private void InitialiseGame()
@@ -418,6 +433,24 @@ private void OnError(Error err)
     message.payload.betIndex = currBet;
 
     // Serialize message data to JSON
+    string json = JsonUtility.ToJson(message);
+    SendDataWithNamespace("request", json);
+  }
+
+  internal void SendWheelBonus()
+  {
+    isWheelBonusDone = false;
+    MessageData message = new();
+    message.type = "WHEELBONUS";
+    string json = JsonUtility.ToJson(message);
+    SendDataWithNamespace("request", json);
+  }
+
+  internal void SendPickJackpot()
+  {
+    isPickJackpotDone = false;
+    MessageData message = new();
+    message.type = "PICKJACKPOT";
     string json = JsonUtility.ToJson(message);
     SendDataWithNamespace("request", json);
   }
@@ -505,6 +538,7 @@ public class SpinPayload
   public int freeSpinsRemaining { get; set; }
   public bool isRedPinataFreeSpin { get; set; }
   public bool isBluePinataLinkBonus { get; set; }
+  public string wheelBonusSegment { get; set; }
 }
 
 [Serializable]

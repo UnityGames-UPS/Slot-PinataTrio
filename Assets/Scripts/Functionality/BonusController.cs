@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,159 +6,131 @@ using TMPro;
 
 public class BonusController : MonoBehaviour
 {
-  [SerializeField]
-  private Button Spin_Button;
-  [SerializeField]
-  private RectTransform Wheel_Transform;
-  [SerializeField]
-  private BoxCollider2D[] point_colliders;
-  [SerializeField]
-  private TMP_Text[] Bonus_Text;
-  [SerializeField]
-  private GameObject Bonus_Object;
-  [SerializeField]
-  private SlotBehaviour slotManager;
-  [SerializeField]
-  private AudioController _audioManager;
-  [SerializeField]
-  private GameObject PopupPanel;
-  [SerializeField]
-  private Transform Win_Transform;
-  [SerializeField]
-  private Transform Loose_Transform;
-  [SerializeField]
-  private SocketIOManager m_SocketManager;
-  [SerializeField]
-  private UIManager uIManager;
+  // GREEN PIÑATA WHEEL BONUS — 6 SEGMENTS MATCHING pinata_config.json wheelBonus.segments
+  // INDEX ORDER: 0=mini, 1=minor, 2=major, 3=mega, 4=grand, 5=boost
+  private static readonly string[] SegmentNames = { "mini", "minor", "major", "mega", "grand", "boost" };
+  private const float SegmentAngle = 360f / 6f;
 
-  internal bool isCollision = false;
+  // VIKING GAME - MANUAL SPIN BUTTON - NOT USED IN THIS GAME
+  // [SerializeField] private Button Spin_Button;
+
+  [SerializeField] private RectTransform Wheel_Transform;
+
+  // VIKING GAME - COLLIDER-BASED STOPPING SYSTEM - NOT USED IN THIS GAME
+  // [SerializeField] private BoxCollider2D[] point_colliders;
+  // [SerializeField] private TMP_Text[] Bonus_Text;
+
+  [SerializeField] private TMP_Text WinAmountText;
+  [SerializeField] private GameObject Bonus_Object;
+  [SerializeField] private SlotBehaviour slotManager;
+  [SerializeField] private AudioController _audioManager;
+  [SerializeField] private GameObject PopupPanel;
+  [SerializeField] private Transform Win_Transform;
+  [SerializeField] private Transform Boost_Transform;
+
+  // VIKING GAME - SOCKET MANAGER USED FOR bonusdata AND ResultData.bonus — NOT USED IN THIS GAME
+  // [SerializeField] private SocketIOManager m_SocketManager;
+
+  [SerializeField] private UIManager uIManager;
+
+  // VIKING GAME - COLLISION FLAG FOR COLLIDER-BASED WHEEL STOP - NOT USED IN THIS GAME
+  // internal bool isCollision = false;
+
+  internal bool isBonusDone = false;
 
   private Tween wheelRoutine;
-
-  private float elasticIntensity = 5f;
-
   private int stopIndex = 0;
 
+  // VIKING GAME - SPIN BUTTON LISTENER SETUP - NOT USED IN THIS GAME (WHEEL AUTO-TRIGGERS FROM SlotBehaviour)
+  // private void Start()
+  // {
+  //   if (Spin_Button) Spin_Button.onClick.RemoveAllListeners();
+  //   if (Spin_Button) Spin_Button.onClick.AddListener(Spinbutton);
+  // }
 
-  private void Start()
+  internal void StartWheelBonus(int segmentIndex, double winAmount)
   {
-    if (Spin_Button) Spin_Button.onClick.RemoveAllListeners();
-    if (Spin_Button) Spin_Button.onClick.AddListener(Spinbutton);
-  }
-
-  internal void StartBonus(int stop)
-  {
-    ResetColliders();
+    isBonusDone = false;
+    stopIndex = segmentIndex;
     if (PopupPanel) PopupPanel.SetActive(false);
     if (Win_Transform) Win_Transform.gameObject.SetActive(false);
-    if (Loose_Transform) Loose_Transform.gameObject.SetActive(false);
+    if (Boost_Transform) Boost_Transform.gameObject.SetActive(false);
+    if (WinAmountText) WinAmountText.text = winAmount.ToString("F3");
     if (_audioManager) _audioManager.SwitchBGSound(true);
-    // VIKING GAME - BONUS WHEEL DATA - NOT USED IN THIS GAME
-    // PopulateWheel(m_SocketManager.bonusdata);
-    stopIndex = stop;
     if (Bonus_Object) Bonus_Object.SetActive(true);
-    if (Spin_Button) Spin_Button.interactable = true;
-
-    if (slotManager.IsAutoSpin || slotManager.IsFreeSpin)
-    {
-      Spin_Button.gameObject.SetActive(false);
-      DOVirtual.DelayedCall(1f, () =>
-      {
-        Spinbutton();
-      });
-    }
-    else
-    {
-      Spin_Button.gameObject.SetActive(true);
-    }
-  }
-
-  private void Spinbutton()
-  {
-    isCollision = false;
-    if (Spin_Button) Spin_Button.interactable = false;
     RotateWheel();
-    DOVirtual.DelayedCall(1.5f, () =>
-    {
-      TurnCollider(stopIndex);
-    });
+    DOVirtual.DelayedCall(2f, () => StopWheel());
   }
 
-  internal void PopulateWheel(List<string> bonusdata)
+  internal int GetSegmentIndex(string segmentType)
   {
-    for (int i = 0; i < bonusdata.Count; i++)
+    for (int i = 0; i < SegmentNames.Length; i++)
     {
-      if (bonusdata[i] == "-1")
-      {
-        if (Bonus_Text[i]) Bonus_Text[i].text = "NO \nBONUS";
-      }
-      else
-      {
-        if (Bonus_Text[i]) Bonus_Text[i].text = (double.Parse(bonusdata[i]) * m_SocketManager.InitialData.bets[slotManager.BetCounter]).ToString();
-        // Debug.Log("Bonus Data: " + bonusdata[i]);
-        // Debug.Log("Bet Data: " + m_SocketManager.InitialData.bets[slotManager.BetCounter]);
-        // Debug.Log("Multiplied Form: " + (double.Parse(bonusdata[i]) * m_SocketManager.InitialData.bets[slotManager.BetCounter]).ToString());
-      }
+      if (SegmentNames[i] == segmentType) return i;
     }
+    return 0;
   }
+
+  // VIKING GAME - MANUAL SPIN BUTTON HANDLER - NOT USED IN THIS GAME
+  // private void Spinbutton()
+  // {
+  //   isCollision = false;
+  //   if (Spin_Button) Spin_Button.interactable = false;
+  //   RotateWheel();
+  //   DOVirtual.DelayedCall(1.5f, () => TurnCollider(stopIndex));
+  // }
+
+  // VIKING GAME - WHEEL SEGMENT POPULATION FROM SOCKET bonusdata - NOT USED IN THIS GAME
+  // internal void PopulateWheel(List<string> bonusdata) { ... }
 
   private void RotateWheel()
   {
-    if (Wheel_Transform) Wheel_Transform.localEulerAngles = new Vector3(0, 0, 359);
-    if (Wheel_Transform) wheelRoutine = Wheel_Transform.DORotate(new Vector3(0, 0, 0), 1, RotateMode.FastBeyond360).SetEase(Ease.Linear).SetLoops(-1);
-    _audioManager.PlayBonusAudio("cycleSpin");
+    if (Wheel_Transform) Wheel_Transform.localEulerAngles = Vector3.zero;
+    if (Wheel_Transform) wheelRoutine = Wheel_Transform.DORotate(new Vector3(0, 0, -360), 1f, RotateMode.FastBeyond360)
+        .SetEase(Ease.Linear).SetLoops(-1);
+    if (_audioManager) _audioManager.PlayBonusAudio("cycleSpin");
   }
 
-  private void ResetColliders()
+  // VIKING GAME - COLLIDER RESET AND ENABLE - NOT USED IN THIS GAME
+  // private void ResetColliders() { ... }
+  // private void TurnCollider(int point) { ... }
+
+  private void StopWheel()
   {
-    foreach (BoxCollider2D col in point_colliders)
-    {
-      col.enabled = false;
-    }
+    if (wheelRoutine != null) wheelRoutine.Kill();
+
+    // SPIN 3 EXTRA FULL ROTATIONS THEN LAND ON THE TARGET SEGMENT ANGLE
+    float targetAngle = -(stopIndex * SegmentAngle) - (360f * 3);
+    if (Wheel_Transform) Wheel_Transform.DORotate(new Vector3(0, 0, targetAngle), 2f, RotateMode.FastBeyond360)
+        .SetEase(Ease.OutCubic)
+        .OnComplete(OnWheelStopped);
   }
 
-  private void TurnCollider(int point)
+  private void OnWheelStopped()
   {
-    if (point_colliders[point]) point_colliders[point].enabled = true;
-  }
-
-  internal void StopWheel()
-  {
-    if (wheelRoutine != null)
-    {
-      wheelRoutine.Pause(); // Pause the rotation
-
-      // Apply an elastic effect to the paused rotation
-      Wheel_Transform.DORotate(Wheel_Transform.eulerAngles + Vector3.forward * Random.Range(-elasticIntensity, elasticIntensity), 1f)
-          .SetEase(Ease.OutElastic);
-    }
-    if (Bonus_Text[stopIndex].text.Equals("NO \nBONUS"))
-    {
-      if (Loose_Transform) Loose_Transform.gameObject.SetActive(true);
-      if (Loose_Transform) Loose_Transform.localScale = Vector3.zero;
-      if (PopupPanel) PopupPanel.SetActive(true);
-      if (Loose_Transform) Loose_Transform.DOScale(Vector3.one, 1f);
-      PlayWinLooseSound(false);
-    }
-    else
+    bool isBoost = SegmentNames[stopIndex] == "boost";
+    if (!isBoost)
     {
       if (Win_Transform) Win_Transform.gameObject.SetActive(true);
-      // VIKING GAME - BONUS AMOUNT FROM OLD MODEL - NOT USED IN THIS GAME
-      // Win_Transform.GetChild(0).GetComponent<TMP_Text>().text = m_SocketManager.ResultData.bonus.amount.ToString("F3");
       if (Win_Transform) Win_Transform.localScale = Vector3.zero;
       if (PopupPanel) PopupPanel.SetActive(true);
       if (Win_Transform) Win_Transform.DOScale(Vector3.one, 1f);
-      PlayWinLooseSound(true);
     }
+    else
+    {
+      // BOOST SEGMENT: NO JACKPOT WIN — GREEN METER GETS BOOSTED ON THE SERVER SIDE
+      if (Boost_Transform) Boost_Transform.gameObject.SetActive(true);
+      if (Boost_Transform) Boost_Transform.localScale = Vector3.zero;
+      if (PopupPanel) PopupPanel.SetActive(true);
+      if (Boost_Transform) Boost_Transform.DOScale(Vector3.one, 1f);
+    }
+    PlayWinLooseSound(!isBoost);
+
     DOVirtual.DelayedCall(1.5f, () =>
     {
-      ResetColliders();
       if (_audioManager) _audioManager.SwitchBGSound(false);
       if (Bonus_Object) Bonus_Object.SetActive(false);
-      DOVirtual.DelayedCall(1f, () =>
-          {
-          slotManager.CheckWinPopups();
-        });
+      isBonusDone = true;
     });
   }
 
@@ -167,11 +138,11 @@ public class BonusController : MonoBehaviour
   {
     if (isWin)
     {
-      _audioManager.PlayBonusAudio("win");
+      if (_audioManager) _audioManager.PlayBonusAudio("win");
     }
     else
     {
-      _audioManager.PlayBonusAudio("lose");
+      if (_audioManager) _audioManager.PlayBonusAudio("boost");
     }
   }
 }

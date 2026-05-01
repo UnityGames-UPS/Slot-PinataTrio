@@ -141,6 +141,7 @@ public class SlotBehaviour : MonoBehaviour
   private Tween BalanceTween;
   internal bool IsAutoSpin = false;
   internal bool IsFreeSpin = false;
+  private bool IsLinkBonus = false;
   private bool IsSpinning = false;
   private bool CheckSpinAudio = false;
   internal bool CheckPopups = false;
@@ -617,7 +618,7 @@ public class SlotBehaviour : MonoBehaviour
       yield return new WaitForSeconds(0.1f);
     }
 
-    if (!IsFreeSpin)
+    if (!IsFreeSpin && !IsLinkBonus)
     {
       BalanceDeduction();
     }
@@ -644,7 +645,7 @@ public class SlotBehaviour : MonoBehaviour
       // VIKING GAME - FEATURE ANIMATION CHECK - NOT USED IN THIS GAME
       // CheckForFeaturesAnimation();
 
-      if (IsTurboOn || IsFreeSpin)
+      if (IsTurboOn || IsFreeSpin || IsLinkBonus)
       {
         StopSpinToggle = true;
       }
@@ -698,6 +699,32 @@ public class SlotBehaviour : MonoBehaviour
 
       currentBalance = SocketManager.PlayerData.balance;
 
+      // UPDATE PINATA METER DISPLAY AFTER EVERY SPIN
+      uiManager.UpdateMeters(
+        SocketManager.CurrentMeterState?.greenMeter ?? 0,
+        SocketManager.CurrentMeterState?.redMeter ?? 0,
+        SocketManager.CurrentMeterState?.blueMeter ?? 0
+      );
+
+      // CHECK PENDING FEATURES — WHEELBONUS AND PICKJACKPOT RUN BEFORE WIN POPUP
+      var pendingFeatures = SocketManager.ResultData.payload?.pendingFeatures;
+      if (pendingFeatures != null)
+      {
+        foreach (var feature in pendingFeatures)
+        {
+          if (!feature.triggered) continue;
+          switch (feature.feature)
+          {
+            case "wheelBonus":
+              yield return StartCoroutine(WheelBonusFlow());
+              break;
+            case "pickJackpot":
+              yield return StartCoroutine(PickJackpotFlow());
+              break;
+          }
+        }
+      }
+
       // VIKING GAME - JACKPOT / BONUS / FREESPIN CHECKS - NOT USED IN THIS GAME
       // if (SocketManager.ResultData.jackpot.isTriggered) { ... }
       // if (SocketManager.ResultData.bonus.BonusSpinStopIndex != -1) { ... }
@@ -706,7 +733,19 @@ public class SlotBehaviour : MonoBehaviour
       CheckWinPopups();
 
       yield return new WaitUntil(() => !CheckPopups);
-      if (!IsAutoSpin && !IsFreeSpin)
+
+      // START FEATURE LOOPS IF TRIGGERED — GATES (!IsFreeSpin, !IsLinkBonus) PREVENT RE-ENTRY DURING LOOP SPINS
+      if (SocketManager.ResultData.payload.isRedPinataFreeSpin && !IsFreeSpin)
+      {
+        IsSpinning = false;
+        StartRedPinataFreeSpin(SocketManager.ResultData.payload.freeSpinsRemaining);
+      }
+      else if (SocketManager.ResultData.payload.isBluePinataLinkBonus && !IsLinkBonus)
+      {
+        IsSpinning = false;
+        StartBluePinataLinkBonus();
+      }
+      else if (!IsAutoSpin && !IsFreeSpin && !IsLinkBonus)
       {
         ToggleButtonGrp(true);
         IsSpinning = false;
@@ -733,6 +772,102 @@ public class SlotBehaviour : MonoBehaviour
   // VIKING GAME - FEATURE ANIMATION - NOT USED IN THIS GAME
   // private void CheckForFeaturesAnimation() { ... }
   // private void PlayFeatureAnimation(...) { ... }
+
+  #region SL-PT Feature Flows
+
+  private IEnumerator WheelBonusFlow()
+  {
+    SocketManager.SendWheelBonus();
+    yield return new WaitUntil(() => SocketManager.isWheelBonusDone);
+
+    // PASS RESULT TO BONUSCONTROLLER — IT ANIMATES THE WHEEL AND SIGNALS isBonusDone WHEN DONE
+    string segmentType = SocketManager.ResultData.payload?.wheelBonusSegment ?? "mini";
+    int segmentIndex = _bonusManager.GetSegmentIndex(segmentType);
+    _bonusManager.StartWheelBonus(segmentIndex, SocketManager.ResultData.payload.winAmount);
+
+    yield return new WaitUntil(() => _bonusManager.isBonusDone);
+
+    if (TotalWin_text) TotalWin_text.text = SocketManager.ResultData.payload.winAmount.ToString("F3");
+    BalanceTween?.Kill();
+    if (Balance_text) Balance_text.text = SocketManager.ResultData.player.balance.ToString("F3");
+    currentBalance = SocketManager.PlayerData.balance;
+  }
+
+  private IEnumerator PickJackpotFlow()
+  {
+    // SEND PICKJACKPOT TO SERVER AND WAIT FOR RESULT. JACKPOT PICK UI WIRED IN STEP 5.
+    SocketManager.SendPickJackpot();
+    yield return new WaitUntil(() => SocketManager.isPickJackpotDone);
+    if (TotalWin_text) TotalWin_text.text = SocketManager.ResultData.payload.winAmount.ToString("F3");
+    BalanceTween?.Kill();
+    if (Balance_text) Balance_text.text = SocketManager.ResultData.player.balance.ToString("F3");
+    currentBalance = SocketManager.PlayerData.balance;
+  }
+
+  private void StartRedPinataFreeSpin(int spinsRemaining)
+  {
+    IsFreeSpin = true;
+    ToggleButtonGrp(false);
+    if (FSBoard_Object) FSBoard_Object.SetActive(true);
+    if (FSnum_text) FSnum_text.text = spinsRemaining.ToString();
+    if (FreeSpinRoutine != null) StopCoroutine(FreeSpinRoutine);
+    FreeSpinRoutine = StartCoroutine(RedPinataFreeSpinCoroutine());
+  }
+
+  private IEnumerator RedPinataFreeSpinCoroutine()
+  {
+    yield return new WaitForSecondsRealtime(1.5f);
+    while (SocketManager.ResultData.payload.isRedPinataFreeSpin)
+    {
+      if (FSnum_text) FSnum_text.text = SocketManager.ResultData.payload.freeSpinsRemaining.ToString();
+      StartSlots(true);
+      yield return tweenroutine;
+      yield return new WaitForSeconds(SpinDelay);
+    }
+    if (FSBoard_Object) FSBoard_Object.SetActive(false);
+    IsFreeSpin = false;
+    FreeSpinRoutine = null;
+    if (WasAutoSpinOn)
+    {
+      AutoSpin();
+    }
+    else
+    {
+      ToggleButtonGrp(true);
+    }
+  }
+
+  private void StartBluePinataLinkBonus()
+  {
+    IsLinkBonus = true;
+    ToggleButtonGrp(false);
+    StartCoroutine(BluePinataLinkBonusCoroutine());
+  }
+
+  private IEnumerator BluePinataLinkBonusCoroutine()
+  {
+    // BLUE PIÑATA LINK BONUS: BACKEND MANAGES 3 RESPINS, RESETS COUNT ON EACH NEW COIN LANDING.
+    // LOOP UNTIL SERVER SIGNALS isBluePinataLinkBonus = FALSE.
+    yield return new WaitForSecondsRealtime(1.5f);
+    while (SocketManager.ResultData.payload.isBluePinataLinkBonus)
+    {
+      StartSlots(true);
+      yield return tweenroutine;
+      yield return new WaitForSeconds(SpinDelay);
+    }
+    IsLinkBonus = false;
+    if (WasAutoSpinOn)
+    {
+      AutoSpin();
+    }
+    else
+    {
+      ToggleButtonGrp(true);
+    }
+  }
+
+  #endregion
+
   private void BalanceDeduction()
   {
     double bet = currentTotalBet;
