@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
@@ -54,6 +55,18 @@ public class UIManager : MonoBehaviour
   [SerializeField] private TMP_Text GreenMeterText;
   [SerializeField] private TMP_Text RedMeterText;
   [SerializeField] private TMP_Text BlueMeterText;
+
+  [Header("Intro")]
+  [SerializeField] private RectTransform PinataTrio;
+  [SerializeField] private RectTransform GameContent;
+  [SerializeField] private float introHoldDuration = 3f;
+  [SerializeField] private float offscreenOffset = 1200f;
+  [SerializeField] private float gameContentScrollAmount = 700f;
+  [SerializeField] private RectTransform GreenPinata;
+  [SerializeField] private RectTransform RedPinata;
+  [SerializeField] private RectTransform BluePinata;
+  [SerializeField] private float pinataScrollAmount = 250f;
+  [SerializeField] private float pinataRedDelay = 0.3f;
 
   [Header("Ticker UI")]
   [SerializeField] private RectTransform TickerContainer;
@@ -227,6 +240,7 @@ public class UIManager : MonoBehaviour
   internal int FreeSpins;
   private void Start()
   {
+    StartCoroutine(PlayIntro());
 
     if (Menu_Button) Menu_Button.onClick.RemoveAllListeners();
     if (Menu_Button) Menu_Button.onClick.AddListener(OpenMenu);
@@ -343,6 +357,29 @@ public class UIManager : MonoBehaviour
     if (SkipWinAnimation) SkipWinAnimation.onClick.RemoveAllListeners();
     if (SkipWinAnimation) SkipWinAnimation.onClick.AddListener(SkipWin);
 
+  }
+
+  private IEnumerator PlayIntro()
+  {
+    if (PinataTrio)
+      PinataTrio.anchoredPosition = new Vector2(PinataTrio.anchoredPosition.x, PinataTrio.anchoredPosition.y + offscreenOffset);
+
+    if (PinataTrio)
+      yield return PinataTrio.DOAnchorPosY(PinataTrio.anchoredPosition.y - offscreenOffset, 0.8f).SetEase(Ease.OutBounce).WaitForCompletion();
+
+    yield return new WaitForSeconds(introHoldDuration);
+
+    if (PinataTrio) PinataTrio.DOAnchorPosY(PinataTrio.anchoredPosition.y + offscreenOffset, 0.6f).SetEase(Ease.InBack);
+    if (GameContent)
+      yield return GameContent.DOAnchorPosY(GameContent.anchoredPosition.y + gameContentScrollAmount, 0.8f).SetEase(Ease.OutCubic).WaitForCompletion();
+
+    if (GreenPinata) GreenPinata.DOAnchorPosY(GreenPinata.anchoredPosition.y + pinataScrollAmount, 0.6f).SetEase(Ease.OutBack);
+    if (BluePinata) BluePinata.DOAnchorPosY(BluePinata.anchoredPosition.y + pinataScrollAmount, 0.6f).SetEase(Ease.OutBack);
+
+    yield return new WaitForSeconds(pinataRedDelay);
+
+    if (RedPinata)
+      yield return RedPinata.DOAnchorPosY(RedPinata.anchoredPosition.y + pinataScrollAmount, 0.6f).SetEase(Ease.OutBack).WaitForCompletion();
   }
 
   internal void LowBalPopup()
