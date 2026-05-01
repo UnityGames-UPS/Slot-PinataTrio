@@ -57,6 +57,10 @@ public class SlotBehaviour : MonoBehaviour
   private Sprite[] RedPinata_Sprite;
   [SerializeField]
   private Sprite[] BluePinata_Sprite;
+  [SerializeField]
+  private Sprite[] YellowBubble_Sprite;
+  [SerializeField]
+  private Sprite[] PinkBubble_Sprite;
 
   [Header("Miscellaneous UI")]
   [SerializeField]
@@ -105,6 +109,8 @@ public class SlotBehaviour : MonoBehaviour
   private float SpinDelay = 0.2f;
   [SerializeField] private float minSpinDuration = 2f;
   [SerializeField] private float stopButtonWindow = 0.5f;
+  [SerializeField] private float naturalStopStagger = 0.2f;
+  [SerializeField] private float stopButtonStagger = 0.05f;
   private float spinStartTime;
   internal bool socketConnected = false;
   private int[,] initialMatrix = new int[,]
@@ -286,6 +292,14 @@ public class SlotBehaviour : MonoBehaviour
     animScript.textureArray.TrimExcess();
     switch (val)
     {
+      case 0:
+        foreach (var s in YellowBubble_Sprite) animScript.textureArray.Add(s);
+        animScript.AnimationSpeed = 12f;
+        break;
+      case 1:
+        foreach (var s in PinkBubble_Sprite) animScript.textureArray.Add(s);
+        animScript.AnimationSpeed = 12f;
+        break;
       case 3:
         foreach (var s in Mini_Sprite) animScript.textureArray.Add(s);
         animScript.AnimationSpeed = 12f;
@@ -382,9 +396,10 @@ public class SlotBehaviour : MonoBehaviour
       if (StopSpinToggle) break;
       yield return null;
     }
+    float stagger = StopSpinToggle ? stopButtonStagger : naturalStopStagger;
     for (int i = 0; i < numberOfSlots; i++)
     {
-      yield return StopTweening(Slot_Transform[i], i);
+      yield return StopTweening(Slot_Transform[i], i, stagger);
     }
     StopSpinToggle = false;
     yield return alltweens[^1].WaitForCompletion();
@@ -485,12 +500,12 @@ public class SlotBehaviour : MonoBehaviour
 
 
 
-  private IEnumerator StopTweening(Transform slotTransform, int index)
+  private IEnumerator StopTweening(Transform slotTransform, int index, float stagger)
   {
     alltweens[index].Kill();
     slotTransform.localPosition = new Vector2(slotTransform.localPosition.x, IconSizeFactor);
     alltweens[index] = slotTransform.DOLocalMoveY(0, 0.5f).SetEase(Ease.OutElastic);
-    yield return new WaitForSeconds(0.2f);
+    yield return new WaitForSeconds(stagger);
   }
 
 
