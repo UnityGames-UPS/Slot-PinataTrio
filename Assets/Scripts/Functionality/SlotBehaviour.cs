@@ -103,6 +103,9 @@ public class SlotBehaviour : MonoBehaviour
   private int IconSizeFactor = 160;
   private int numberOfSlots = 5;
   private float SpinDelay = 0.2f;
+  [SerializeField] private float minSpinDuration = 2f;
+  [SerializeField] private float stopButtonWindow = 0.5f;
+  private float spinStartTime;
   internal bool socketConnected = false;
   private int[,] initialMatrix = new int[,]
 {
@@ -353,6 +356,7 @@ public class SlotBehaviour : MonoBehaviour
     // }
     ClearCoinOverlays();
     IsSpinning = true;
+    spinStartTime = Time.time;
     Spin_Button.GetComponent<Image>().sprite = StopSprite;
     ToggleButtonGrp(false);
     for (int i = 0; i < numberOfSlots; i++)
@@ -362,7 +366,7 @@ public class SlotBehaviour : MonoBehaviour
     }
     BalanceDeduction();
     SocketManager.AccumulateResult(BetCounter);
-    yield return new WaitUntil(() => SocketManager.isResultdone);
+    yield return new WaitUntil(() => SocketManager.isResultdone && Time.time - spinStartTime >= minSpinDuration);
     for (int row = 0; row < 3; row++)
     {
       for (int col = 0; col < 5; col++)
@@ -372,10 +376,11 @@ public class SlotBehaviour : MonoBehaviour
         Tempimages[col].slotImages[row].sprite = myImages[resultNum];
       }
     }
-    for (int i = 0; i < 5; i++)
+    float stopWindowEnd = Time.time + stopButtonWindow;
+    while (Time.time < stopWindowEnd)
     {
-      yield return null;
       if (StopSpinToggle) break;
+      yield return null;
     }
     for (int i = 0; i < numberOfSlots; i++)
     {
