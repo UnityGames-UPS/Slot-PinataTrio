@@ -81,7 +81,6 @@ public class SlotBehaviour : MonoBehaviour
   private UIManager uiManager;
 
   private int tweenHeight = 0;
-  [SerializeField] private float reelRestY = 0f;
 
   [Header("Animation List")]
   [SerializeField]
@@ -465,8 +464,8 @@ public class SlotBehaviour : MonoBehaviour
   #region TweeningCode
   private void InitializeTweening(Transform slotTransform)
   {
-    slotTransform.localPosition = new Vector2(slotTransform.localPosition.x, reelRestY);
-    Tweener tweener = slotTransform.DOLocalMoveY(reelRestY - tweenHeight, 0.2f).SetLoops(-1, LoopType.Restart).SetDelay(0);
+    slotTransform.localPosition = new Vector2(slotTransform.localPosition.x, 0);
+    Tweener tweener = slotTransform.DOLocalMoveY(-tweenHeight, 0.2f).SetLoops(-1, LoopType.Restart).SetDelay(0);
     tweener.Play();
     alltweens.Add(tweener);
   }
@@ -476,8 +475,8 @@ public class SlotBehaviour : MonoBehaviour
   private IEnumerator StopTweening(Transform slotTransform, int index, bool isStop)
   {
     alltweens[index].Kill();
-    slotTransform.localPosition = new Vector2(slotTransform.localPosition.x, reelRestY + IconSizeFactor);
-    alltweens[index] = slotTransform.DOLocalMoveY(reelRestY, 0.5f).SetEase(Ease.OutElastic);
+    slotTransform.localPosition = new Vector2(slotTransform.localPosition.x, IconSizeFactor);
+    alltweens[index] = slotTransform.DOLocalMoveY(0, 0.5f).SetEase(Ease.OutElastic);
     if (!isStop)
       yield return new WaitForSeconds(0.2f);
     else
