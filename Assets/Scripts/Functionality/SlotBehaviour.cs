@@ -294,43 +294,33 @@ public class SlotBehaviour : MonoBehaviour
     {
       case 0:
         foreach (var s in YellowBubble_Sprite) animScript.textureArray.Add(s);
-        animScript.AnimationSpeed = 12f;
         break;
       case 1:
         foreach (var s in PinkBubble_Sprite) animScript.textureArray.Add(s);
-        animScript.AnimationSpeed = 12f;
         break;
       case 3:
         foreach (var s in Mini_Sprite) animScript.textureArray.Add(s);
-        animScript.AnimationSpeed = 12f;
         break;
       case 4:
         foreach (var s in Minor_Sprite) animScript.textureArray.Add(s);
-        animScript.AnimationSpeed = 12f;
         break;
       case 5:
         foreach (var s in Major_Sprite) animScript.textureArray.Add(s);
-        animScript.AnimationSpeed = 12f;
         break;
       case 6:
         foreach (var s in Mega_Sprite) animScript.textureArray.Add(s);
-        animScript.AnimationSpeed = 12f;
         break;
       case 7:
         foreach (var s in Grand_Sprite) animScript.textureArray.Add(s);
-        animScript.AnimationSpeed = 12f;
         break;
       case 8:
         foreach (var s in GreenPinata_Sprite) animScript.textureArray.Add(s);
-        animScript.AnimationSpeed = 12f;
         break;
       case 9:
         foreach (var s in RedPinata_Sprite) animScript.textureArray.Add(s);
-        animScript.AnimationSpeed = 12f;
         break;
       case 10:
         foreach (var s in BluePinata_Sprite) animScript.textureArray.Add(s);
-        animScript.AnimationSpeed = 12f;
         break;
       default:
         break;

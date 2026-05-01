@@ -532,20 +532,26 @@ public class SpinPayload
   public List<WaysWin> waysWins { get; set; }
   public List<CoinValue> coinWins { get; set; }
   public MetersUpdate meters { get; set; }
-  public List<string> triggeredFeatures { get; set; }
+  public List<TriggeredFeature> triggeredFeatures { get; set; }
   public List<PendingFeature> pendingFeatures { get; set; }
   public bool isFreeSpinActive { get; set; }
   public int freeSpinsRemaining { get; set; }
   public bool isRedPinataFreeSpin { get; set; }
   public bool isBluePinataLinkBonus { get; set; }
-  public string wheelBonusSegment { get; set; }
+  public List<LinkBonusZone> linkBonusTargetZones { get; set; }
+  public List<LockedCell> linkBonusLockedCells { get; set; }
 }
 
 [Serializable]
 public class WaysWin
 {
+  public int symbolId { get; set; }
+  public string symbolName { get; set; }
+  public int matchCount { get; set; }
   public List<List<int>> positions { get; set; }
-  public double amount { get; set; }
+  public double payout { get; set; }
+  public double basePayout { get; set; }
+  public double jackpotPayout { get; set; }
 }
 
 [Serializable]
@@ -564,11 +570,45 @@ public class MetersUpdate
 }
 
 [Serializable]
+public class TriggeredFeature
+{
+  public string feature { get; set; }
+  public bool triggered { get; set; }
+  public double awardValue { get; set; }
+  // wheelBonus
+  public string jackpotTier { get; set; }
+  public List<string> spinHistory { get; set; }
+  // linkBonus
+  public List<LockedCell> lockedCells { get; set; }
+  public int respinsRemaining { get; set; }
+  public bool grandTriggered { get; set; }
+  public double grandBonus { get; set; }
+  public double jackpotBonus { get; set; }
+  public double baseWin { get; set; }
+}
+
+[Serializable]
 public class PendingFeature
 {
   public string feature { get; set; }
   public bool triggered { get; set; }
   public double bet { get; set; }
+}
+
+[Serializable]
+public class LinkBonusZone
+{
+  public List<int> position { get; set; }
+  public int zoneMultiplier { get; set; }
+}
+
+[Serializable]
+public class LockedCell
+{
+  public List<int> position { get; set; }
+  public int zoneMultiplier { get; set; }
+  public string symbolId { get; set; }
+  public double? prizeValue { get; set; }
 }
 
 // ─── Shared Models ───────────────────────────────────────────────────────────
