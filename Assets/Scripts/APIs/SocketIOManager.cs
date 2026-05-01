@@ -14,10 +14,9 @@ public class SocketIOManager : MonoBehaviour
   [SerializeField] internal JSFunctCalls JSManager;
   [SerializeField] private string testToken;
   [SerializeField] private GameObject RaycastBlocker;
-  internal List<string> bonusdata = null;
   internal GameData InitialData = null;
   internal UiData UIData = null;
-  internal Root ResultData = null;
+  internal ServerResponse ResultData = null;
   internal Player PlayerData = null;
   internal bool isResultdone = false;
   internal bool SetInit = false;
@@ -28,7 +27,7 @@ public class SocketIOManager : MonoBehaviour
   protected string TestSocketURI = "https://devrealtime.dingdinghouse.com";
   protected string nameSpace = "playground";
   private Socket gameSocket;
-  protected string gameID = "SL-VIK";
+  protected string gameID = "SL-PT";
   //protected string gameID = "";
   private const int maxReconnectionAttempts = 6;
   private readonly TimeSpan reconnectionDelay = TimeSpan.FromSeconds(10);
@@ -337,7 +336,7 @@ private void OnError(Error err)
   private void ParseResponse(string jsonObject)
   {
     Debug.Log(jsonObject);
-    Root myData = JsonConvert.DeserializeObject<Root>(jsonObject);
+    ServerResponse myData = JsonConvert.DeserializeObject<ServerResponse>(jsonObject);
 
     string id = myData.id;
 
@@ -348,17 +347,11 @@ private void OnError(Error err)
           InitialData = myData.gameData;
           UIData = myData.uiData;
           PlayerData = myData.player;
-          bonusdata = GetBonusData(myData.gameData.spinBonus);
 
           if (!SetInit)
           {
-            List<string> LinesString = ConvertListListIntToListString(InitialData.lines);
-            PopulateSlotSocket(LinesString);
+            InitialiseGame();
             SetInit = true;
-          }
-          else
-          {
-            RefreshUI();
           }
           break;
         }
@@ -369,38 +362,53 @@ private void OnError(Error err)
           isResultdone = true;
           break;
         }
+      case "WheelBonusResult":
+        {
+          ResultData = myData;
+          PlayerData = myData.player;
+          isResultdone = true;
+          break;
+        }
+      case "PickJackpotResult":
+        {
+          ResultData = myData;
+          PlayerData = myData.player;
+          isResultdone = true;
+          break;
+        }
     }
   }
 
-  List<string> GetBonusData(List<int> bonusData)
+  private void InitialiseGame()
   {
-    List<string> bonusDataString = new();
-    foreach (int data in bonusData)
-    {
-      bonusDataString.Add(data.ToString());
-    }
-    return bonusDataString;
-  }
-
-  private void RefreshUI()
-  {
-    uiManager.InitialiseUIData(UIData.paylines);
-  }
-
-  private void PopulateSlotSocket(List<string> LineIds)
-  {
-    // slotManager.shuffleInitialMatrix();
     slotManager.InitializeMatrix();
-    for (int i = 0; i < LineIds.Count; i++)
-    {
-      slotManager.FetchLines(LineIds[i], i);
-    }
     slotManager.SetInitialUI();
 #if UNITY_WEBGL && !UNITY_EDITOR
     JSManager.SendCustomMessage("OnEnter");
 #endif
     RaycastBlocker.SetActive(false);
   }
+
+  // VIKING GAME - LINES-BASED SOCKET POPULATION - NOT USED IN THIS GAME
+  // private void PopulateSlotSocket(List<string> LineIds)
+  // {
+  //   slotManager.InitializeMatrix();
+  //   for (int i = 0; i < LineIds.Count; i++)
+  //   {
+  //     slotManager.FetchLines(LineIds[i], i);
+  //   }
+  //   slotManager.SetInitialUI();
+  //   RaycastBlocker.SetActive(false);
+  // }
+
+  // VIKING GAME - BONUS DATA PARSING - NOT USED IN THIS GAME
+  // List<string> GetBonusData(List<int> bonusData) { ... }
+
+  // PAYTABLE DATA CALL FROM VIKING GAME - NOT USED IN THIS GAME
+  // private void RefreshUI()
+  // {
+  //   uiManager.InitialiseUIData(UIData.paylines);
+  // }
 
   internal void AccumulateResult(int currBet)
   {
@@ -414,28 +422,11 @@ private void OnError(Error err)
     SendDataWithNamespace("request", json);
   }
 
-  private List<string> ConvertListListIntToListString(List<List<int>> listOfLists)
-  {
-    List<string> resultList = new List<string>();
-
-    foreach (List<int> innerList in listOfLists)
-    {
-      // Convert each integer in the inner list to string
-      List<string> stringList = new List<string>();
-      foreach (int number in innerList)
-      {
-        stringList.Add(number.ToString());
-      }
-
-      // Join the string representation of integers with ","
-      string joinedString = string.Join(",", stringList.ToArray()).Trim();
-      resultList.Add(joinedString);
-    }
-
-    return resultList;
-  }
+  // VIKING GAME - LINES STRING CONVERSION - NOT USED IN THIS GAME
+  // private List<string> ConvertListListIntToListString(List<List<int>> listOfLists) { ... }
 }
 
+// ─── Emit Models ────────────────────────────────────────────────────────────
 [Serializable]
 public class MessageData
 {
@@ -452,70 +443,101 @@ public class Data
   public int option;
 }
 
-[Serializable]
-public class GameData
-{
-  public List<List<int>> lines { get; set; }
-  public List<double> bets { get; set; }
-  public List<int> spinBonus { get; set; }
-}
+// ─── SL-PT Server Response Models ───────────────────────────────────────────
 
+// Top-level wrapper — handles initData, ResultData, WheelBonusResult, PickJackpotResult
 [Serializable]
-public class FreeSpins
+public class ServerResponse
 {
-  public int count { get; set; }
-  public bool isFreeSpin { get; set; }
-}
-
-[Serializable]
-public class Bonus
-{
-  public int BonusSpinStopIndex { get; set; }
-  public double amount { get; set; }
-}
-
-[Serializable]
-public class Root
-{
-  public List<List<string>> matrix { get; set; }
-  public Payload payload { get; set; }
-  public Bonus bonus { get; set; }
-  public Jackpot jackpot { get; set; }
-  public Scatter scatter { get; set; }
-  public FreeSpins freeSpin { get; set; }
-  //Initial Data
   public string id { get; set; }
+  public bool success { get; set; }
+  // initData fields
   public GameData gameData { get; set; }
+  public Features features { get; set; }
   public UiData uiData { get; set; }
+  // ResultData fields
+  public List<List<string>> matrix { get; set; }
+  public SpinPayload payload { get; set; }
+  // Shared
   public Player player { get; set; }
 }
 
 [Serializable]
-public class Scatter
+public class GameData
 {
-  public double amount { get; set; }
-}
-[Serializable]
-public class Jackpot
-{
-  public bool isTriggered { get; set; }
-  public double amount { get; set; }
-}
-[Serializable]
-public class Payload
-{
-  public double winAmount { get; set; }
-  public List<Win> wins { get; set; }
+  public List<double> bets { get; set; }
 }
 
 [Serializable]
-public class Win
+public class Features
 {
-  public int line { get; set; }
+  public PinataMeters pinataMeters { get; set; }
+}
+
+[Serializable]
+public class PinataMeters
+{
+  public bool enabled { get; set; }
+  public MeterCurrentState currentState { get; set; }
+}
+
+[Serializable]
+public class MeterCurrentState
+{
+  public int greenMeter { get; set; }
+  public int redMeter { get; set; }
+  public int blueMeter { get; set; }
+  public int greenThreshold { get; set; }
+  public int redThreshold { get; set; }
+  public int blueThreshold { get; set; }
+}
+
+[Serializable]
+public class SpinPayload
+{
+  public double winAmount { get; set; }
+  public List<WaysWin> waysWins { get; set; }
+  public List<CoinValue> coinValues { get; set; }
+  public MetersUpdate meters { get; set; }
+  public List<string> triggeredFeatures { get; set; }
+  public List<PendingFeature> pendingFeatures { get; set; }
+  public bool isFreeSpinActive { get; set; }
+  public int freeSpinsRemaining { get; set; }
+  public bool isRedPinataFreeSpin { get; set; }
+  public bool isBluePinataLinkBonus { get; set; }
+}
+
+[Serializable]
+public class WaysWin
+{
   public List<int> positions { get; set; }
   public double amount { get; set; }
 }
 
+[Serializable]
+public class CoinValue
+{
+  public List<int> position { get; set; }
+  public double value { get; set; }
+}
+
+[Serializable]
+public class MetersUpdate
+{
+  public int greenMeter { get; set; }
+  public int redMeter { get; set; }
+  public int blueMeter { get; set; }
+}
+
+[Serializable]
+public class PendingFeature
+{
+  public string feature { get; set; }
+  public bool triggered { get; set; }
+  public double bet { get; set; }
+}
+
+// ─── Shared Models ───────────────────────────────────────────────────────────
 [Serializable]
 public class UiData
 {

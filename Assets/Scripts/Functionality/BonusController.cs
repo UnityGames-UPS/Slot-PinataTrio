@@ -54,7 +54,8 @@ public class BonusController : MonoBehaviour
     if (Win_Transform) Win_Transform.gameObject.SetActive(false);
     if (Loose_Transform) Loose_Transform.gameObject.SetActive(false);
     if (_audioManager) _audioManager.SwitchBGSound(true);
-    PopulateWheel(m_SocketManager.bonusdata);
+    // VIKING GAME - BONUS WHEEL DATA - NOT USED IN THIS GAME
+    // PopulateWheel(m_SocketManager.bonusdata);
     stopIndex = stop;
     if (Bonus_Object) Bonus_Object.SetActive(true);
     if (Spin_Button) Spin_Button.interactable = true;
@@ -143,7 +144,8 @@ public class BonusController : MonoBehaviour
     else
     {
       if (Win_Transform) Win_Transform.gameObject.SetActive(true);
-      Win_Transform.GetChild(0).GetComponent<TMP_Text>().text = m_SocketManager.ResultData.bonus.amount.ToString("F3");
+      // VIKING GAME - BONUS AMOUNT FROM OLD MODEL - NOT USED IN THIS GAME
+      // Win_Transform.GetChild(0).GetComponent<TMP_Text>().text = m_SocketManager.ResultData.bonus.amount.ToString("F3");
       if (Win_Transform) Win_Transform.localScale = Vector3.zero;
       if (PopupPanel) PopupPanel.SetActive(true);
       if (Win_Transform) Win_Transform.DOScale(Vector3.one, 1f);

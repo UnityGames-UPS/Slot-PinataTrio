@@ -33,12 +33,43 @@ public class UIManager : MonoBehaviour
   [SerializeField]
   private RectTransform Exit_RT;
 
+  // PAYTABLE FROM VIKING GAME
+  // [SerializeField]
+  // private Button Paytable_Button;
+  // [SerializeField]
+  // private GameObject Paytable_Object;
+  // [SerializeField]
+  // private RectTransform Paytable_RT;
+
+  [Header("Betting UI")]
+  [SerializeField] private TMP_Text TotalBetAmountText;
+  [SerializeField] private TMP_Text MiniPayoutText;
+  [SerializeField] private TMP_Text MinorPayoutText;
+  [SerializeField] private TMP_Text MajorPayoutText;
+  [SerializeField] private TMP_Text MegaPayoutText;
+  [SerializeField] private TMP_Text GrandPayoutText;
+
+  private readonly double[] betAmounts = { 0.10, 0.50, 1.00, 2.00, 3.00, 5.00, 10.00, 15.00, 20.00 };
+  internal int BetCount => betAmounts.Length;
+  internal double GetBetAmount(int index) => betAmounts[index];
+
+  [Header("Information UI")]
   [SerializeField]
-  private Button Paytable_Button;
+  private Button Info_Button;
   [SerializeField]
-  private GameObject Paytable_Object;
+  private GameObject InfoSlidesPanel;
   [SerializeField]
-  private RectTransform Paytable_RT;
+  private Button BackToGame_Button;
+  [SerializeField]
+  private Button NextButton;
+  [SerializeField]
+  private Button PrevButton;
+  [SerializeField]
+  private Image SlideContainer;
+  [SerializeField]
+  private Sprite[] InfoSlides;
+
+  private int currentSlideIndex = 0;
 
   [Header("Popus UI")]
   [SerializeField]
@@ -54,23 +85,24 @@ public class UIManager : MonoBehaviour
   [SerializeField]
   private Button Support_Button;
 
-  [Header("Paytable Popup")]
-  [SerializeField]
-  private GameObject PaytablePopup_Object;
-  [SerializeField]
-  private Button PaytableExit_Button;
-  [SerializeField]
-  private TMP_Text[] SymbolsText;
-  [SerializeField]
-  private TMP_Text FreeSpin_Text;
-  [SerializeField]
-  private TMP_Text Scatter_Text;
-  [SerializeField]
-  private TMP_Text Jackpot_Text;
-  [SerializeField]
-  private TMP_Text Bonus_Text;
-  [SerializeField]
-  private TMP_Text Wild_Text;
+  // PAYTABLE FROM VIKING GAME
+  // [Header("Paytable Popup")]
+  // [SerializeField]
+  // private GameObject PaytablePopup_Object;
+  // [SerializeField]
+  // private Button PaytableExit_Button;
+  // [SerializeField]
+  // private TMP_Text[] SymbolsText;
+  // [SerializeField]
+  // private TMP_Text FreeSpin_Text;
+  // [SerializeField]
+  // private TMP_Text Scatter_Text;
+  // [SerializeField]
+  // private TMP_Text Jackpot_Text;
+  // [SerializeField]
+  // private TMP_Text Bonus_Text;
+  // [SerializeField]
+  // private TMP_Text Wild_Text;
 
   [Header("Settings Popup")]
   [SerializeField]
@@ -195,11 +227,38 @@ public class UIManager : MonoBehaviour
     if (AboutExit_Button) AboutExit_Button.onClick.RemoveAllListeners();
     if (AboutExit_Button) AboutExit_Button.onClick.AddListener(delegate { ClosePopup(AboutPopup_Object); });
 
-    if (Paytable_Button) Paytable_Button.onClick.RemoveAllListeners();
-    if (Paytable_Button) Paytable_Button.onClick.AddListener(delegate { OpenPopup(PaytablePopup_Object); });
+    // PAYTABLE FROM VIKING GAME
+    // if (Paytable_Button) Paytable_Button.onClick.RemoveAllListeners();
+    // if (Paytable_Button) Paytable_Button.onClick.AddListener(delegate { OpenPopup(PaytablePopup_Object); });
+    // if (PaytableExit_Button) PaytableExit_Button.onClick.RemoveAllListeners();
+    // if (PaytableExit_Button) PaytableExit_Button.onClick.AddListener(delegate { ClosePopup(PaytablePopup_Object); });
 
-    if (PaytableExit_Button) PaytableExit_Button.onClick.RemoveAllListeners();
-    if (PaytableExit_Button) PaytableExit_Button.onClick.AddListener(delegate { ClosePopup(PaytablePopup_Object); });
+    if (InfoSlidesPanel) InfoSlidesPanel.SetActive(false);
+
+    if (Info_Button) Info_Button.onClick.RemoveAllListeners();
+    if (Info_Button) Info_Button.onClick.AddListener(() =>
+    {
+      currentSlideIndex = 0;
+      InfoSlidesPanel.SetActive(true);
+      ShowSlide(currentSlideIndex);
+
+      if (BackToGame_Button) BackToGame_Button.onClick.RemoveAllListeners();
+      if (BackToGame_Button) BackToGame_Button.onClick.AddListener(() => InfoSlidesPanel.SetActive(false));
+
+      if (NextButton) NextButton.onClick.RemoveAllListeners();
+      if (NextButton) NextButton.onClick.AddListener(() =>
+      {
+        currentSlideIndex = (currentSlideIndex + 1) % InfoSlides.Length;
+        ShowSlide(currentSlideIndex);
+      });
+
+      if (PrevButton) PrevButton.onClick.RemoveAllListeners();
+      if (PrevButton) PrevButton.onClick.AddListener(() =>
+      {
+        currentSlideIndex = (currentSlideIndex - 1 + InfoSlides.Length) % InfoSlides.Length;
+        ShowSlide(currentSlideIndex);
+      });
+    });
 
     if (Settings_Button) Settings_Button.onClick.RemoveAllListeners();
     if (Settings_Button) Settings_Button.onClick.AddListener(delegate { OpenPopup(SettingsPopup_Object); });
@@ -270,6 +329,8 @@ public class UIManager : MonoBehaviour
 
     if (SkipWinAnimation) SkipWinAnimation.onClick.RemoveAllListeners();
     if (SkipWinAnimation) SkipWinAnimation.onClick.AddListener(SkipWin);
+
+    UpdateBetDisplay(betAmounts[0]);
   }
 
   internal void LowBalPopup()
@@ -386,55 +447,51 @@ public class UIManager : MonoBehaviour
     OpenPopup(ADPopup_Object);
   }
 
-  internal void InitialiseUIData(Paylines symbolsText)
-  {
-    PopulateSymbolsPayout(symbolsText);
-  }
+  // PAYTABLE FROM VIKING GAME
+  // internal void InitialiseUIData(Paylines symbolsText)
+  // {
+  //   PopulateSymbolsPayout(symbolsText);
+  // }
 
-  private void PopulateSymbolsPayout(Paylines paylines)
-  {
-    double betPerLine = socketManager.InitialData.bets[slotManager.BetCounter];
-    for (int i = 0; i < SymbolsText.Length; i++)
-    {
-      string text = null;
-      if (paylines.symbols[i].multiplier[0] != 0)
-      {
-        // text += "5x - " + paylines.symbols[i].multiplier[0] + "x";
-        text += "5x - " + (paylines.symbols[i].multiplier[0] * betPerLine);
-      }
-      if (paylines.symbols[i].multiplier[1] != 0)
-      {
-        // text += "\n4x - " + paylines.symbols[i].multiplier[1] + "x";
-        text += "\n4x - " + (paylines.symbols[i].multiplier[1] * betPerLine);
-      }
-      if (paylines.symbols[i].multiplier[2] != 0)
-      {
-        // text += "\n3x - " + paylines.symbols[i].multiplier[2] + "x";
-        text += "\n3x - " + (paylines.symbols[i].multiplier[2] * betPerLine);
-      }
-      if (SymbolsText[i]) SymbolsText[i].text = text;
-    }
+  // private void PopulateSymbolsPayout(Paylines paylines)
+  // {
+  //   double betPerLine = socketManager.InitialData.bets[slotManager.BetCounter];
+  //   for (int i = 0; i < SymbolsText.Length; i++)
+  //   {
+  //     string text = null;
+  //     if (paylines.symbols[i].multiplier[0] != 0)
+  //     {
+  //       text += "5x - " + (paylines.symbols[i].multiplier[0] * betPerLine);
+  //     }
+  //     if (paylines.symbols[i].multiplier[1] != 0)
+  //     {
+  //       text += "\n4x - " + (paylines.symbols[i].multiplier[1] * betPerLine);
+  //     }
+  //     if (paylines.symbols[i].multiplier[2] != 0)
+  //     {
+  //       text += "\n3x - " + (paylines.symbols[i].multiplier[2] * betPerLine);
+  //     }
+  //     if (SymbolsText[i]) SymbolsText[i].text = text;
+  //   }
+  //   FreeSpin_Text.text = GetSymbolDescription("FreeSpin");
+  //   Wild_Text.text = GetSymbolDescription("Wild");
+  //   Scatter_Text.text = GetSymbolDescription("Scatter");
+  //   Jackpot_Text.text = GetSymbolDescription("Jackpot");
+  //   Bonus_Text.text = GetSymbolDescription("Bonus");
+  // }
 
-    FreeSpin_Text.text = GetSymbolDescription("FreeSpin");
-    Wild_Text.text = GetSymbolDescription("Wild");
-    Scatter_Text.text = GetSymbolDescription("Scatter");
-    Jackpot_Text.text = GetSymbolDescription("Jackpot");
-    Bonus_Text.text = GetSymbolDescription("Bonus");
-
-  }
-
-  internal string GetSymbolDescription(string name)
-  {
-    if (socketManager.UIData.paylines.symbols == null) return null;
-    foreach (var symbol in socketManager.UIData.paylines.symbols)
-    {
-      if (symbol.name == name)
-      {
-        return symbol.description;
-      }
-    }
-    return null;
-  }
+  // internal string GetSymbolDescription(string name)
+  // {
+  //   if (socketManager.UIData.paylines.symbols == null) return null;
+  //   foreach (var symbol in socketManager.UIData.paylines.symbols)
+  //   {
+  //     if (symbol.name == name)
+  //     {
+  //       return symbol.description;
+  //     }
+  //   }
+  //   return null;
+  // }
 
   private void CallOnExitFunction()
   {
@@ -452,7 +509,8 @@ public class UIManager : MonoBehaviour
     if (Menu_Object) Menu_Object.SetActive(false);
     if (Exit_Object) Exit_Object.SetActive(true);
     //if (About_Object) About_Object.SetActive(true);
-    if (Paytable_Object) Paytable_Object.SetActive(true);
+    // PAYTABLE FROM VIKING GAME
+    // if (Paytable_Object) Paytable_Object.SetActive(true);
     if (Settings_Object) Settings_Object.SetActive(true);
 
     //DOTween.To(() => About_RT.anchoredPosition, (val) => About_RT.anchoredPosition = val, new Vector2(About_RT.anchoredPosition.x, About_RT.anchoredPosition.y + 150), 0.1f).OnUpdate(() =>
@@ -460,10 +518,11 @@ public class UIManager : MonoBehaviour
     //    LayoutRebuilder.ForceRebuildLayoutImmediate(About_RT);
     //});
 
-    DOTween.To(() => Paytable_RT.anchoredPosition, (val) => Paytable_RT.anchoredPosition = val, new Vector2(Paytable_RT.anchoredPosition.x, Paytable_RT.anchoredPosition.y + 125), 0.1f).OnUpdate(() =>
-    {
-      LayoutRebuilder.ForceRebuildLayoutImmediate(Paytable_RT);
-    });
+    // PAYTABLE FROM VIKING GAME
+    // DOTween.To(() => Paytable_RT.anchoredPosition, (val) => Paytable_RT.anchoredPosition = val, new Vector2(Paytable_RT.anchoredPosition.x, Paytable_RT.anchoredPosition.y + 125), 0.1f).OnUpdate(() =>
+    // {
+    //   LayoutRebuilder.ForceRebuildLayoutImmediate(Paytable_RT);
+    // });
 
     DOTween.To(() => Settings_RT.anchoredPosition, (val) => Settings_RT.anchoredPosition = val, new Vector2(Settings_RT.anchoredPosition.x, Settings_RT.anchoredPosition.y + 250), 0.1f).OnUpdate(() =>
     {
@@ -480,10 +539,11 @@ public class UIManager : MonoBehaviour
     //    LayoutRebuilder.ForceRebuildLayoutImmediate(About_RT);
     //});
 
-    DOTween.To(() => Paytable_RT.anchoredPosition, (val) => Paytable_RT.anchoredPosition = val, new Vector2(Paytable_RT.anchoredPosition.x, Paytable_RT.anchoredPosition.y - 125), 0.1f).OnUpdate(() =>
-    {
-      LayoutRebuilder.ForceRebuildLayoutImmediate(Paytable_RT);
-    });
+    // PAYTABLE FROM VIKING GAME
+    // DOTween.To(() => Paytable_RT.anchoredPosition, (val) => Paytable_RT.anchoredPosition = val, new Vector2(Paytable_RT.anchoredPosition.x, Paytable_RT.anchoredPosition.y - 125), 0.1f).OnUpdate(() =>
+    // {
+    //   LayoutRebuilder.ForceRebuildLayoutImmediate(Paytable_RT);
+    // });
 
     DOTween.To(() => Settings_RT.anchoredPosition, (val) => Settings_RT.anchoredPosition = val, new Vector2(Settings_RT.anchoredPosition.x, Settings_RT.anchoredPosition.y - 250), 0.1f).OnUpdate(() =>
     {
@@ -495,7 +555,8 @@ public class UIManager : MonoBehaviour
        if (Menu_Object) Menu_Object.SetActive(true);
        if (Exit_Object) Exit_Object.SetActive(false);
        //if (About_Object) About_Object.SetActive(false);
-       if (Paytable_Object) Paytable_Object.SetActive(false);
+       // PAYTABLE FROM VIKING GAME
+       // if (Paytable_Object) Paytable_Object.SetActive(false);
        if (Settings_Object) Settings_Object.SetActive(false);
      });
   }
@@ -556,5 +617,26 @@ public class UIManager : MonoBehaviour
       if (audioController) audioController.ToggleMute(true, "button");
       if (audioController) audioController.ToggleMute(true, "wl");
     }
+  }
+
+  internal void SetBet(int betIndex)
+  {
+    UpdateBetDisplay(betAmounts[betIndex]);
+  }
+
+  private void UpdateBetDisplay(double bet)
+  {
+    if (TotalBetAmountText) TotalBetAmountText.text = bet.ToString("F2");
+    if (MiniPayoutText) MiniPayoutText.text = (bet * 5).ToString("F2");
+    if (MinorPayoutText) MinorPayoutText.text = (bet * 10).ToString("F2");
+    if (MajorPayoutText) MajorPayoutText.text = (bet * 20).ToString("F2");
+    if (MegaPayoutText) MegaPayoutText.text = (bet * 40).ToString("F2");
+    if (GrandPayoutText) GrandPayoutText.text = (bet * 500).ToString("F2");
+  }
+
+  private void ShowSlide(int index)
+  {
+    if (SlideContainer && InfoSlides != null && InfoSlides.Length > 0)
+      SlideContainer.sprite = InfoSlides[index];
   }
 }
