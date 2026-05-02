@@ -68,6 +68,26 @@ public class UIManager : MonoBehaviour
   [SerializeField] private float pinataScrollAmount = 250f;
   [SerializeField] private float pinataRedDelay = 0.3f;
 
+  [Header("Pick Jackpot UI")]
+  [SerializeField] private GameObject PickJackpotPanel;
+  [SerializeField] private Button[] PinataButtons;
+  [SerializeField] private Image[] JackpotRevealImages;
+  [SerializeField] private TMP_Text PickJackpotTimerText;
+  [SerializeField] private RectTransform FallingJackpotRT;
+  [SerializeField] private Image FallingJackpotImage;
+  [SerializeField] private Transform JackpotLandingPoint;
+  [SerializeField] private Sprite MiniJackpotSprite;
+  [SerializeField] private Sprite MinorJackpotSprite;
+  [SerializeField] private Sprite MajorJackpotSprite;
+  [SerializeField] private Sprite MegaJackpotSprite;
+  [SerializeField] private Sprite GrandJackpotSprite;
+  [SerializeField] private float pickJackpotTimerDuration = 10f;
+
+  internal bool PickJackpotSelected = false;
+  private int _selectedPinataIndex = -1;
+  private Coroutine _pickJackpotTimerRoutine;
+  private readonly string[] _jackpotOrder = { "mini", "minor", "major", "mega", "grand" };
+
   [Header("Ticker UI")]
   [SerializeField] private RectTransform TickerContainer;
   [SerializeField] private TMP_Text TickerText;
@@ -707,6 +727,124 @@ public class UIManager : MonoBehaviour
 
     TickerText.rectTransform.anchoredPosition = new Vector2(startX, TickerText.rectTransform.anchoredPosition.y);
     tickerTween = TickerText.rectTransform.DOAnchorPosX(endX, TickerDuration).SetEase(Ease.Linear);
+  }
+
+  internal void ShowPickJackpotScreen()
+  {
+    PickJackpotSelected = false;
+    _selectedPinataIndex = -1;
+
+    if (PickJackpotPanel) PickJackpotPanel.SetActive(true);
+    if (JackpotRevealImages != null)
+      foreach (var img in JackpotRevealImages) img.gameObject.SetActive(false);
+
+    for (int i = 0; i < PinataButtons.Length; i++)
+    {
+      int index = i;
+      PinataButtons[i].onClick.RemoveAllListeners();
+      PinataButtons[i].onClick.AddListener(() => OnPinataSelected(index));
+      PinataButtons[i].interactable = true;
+    }
+
+    if (_pickJackpotTimerRoutine != null) StopCoroutine(_pickJackpotTimerRoutine);
+    _pickJackpotTimerRoutine = StartCoroutine(PickJackpotTimer());
+  }
+
+  private void OnPinataSelected(int index)
+  {
+    if (PickJackpotSelected) return;
+    _selectedPinataIndex = index;
+    if (_pickJackpotTimerRoutine != null)
+    {
+      StopCoroutine(_pickJackpotTimerRoutine);
+      _pickJackpotTimerRoutine = null;
+    }
+    foreach (var btn in PinataButtons) btn.interactable = false;
+    PickJackpotSelected = true;
+  }
+
+  private IEnumerator PickJackpotTimer()
+  {
+    float timeRemaining = pickJackpotTimerDuration;
+    while (timeRemaining > 0)
+    {
+      timeRemaining -= Time.deltaTime;
+      if (PickJackpotTimerText) PickJackpotTimerText.text = Mathf.CeilToInt(timeRemaining).ToString();
+      yield return null;
+    }
+    OnPinataSelected(Random.Range(0, PinataButtons.Length));
+  }
+
+  internal IEnumerator RevealJackpot(string goalJackpot)
+  {
+    List<string> remaining = new List<string>(_jackpotOrder);
+    remaining.Remove(goalJackpot);
+
+    for (int i = remaining.Count - 1; i > 0; i--)
+    {
+      int j = Random.Range(0, i + 1);
+      string temp = remaining[i];
+      remaining[i] = remaining[j];
+      remaining[j] = temp;
+    }
+
+    string[] assignment = new string[PinataButtons.Length];
+    assignment[_selectedPinataIndex] = goalJackpot;
+    int remainingIndex = 0;
+    for (int i = 0; i < assignment.Length; i++)
+    {
+      if (i == _selectedPinataIndex) continue;
+      assignment[i] = remaining[remainingIndex++];
+    }
+
+    for (int i = 0; i < JackpotRevealImages.Length; i++)
+    {
+      JackpotRevealImages[i].sprite = GetJackpotSprite(assignment[i]);
+      JackpotRevealImages[i].gameObject.SetActive(true);
+      JackpotRevealImages[i].transform.localScale = Vector3.zero;
+      JackpotRevealImages[i].DOFade(i == _selectedPinataIndex ? 1f : 0.5f, 0.3f);
+      JackpotRevealImages[i].transform.DOScale(i == _selectedPinataIndex ? 1.3f : 1f, 0.3f);
+      yield return new WaitForSeconds(0.1f);
+    }
+
+    yield return new WaitForSeconds(1f);
+
+    if (FallingJackpotImage) FallingJackpotImage.sprite = GetJackpotSprite(goalJackpot);
+
+    RectTransform selectedRT = JackpotRevealImages[_selectedPinataIndex].rectTransform;
+    Vector2 centerPos = Vector2.zero;
+    yield return selectedRT.DOAnchorPos(centerPos, 0.5f).SetEase(Ease.InOutCubic).WaitForCompletion();
+
+    yield return new WaitForSeconds(0.3f);
+
+    if (PickJackpotPanel)
+      yield return PickJackpotPanel.GetComponent<RectTransform>()
+        .DOAnchorPosY(PickJackpotPanel.GetComponent<RectTransform>().anchoredPosition.y + offscreenOffset, 0.6f)
+        .SetEase(Ease.InBack).WaitForCompletion();
+
+    if (FallingJackpotRT && JackpotLandingPoint)
+    {
+      FallingJackpotRT.gameObject.SetActive(true);
+      FallingJackpotRT.anchoredPosition = new Vector2(0, offscreenOffset);
+      yield return FallingJackpotRT.DOAnchorPosY(
+        ((RectTransform)JackpotLandingPoint).anchoredPosition.y, 0.5f)
+        .SetEase(Ease.OutBounce).WaitForCompletion();
+    }
+
+    if (PickJackpotPanel) PickJackpotPanel.SetActive(false);
+  }
+
+  private Sprite GetJackpotSprite(string jackpotName)
+  {
+    switch (jackpotName)
+    {
+      case "mini": return MiniJackpotSprite;
+      case "minor": return MinorJackpotSprite;
+      case "major": return MajorJackpotSprite;
+      case "mega": return MegaJackpotSprite;
+      case "grand": return GrandJackpotSprite;
+      default: return null;
+    }
   }
 
   private void UpdateBetDisplay(double bet)

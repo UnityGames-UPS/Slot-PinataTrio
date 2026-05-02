@@ -538,6 +538,7 @@ public class SpinPayload
   public int freeSpinsRemaining { get; set; }
   public bool isRedPinataFreeSpin { get; set; }
   public bool isBluePinataLinkBonus { get; set; }
+  public bool isBluePinataFreeSpin { get; set; }
   public List<LinkBonusZone> linkBonusTargetZones { get; set; }
   public List<LockedCell> linkBonusLockedCells { get; set; }
 }
@@ -578,6 +579,8 @@ public class TriggeredFeature
   // wheelBonus
   public string jackpotTier { get; set; }
   public List<string> spinHistory { get; set; }
+  // pickJackpot
+  public string goalJackpot { get; set; }
   // linkBonus
   public List<LockedCell> lockedCells { get; set; }
   public int respinsRemaining { get; set; }

@@ -16,9 +16,11 @@ public class SlotBehaviour : MonoBehaviour
 
   [Header("Slot Images")]
   [SerializeField]
-  private List<SlotImage> images;     //class to store total images
+  private List<SlotImage> images;
   [SerializeField]
-  private List<SlotImage> Tempimages;     //class to store the result matrix
+  private List<SlotImage> Tempimages;
+  [SerializeField]
+  private List<SlotImage> Animimages;
 
   [Header("Slots Transforms")]
   [SerializeField]
@@ -100,6 +102,7 @@ public class SlotBehaviour : MonoBehaviour
   private bool StopSpinToggle = false;
   private bool CheckSpinAudio = false;
   internal bool CheckPopups = false;
+  private bool _isInFreeSpin = false;
   internal int BetCounter = 0;
   private double currentBalance = 0;
   private double currentTotalBet = 0;
@@ -251,13 +254,14 @@ public class SlotBehaviour : MonoBehaviour
         int val = initialMatrix[row, col];
         Tempimages[col].slotImages[row].sprite = myImages[val];
 
-        ImageAnimation animScript = Tempimages[col].slotImages[row]
+        ImageAnimation animScript = Animimages[col].slotImages[row]
           .GetComponent<ImageAnimation>();
         if (animScript != null)
         {
           PopulateAnimationSprites(animScript, val);
           if (animScript.textureArray.Count > 0 && val >= 3)
           {
+            Animimages[col].slotImages[row].gameObject.SetActive(true);
             animScript.StartAnimation();
             TempList.Add(animScript);
           }
@@ -342,6 +346,7 @@ public class SlotBehaviour : MonoBehaviour
 
   private void BalanceDeduction()
   {
+    if (_isInFreeSpin) return;
     double initAmount = currentBalance;
     double targetAmount = currentBalance - currentTotalBet;
     BalanceTween = DOTween.To(() => initAmount, (val) => initAmount = val, targetAmount, 0.8f).OnUpdate(() =>
@@ -377,8 +382,9 @@ public class SlotBehaviour : MonoBehaviour
       for (int col = 0; col < 5; col++)
       {
         int resultNum = int.Parse(SocketManager.ResultData.matrix[row][col]);
-        PopulateAnimationSprites(Tempimages[col].slotImages[row].GetComponent<ImageAnimation>(), resultNum);
         Tempimages[col].slotImages[row].sprite = myImages[resultNum];
+        ImageAnimation animScript = Animimages[col].slotImages[row].GetComponent<ImageAnimation>();
+        if (animScript != null) PopulateAnimationSprites(animScript, resultNum);
       }
     }
     float stopWindowEnd = Time.time + stopButtonWindow;
@@ -402,10 +408,72 @@ public class SlotBehaviour : MonoBehaviour
     if (Balance_text) Balance_text.text = SocketManager.ResultData.player.balance.ToString("F3");
     currentBalance = SocketManager.PlayerData.balance;
     SpinDelay = SocketManager.ResultData.payload.winAmount > 0 ? 1.2f : 0.2f;
+
+    var pendingFeatures = SocketManager.ResultData.payload?.pendingFeatures;
+    if (pendingFeatures != null && pendingFeatures.Exists(f => f.triggered))
+      yield return StartCoroutine(HandlePendingFeatures(pendingFeatures));
+
     CheckPopups = false;
     Spin_Button.GetComponent<Image>().sprite = SpinSprite;
     IsSpinning = false;
     ToggleButtonGrp(true);
+  }
+  #endregion
+
+  #region PendingFeatures
+  private IEnumerator HandlePendingFeatures(List<PendingFeature> features)
+  {
+    foreach (var feature in features)
+    {
+      if (!feature.triggered) continue;
+      switch (feature.feature)
+      {
+        case "pickJackpot":
+          yield return StartCoroutine(HandleRedPinataPick());
+          break;
+        case "wheelBonus":
+          // TODO: wire up wheel bonus
+          break;
+        case "linkBonus":
+          // TODO: wire up link bonus
+          break;
+      }
+    }
+  }
+
+  private IEnumerator HandleRedPinataPick()
+  {
+    CheckPopups = true;
+    uiManager.ShowPickJackpotScreen();
+
+    yield return new WaitUntil(() => uiManager.PickJackpotSelected);
+
+    SocketManager.SendPickJackpot();
+    uiManager.PickJackpotSelected = false;
+
+    yield return new WaitUntil(() => SocketManager.isPickJackpotDone);
+
+    string goalJackpot = SocketManager.ResultData.payload?.triggeredFeatures
+      ?.Find(f => f.feature == "pickJackpot")?.goalJackpot;
+
+    yield return StartCoroutine(uiManager.RevealJackpot(goalJackpot));
+
+    _isInFreeSpin = true;
+    yield return StartCoroutine(FreeSpinLoop());
+    _isInFreeSpin = false;
+  }
+
+  private IEnumerator FreeSpinLoop()
+  {
+    while (true)
+    {
+      yield return new WaitForSeconds(SpinDelay);
+      StartSlots();
+      yield return new WaitUntil(() => !IsSpinning);
+
+      if (!SocketManager.ResultData.payload.isFreeSpinActive)
+        break;
+    }
   }
   #endregion
 
@@ -440,12 +508,12 @@ public class SlotBehaviour : MonoBehaviour
 
         if (!isJackpotOrPinata && !hasCoinValue) continue;
 
-        ImageAnimation animScript = Tempimages[col].slotImages[row]
+        ImageAnimation animScript = Animimages[col].slotImages[row]
           .GetComponent<ImageAnimation>();
         if (animScript != null && animScript.textureArray.Count > 0)
         {
+          Animimages[col].slotImages[row].gameObject.SetActive(true);
           animScript.StartAnimation();
-          animScript.transform.SetAsLastSibling();
           TempList.Add(animScript);
         }
       }
@@ -457,6 +525,7 @@ public class SlotBehaviour : MonoBehaviour
     for (int i = 0; i < TempList.Count; i++)
     {
       TempList[i].StopAnimation();
+      TempList[i].gameObject.SetActive(false);
     }
     TempList.Clear();
     TempList.TrimExcess();
