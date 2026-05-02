@@ -82,6 +82,9 @@ public class UIManager : MonoBehaviour
   [SerializeField] private Sprite MegaJackpotSprite;
   [SerializeField] private Sprite GrandJackpotSprite;
   [SerializeField] private float pickJackpotTimerDuration = 10f;
+  [SerializeField] private ImageAnimation[] PinataButtonAnimations;
+  [SerializeField] private Image FreeSpinsUntilImage;
+  [SerializeField] private float jackpotLaunchHeight = 500f;
 
   internal bool PickJackpotSelected = false;
   private int _selectedPinataIndex = -1;
@@ -258,8 +261,10 @@ public class UIManager : MonoBehaviour
   private Tween ClosePopupTween;
   internal bool isExit = false;
   internal int FreeSpins;
+  private Vector2 _pickJackpotPanelOrigin;
   private void Start()
   {
+    if (PickJackpotPanel) _pickJackpotPanelOrigin = PickJackpotPanel.GetComponent<RectTransform>().anchoredPosition;
     StartCoroutine(PlayIntro());
 
     if (Menu_Button) Menu_Button.onClick.RemoveAllListeners();
@@ -734,13 +739,24 @@ public class UIManager : MonoBehaviour
     PickJackpotSelected = false;
     _selectedPinataIndex = -1;
 
-    if (PickJackpotPanel) PickJackpotPanel.SetActive(true);
+    if (PickJackpotPanel)
+    {
+      PickJackpotPanel.GetComponent<RectTransform>().anchoredPosition = _pickJackpotPanelOrigin;
+      PickJackpotPanel.SetActive(true);
+    }
+
     if (JackpotRevealImages != null)
-      foreach (var img in JackpotRevealImages) img.gameObject.SetActive(false);
+      foreach (var img in JackpotRevealImages)
+      {
+        img.gameObject.SetActive(false);
+        img.transform.localScale = Vector3.one;
+      }
 
     for (int i = 0; i < PinataButtons.Length; i++)
     {
       int index = i;
+      Image btnImg = PinataButtons[i].GetComponent<Image>();
+      if (btnImg) btnImg.color = Color.white;
       PinataButtons[i].onClick.RemoveAllListeners();
       PinataButtons[i].onClick.AddListener(() => OnPinataSelected(index));
       PinataButtons[i].interactable = true;
@@ -748,6 +764,9 @@ public class UIManager : MonoBehaviour
 
     if (_pickJackpotTimerRoutine != null) StopCoroutine(_pickJackpotTimerRoutine);
     _pickJackpotTimerRoutine = StartCoroutine(PickJackpotTimer());
+
+    foreach (var anim in PinataButtonAnimations)
+      if (anim != null) anim.StartAnimation();
   }
 
   private void OnPinataSelected(int index)
@@ -760,6 +779,8 @@ public class UIManager : MonoBehaviour
       _pickJackpotTimerRoutine = null;
     }
     foreach (var btn in PinataButtons) btn.interactable = false;
+    foreach (var anim in PinataButtonAnimations)
+      if (anim != null) anim.StopAnimation();
     PickJackpotSelected = true;
   }
 
@@ -801,34 +822,76 @@ public class UIManager : MonoBehaviour
     {
       JackpotRevealImages[i].sprite = GetJackpotSprite(assignment[i]);
       JackpotRevealImages[i].gameObject.SetActive(true);
-      JackpotRevealImages[i].transform.localScale = Vector3.zero;
-      JackpotRevealImages[i].DOFade(i == _selectedPinataIndex ? 1f : 0.5f, 0.3f);
-      JackpotRevealImages[i].transform.DOScale(i == _selectedPinataIndex ? 1.3f : 1f, 0.3f);
-      yield return new WaitForSeconds(0.1f);
+      JackpotRevealImages[i].color = new Color(1, 1, 1, 0);
     }
+
+    List<Tween> fadeTweens = new List<Tween>();
+    for (int i = 0; i < PinataButtons.Length; i++)
+    {
+      Image pinataImg = PinataButtons[i].GetComponent<Image>();
+      if (pinataImg) fadeTweens.Add(pinataImg.DOFade(0f, 0.5f));
+    }
+    for (int i = 0; i < JackpotRevealImages.Length; i++)
+    {
+      float targetAlpha = i == _selectedPinataIndex ? 1f : 0.4f;
+      fadeTweens.Add(JackpotRevealImages[i].DOFade(targetAlpha, 0.5f));
+    }
+    yield return fadeTweens[^1].WaitForCompletion();
+
+    yield return JackpotRevealImages[_selectedPinataIndex].transform
+      .DOScale(1.3f, 0.3f).SetEase(Ease.OutBack).WaitForCompletion();
 
     yield return new WaitForSeconds(1f);
 
-    if (FallingJackpotImage) FallingJackpotImage.sprite = GetJackpotSprite(goalJackpot);
+    if (FallingJackpotImage)
+    {
+      FallingJackpotImage.sprite = GetJackpotSprite(goalJackpot);
+      FallingJackpotImage.preserveAspect = true;
+    }
+
+    for (int i = 0; i < JackpotRevealImages.Length; i++)
+      if (i != _selectedPinataIndex)
+        JackpotRevealImages[i].DOFade(0f, 0.5f);
 
     RectTransform selectedRT = JackpotRevealImages[_selectedPinataIndex].rectTransform;
-    Vector2 centerPos = Vector2.zero;
-    yield return selectedRT.DOAnchorPos(centerPos, 0.5f).SetEase(Ease.InOutCubic).WaitForCompletion();
+    yield return selectedRT.DOAnchorPos(Vector2.zero, 0.5f).SetEase(Ease.InOutCubic).WaitForCompletion();
 
-    yield return new WaitForSeconds(0.3f);
+    for (int i = 0; i < JackpotRevealImages.Length; i++)
+      if (i != _selectedPinataIndex)
+        JackpotRevealImages[i].gameObject.SetActive(false);
 
-    if (PickJackpotPanel)
-      yield return PickJackpotPanel.GetComponent<RectTransform>()
-        .DOAnchorPosY(PickJackpotPanel.GetComponent<RectTransform>().anchoredPosition.y + offscreenOffset, 0.6f)
-        .SetEase(Ease.InBack).WaitForCompletion();
+    if (FreeSpinsUntilImage) FreeSpinsUntilImage.gameObject.SetActive(true);
 
-    if (FallingJackpotRT && JackpotLandingPoint)
+    yield return new WaitForSeconds(2f);
+
+    if (FallingJackpotRT)
     {
       FallingJackpotRT.gameObject.SetActive(true);
-      FallingJackpotRT.anchoredPosition = new Vector2(0, offscreenOffset);
-      yield return FallingJackpotRT.DOAnchorPosY(
-        ((RectTransform)JackpotLandingPoint).anchoredPosition.y, 0.5f)
-        .SetEase(Ease.OutBounce).WaitForCompletion();
+      FallingJackpotRT.anchoredPosition = Vector2.zero;
+      FallingJackpotRT.localEulerAngles = Vector3.zero;
+    }
+
+    // panel exits fast, don't await so jackpot animates simultaneously
+    if (PickJackpotPanel)
+      PickJackpotPanel.GetComponent<RectTransform>()
+        .DOAnchorPosY(PickJackpotPanel.GetComponent<RectTransform>().anchoredPosition.y + offscreenOffset, 0.4f)
+        .SetEase(Ease.InBack);
+
+    if (FallingJackpotRT)
+    {
+      // launch up near top while rotating 180° CW
+      yield return DOTween.Sequence()
+        .Append(FallingJackpotRT.DOAnchorPosY(jackpotLaunchHeight, 0.6f).SetEase(Ease.OutQuad))
+        .Join(FallingJackpotRT.DOLocalRotate(new Vector3(0, 0, -180), 0.6f, RotateMode.LocalAxisAdd))
+        .WaitForCompletion();
+
+      // fall to landing point while rotating another 180° CW, ends right-side up
+      float landingY = JackpotLandingPoint != null
+        ? ((RectTransform)JackpotLandingPoint).anchoredPosition.y : 0;
+      yield return DOTween.Sequence()
+        .Append(FallingJackpotRT.DOAnchorPosY(landingY, 0.5f).SetEase(Ease.InQuad))
+        .Join(FallingJackpotRT.DOLocalRotate(new Vector3(0, 0, -180), 0.5f, RotateMode.LocalAxisAdd))
+        .WaitForCompletion();
     }
 
     if (PickJackpotPanel) PickJackpotPanel.SetActive(false);
@@ -861,5 +924,13 @@ public class UIManager : MonoBehaviour
   {
     if (SlideContainer && InfoSlides != null && InfoSlides.Length > 0)
       SlideContainer.sprite = InfoSlides[index];
+  }
+
+  // TODO: replace with full jackpot win screen (win graphic, amount display, etc.)
+  internal IEnumerator ShowJackpotWin(string jackpotTier, double winAmount)
+  {
+    if (FallingJackpotRT) FallingJackpotRT.gameObject.SetActive(false);
+    PopulateWin(4, winAmount);
+    yield return new WaitUntil(() => WinPopup_Object == null || !WinPopup_Object.activeSelf);
   }
 }

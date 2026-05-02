@@ -77,6 +77,13 @@ public class SlotBehaviour : MonoBehaviour
   private Transform CoinValueParent;
   private List<GameObject> _coinOverlays = new List<GameObject>();
 
+  [Header("Pinata Fly Targets")]
+  [SerializeField] private RectTransform GreenPinataTarget;
+  [SerializeField] private RectTransform RedPinataTarget;
+  [SerializeField] private RectTransform BluePinataTarget;
+  [SerializeField] private float pinataFlyDuration = 0.8f;
+  [SerializeField] private float pinataPeakScale = 1.8f;
+
   [Header("Audio Management")]
   [SerializeField]
   private AudioController audioController;
@@ -116,6 +123,7 @@ public class SlotBehaviour : MonoBehaviour
   [SerializeField] private float stopButtonStagger = 0.05f;
   private float spinStartTime;
   internal bool socketConnected = false;
+  private int _activePinataAnims = 0;
   private int[,] initialMatrix = new int[,]
 {
   { 0, 0, 7, 0, 0 },  // row 0 (top):    grand, mega, major, minor, mini
@@ -365,6 +373,7 @@ public class SlotBehaviour : MonoBehaviour
     //   yield break;
     // }
     ClearCoinOverlays();
+    _activePinataAnims = 0;
     IsSpinning = true;
     spinStartTime = Time.time;
     Spin_Button.GetComponent<Image>().sprite = StopSprite;
@@ -400,6 +409,7 @@ public class SlotBehaviour : MonoBehaviour
     }
     StopSpinToggle = false;
     yield return alltweens[^1].WaitForCompletion();
+    yield return new WaitUntil(() => _activePinataAnims == 0);
     KillAllTweens();
     CheckForFeaturesAnimation();
     SpawnCoinOverlays();
@@ -432,13 +442,22 @@ public class SlotBehaviour : MonoBehaviour
           yield return StartCoroutine(HandleRedPinataPick());
           break;
         case "wheelBonus":
-          // TODO: wire up wheel bonus
+          yield return StartCoroutine(HandleWheelBonus(feature));
           break;
         case "linkBonus":
           // TODO: wire up link bonus
           break;
       }
     }
+  }
+
+  private IEnumerator HandleWheelBonus(PendingFeature feature)
+  {
+    CheckPopups = true;
+    SocketManager.SendWheelBonus();
+    yield return new WaitUntil(() => SocketManager.isWheelBonusDone);
+    SocketManager.isWheelBonusDone = false;
+    CheckPopups = false;
   }
 
   private IEnumerator HandleRedPinataPick()
@@ -452,15 +471,20 @@ public class SlotBehaviour : MonoBehaviour
     uiManager.PickJackpotSelected = false;
 
     yield return new WaitUntil(() => SocketManager.isPickJackpotDone);
+    SocketManager.isPickJackpotDone = false;
 
-    string goalJackpot = SocketManager.ResultData.payload?.triggeredFeatures
-      ?.Find(f => f.feature == "pickJackpot")?.goalJackpot;
+    var pjFeature = SocketManager.ResultData.payload?.triggeredFeatures
+      ?.Find(f => f.feature == "pickJackpot");
+    string goalJackpot = pjFeature?.goalJackpot;
+    double awardValue = pjFeature?.awardValue ?? 0;
 
     yield return StartCoroutine(uiManager.RevealJackpot(goalJackpot));
 
     _isInFreeSpin = true;
     yield return StartCoroutine(FreeSpinLoop());
     _isInFreeSpin = false;
+
+    yield return StartCoroutine(uiManager.ShowJackpotWin(goalJackpot, awardValue));
   }
 
   private IEnumerator FreeSpinLoop()
@@ -502,7 +526,7 @@ public class SlotBehaviour : MonoBehaviour
       {
         int val = int.Parse(SocketManager.ResultData.matrix[row][col]);
 
-        bool isJackpotOrPinata = val >= 3 && val <= 10;
+        bool isJackpotOrPinata = val >= 3 && val <= 7; // pinatas (8-10) handled by fly animation
         bool hasCoinValue = coinPositions != null &&
           coinPositions.Exists(c => c.position[0] == row && c.position[1] == col);
 
@@ -573,7 +597,51 @@ public class SlotBehaviour : MonoBehaviour
     alltweens[index].Kill();
     slotTransform.localPosition = new Vector2(slotTransform.localPosition.x, IconSizeFactor);
     alltweens[index] = slotTransform.DOLocalMoveY(0, 0.5f).SetEase(Ease.OutElastic);
+    StartCoroutine(AnimatePinatasOnReelStop(index));
     yield return new WaitForSeconds(stagger);
+  }
+
+  private IEnumerator AnimatePinatasOnReelStop(int col)
+  {
+    _activePinataAnims++;
+    yield return alltweens[col].WaitForCompletion();
+    List<Coroutine> flyRoutines = new List<Coroutine>();
+    for (int row = 0; row < 3; row++)
+    {
+      int val = int.Parse(SocketManager.ResultData.matrix[row][col]);
+      if (val >= 8 && val <= 10)
+        flyRoutines.Add(StartCoroutine(FlyPinataToMeter(col, row, val)));
+    }
+    foreach (var r in flyRoutines) yield return r;
+    _activePinataAnims--;
+  }
+
+  private IEnumerator FlyPinataToMeter(int col, int row, int colorId)
+  {
+    Image animImg = Animimages[col].slotImages[row];
+    RectTransform animRT = (RectTransform)animImg.transform;
+    Vector2 startAnchoredPos = animRT.anchoredPosition;
+    Vector3 startScale = animRT.localScale;
+
+    RectTransform target = colorId == 8 ? GreenPinataTarget
+                         : colorId == 9 ? RedPinataTarget
+                         : BluePinataTarget;
+    if (target == null) yield break;
+
+    ImageAnimation animScript = animImg.GetComponent<ImageAnimation>();
+    animImg.gameObject.SetActive(true);
+    if (animScript != null) animScript.StartAnimation();
+
+    Sequence flySeq = DOTween.Sequence();
+    flySeq.Append(animImg.transform.DOMove(target.position, pinataFlyDuration).SetEase(Ease.InOutQuad));
+    flySeq.Join(animRT.DOScale(startScale * pinataPeakScale, pinataFlyDuration * 0.6f).SetEase(Ease.OutQuad));
+    flySeq.Insert(pinataFlyDuration * 0.6f, animRT.DOScale(Vector3.zero, pinataFlyDuration * 0.4f).SetEase(Ease.InQuad));
+    yield return flySeq.WaitForCompletion();
+
+    if (animScript != null) animScript.StopAnimation();
+    animImg.gameObject.SetActive(false);
+    animRT.anchoredPosition = startAnchoredPos;
+    animRT.localScale = startScale;
   }
 
 
