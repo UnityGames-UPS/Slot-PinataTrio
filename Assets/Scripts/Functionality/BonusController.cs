@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -33,6 +34,13 @@ public class BonusController : MonoBehaviour
 
   [SerializeField] private UIManager uIManager;
 
+  [Header("Wheel Entrance")]
+  [SerializeField] private float wheelBigScale = 1.5f;
+  [SerializeField] private float wheelSmallScale = 0.7f;
+  [SerializeField] private float wheelFinalScale = 1.2f;
+  [SerializeField] private Vector2 wheelFinalAnchoredPos = new Vector2(0f, -400f);
+  [SerializeField] private GameObject GreenPinataOnWheel;
+
   // VIKING GAME - COLLISION FLAG FOR COLLIDER-BASED WHEEL STOP - NOT USED IN THIS GAME
   // internal bool isCollision = false;
 
@@ -57,7 +65,32 @@ public class BonusController : MonoBehaviour
     if (Boost_Transform) Boost_Transform.gameObject.SetActive(false);
     if (WinAmountText) WinAmountText.text = winAmount.ToString("F3");
     if (_audioManager) _audioManager.SwitchBGSound(true);
+    if (GreenPinataOnWheel) GreenPinataOnWheel.SetActive(false);
     if (Bonus_Object) Bonus_Object.SetActive(true);
+    StartCoroutine(WheelEntranceRoutine());
+  }
+
+  private IEnumerator WheelEntranceRoutine()
+  {
+    if (Wheel_Transform)
+    {
+      Wheel_Transform.localEulerAngles = Vector3.zero;
+      Wheel_Transform.anchoredPosition = Vector2.zero;
+      Wheel_Transform.localScale = Vector3.zero;
+    }
+
+    // Appear big at center
+    yield return Wheel_Transform.DOScale(wheelBigScale, 0.4f).SetEase(Ease.OutBack).WaitForCompletion();
+
+    // Scale down past the final size
+    yield return Wheel_Transform.DOScale(wheelSmallScale, 0.3f).SetEase(Ease.InOutCubic).WaitForCompletion();
+
+    // Move to bottom position and scale up to final size; green pinata appears at top of wheel
+    if (GreenPinataOnWheel) GreenPinataOnWheel.SetActive(true);
+    Wheel_Transform.DOAnchorPos(wheelFinalAnchoredPos, 0.5f).SetEase(Ease.InOutCubic);
+    yield return Wheel_Transform.DOScale(wheelFinalScale, 0.5f).SetEase(Ease.InOutCubic).WaitForCompletion();
+
+    yield return new WaitForSeconds(0.3f);
     RotateWheel();
     DOVirtual.DelayedCall(2f, () => StopWheel());
   }
@@ -130,6 +163,7 @@ public class BonusController : MonoBehaviour
     {
       if (_audioManager) _audioManager.SwitchBGSound(false);
       if (Bonus_Object) Bonus_Object.SetActive(false);
+      if (Wheel_Transform) { Wheel_Transform.anchoredPosition = Vector2.zero; Wheel_Transform.localScale = Vector3.one; }
       isBonusDone = true;
     });
   }

@@ -1066,6 +1066,13 @@ MonoBehaviour:
   SmallReelFrame: {fileID: 275158966}
   GoalFrameSprite: {fileID: 0}
   SpinsRemainingFrameSprite: {fileID: 717144221660794061, guid: e2e4ce60d823fed4f80cdd64e4736d33, type: 3}
+  pinataEarlyStart: 0.15
+  WheelBonusBoard: {fileID: 0}
+  WheelBonusGrandText: {fileID: 0}
+  WheelBonusMegaText: {fileID: 0}
+  WheelBonusMinorText: {fileID: 0}
+  WheelBonusMajorText: {fileID: 0}
+  WheelBonusMiniText: {fileID: 0}
   PickJackpotPanel: {fileID: 2049933750}
   PinataButtons:
   - {fileID: 1076849812}
@@ -16382,6 +16389,7 @@ MonoBehaviour:
   uiManager: {fileID: 117472470}
   TempList: []
   SocketManager: {fileID: 839819183}
+  bonusController: {fileID: 0}
   IconSizeFactor: 130
   minSpinDuration: 1
   stopButtonWindow: 0.5

@@ -56,6 +56,13 @@ public class UIManager : MonoBehaviour
   [SerializeField] private TMP_Text RedMeterText;
   [SerializeField] private TMP_Text BlueMeterText;
 
+  [Header("Reel Frame")]
+  [SerializeField] private Image ReelFrame;
+  [SerializeField] private Sprite DefaultReelFrameSprite;
+  [SerializeField] private Sprite GreenReelFrameSprite;
+  [SerializeField] private Sprite RedReelFrameSprite;
+  [SerializeField] private Sprite BlueReelFrameSprite;
+
   [Header("Intro")]
   [SerializeField] private RectTransform PinataTrio;
   [SerializeField] private RectTransform GameContent;
@@ -67,6 +74,23 @@ public class UIManager : MonoBehaviour
   [SerializeField] private RectTransform BluePinata;
   [SerializeField] private float pinataScrollAmount = 250f;
   [SerializeField] private float pinataRedDelay = 0.3f;
+
+  [Header("Feature Pinata UI")]
+  [SerializeField] private float featureHideAmount = 550f;
+  [SerializeField] private Sprite BustedRedPinataSprite;
+  [SerializeField] private Sprite BustedBluePinataSprite;
+  [SerializeField] private Image SmallReelFrame;
+  [SerializeField] private Sprite GoalFrameSprite;
+  [SerializeField] private Sprite SpinsRemainingFrameSprite;
+  [SerializeField] private float pinataEarlyStart = 0.15f;
+
+  [Header("Wheel Bonus UI")]
+  [SerializeField] private GameObject WheelBonusBoard;
+  [SerializeField] private TMP_Text WheelBonusGrandText;
+  [SerializeField] private TMP_Text WheelBonusMegaText;
+  [SerializeField] private TMP_Text WheelBonusMinorText;
+  [SerializeField] private TMP_Text WheelBonusMajorText;
+  [SerializeField] private TMP_Text WheelBonusMiniText;
 
   [Header("Pick Jackpot UI")]
   [SerializeField] private GameObject PickJackpotPanel;
@@ -262,9 +286,26 @@ public class UIManager : MonoBehaviour
   internal bool isExit = false;
   internal int FreeSpins;
   private Vector2 _pickJackpotPanelOrigin;
+  private Vector2[] _jackpotRevealImageOrigins;
+  private Vector2 _greenPinataOrigin;
+  private Vector2 _redPinataOrigin;
+  private Vector2 _bluePinataOrigin;
+  private Vector2 _smallReelFrameOrigin;
+  private Sprite _redPinataOriginalSprite;
+  private Sprite _bluePinataOriginalSprite;
   private void Start()
   {
     if (PickJackpotPanel) _pickJackpotPanelOrigin = PickJackpotPanel.GetComponent<RectTransform>().anchoredPosition;
+    if (JackpotRevealImages != null)
+    {
+      _jackpotRevealImageOrigins = new Vector2[JackpotRevealImages.Length];
+      for (int i = 0; i < JackpotRevealImages.Length; i++)
+        _jackpotRevealImageOrigins[i] = JackpotRevealImages[i].rectTransform.anchoredPosition;
+    }
+    if (GreenPinata) _greenPinataOrigin = GreenPinata.anchoredPosition;
+    if (RedPinata) { _redPinataOrigin = RedPinata.anchoredPosition; _redPinataOriginalSprite = RedPinata.GetComponent<Image>()?.sprite; }
+    if (BluePinata) { _bluePinataOrigin = BluePinata.anchoredPosition; _bluePinataOriginalSprite = BluePinata.GetComponent<Image>()?.sprite; }
+    if (SmallReelFrame) _smallReelFrameOrigin = SmallReelFrame.rectTransform.anchoredPosition;
     StartCoroutine(PlayIntro());
 
     if (Menu_Button) Menu_Button.onClick.RemoveAllListeners();
@@ -701,6 +742,98 @@ public class UIManager : MonoBehaviour
     if (BlueMeterText) BlueMeterText.text = blue.ToString();
   }
 
+  internal void LockFeatureUI(bool locked)
+  {
+    if (Menu_Button) Menu_Button.interactable = !locked;
+    if (GameExit_Button) GameExit_Button.interactable = !locked;
+  }
+
+  internal void SetReelFrame(string feature)
+  {
+    if (ReelFrame == null) return;
+    switch (feature)
+    {
+      case "wheelBonus":  ReelFrame.sprite = GreenReelFrameSprite; break;
+      case "pickJackpot": ReelFrame.sprite = RedReelFrameSprite;   break;
+      case "linkBonus":   ReelFrame.sprite = BlueReelFrameSprite;  break;
+      default:            ReelFrame.sprite = DefaultReelFrameSprite; break;
+    }
+  }
+
+  internal IEnumerator SlideContentDown()
+  {
+    yield return GameContent.DOAnchorPosY(GameContent.anchoredPosition.y - featureHideAmount, 0.5f)
+      .SetEase(Ease.InOutCubic).WaitForCompletion();
+    // Reset pinatas and small frame to pre-intro local Y while hidden, so SlideContentUp can animate them back up
+    if (GreenPinata) GreenPinata.anchoredPosition = _greenPinataOrigin;
+    if (BluePinata) BluePinata.anchoredPosition = _bluePinataOrigin;
+    if (RedPinata) RedPinata.anchoredPosition = new Vector2(RedPinata.anchoredPosition.x, _redPinataOrigin.y);
+    if (SmallReelFrame && SmallReelFrame.gameObject.activeSelf)
+      SmallReelFrame.rectTransform.anchoredPosition = _smallReelFrameOrigin;
+  }
+
+  internal IEnumerator SlideContentUp()
+  {
+    float slideDuration = 0.5f;
+    GameContent.DOAnchorPosY(GameContent.anchoredPosition.y + featureHideAmount, slideDuration).SetEase(Ease.OutCubic);
+    yield return new WaitForSeconds(Mathf.Max(0f, slideDuration - pinataEarlyStart));
+    if (GreenPinata) GreenPinata.DOAnchorPosY(GreenPinata.anchoredPosition.y + pinataScrollAmount, 0.6f).SetEase(Ease.OutBack);
+    if (BluePinata) BluePinata.DOAnchorPosY(BluePinata.anchoredPosition.y + pinataScrollAmount, 0.6f).SetEase(Ease.OutBack);
+    yield return new WaitForSeconds(pinataRedDelay);
+    if (SmallReelFrame && SmallReelFrame.gameObject.activeSelf)
+      SmallReelFrame.rectTransform.DOAnchorPosY(SmallReelFrame.rectTransform.anchoredPosition.y + pinataScrollAmount, 0.6f).SetEase(Ease.OutBack);
+    if (RedPinata)
+      yield return RedPinata.DOAnchorPosY(RedPinata.anchoredPosition.y + pinataScrollAmount, 0.6f).SetEase(Ease.OutBack).WaitForCompletion();
+  }
+
+  internal void SetupFeaturePinata(string feature)
+  {
+    if (feature == "wheelBonus")
+    {
+      if (WheelBonusBoard) WheelBonusBoard.SetActive(true);
+    }
+    else if (feature == "pickJackpot" && RedPinata)
+    {
+      Image img = RedPinata.GetComponent<Image>();
+      if (img && BustedRedPinataSprite) img.sprite = BustedRedPinataSprite;
+      RedPinata.anchoredPosition = new Vector2(0f, RedPinata.anchoredPosition.y);
+      if (SmallReelFrame) { SmallReelFrame.sprite = GoalFrameSprite; SmallReelFrame.gameObject.SetActive(true); }
+    }
+    else if (feature == "linkBonus" && BluePinata)
+    {
+      Image img = BluePinata.GetComponent<Image>();
+      if (img && BustedBluePinataSprite) img.sprite = BustedBluePinataSprite;
+      BluePinata.anchoredPosition = new Vector2(0f, BluePinata.anchoredPosition.y);
+      if (SmallReelFrame) { SmallReelFrame.sprite = SpinsRemainingFrameSprite; SmallReelFrame.gameObject.SetActive(true); }
+      if (GreenPinata) GreenPinata.gameObject.SetActive(false);
+      if (RedPinata) RedPinata.gameObject.SetActive(false);
+    }
+  }
+
+  internal void CleanupFeaturePinata(string feature)
+  {
+    if (SmallReelFrame) SmallReelFrame.gameObject.SetActive(false);
+    if (feature == "wheelBonus")
+    {
+      if (WheelBonusBoard) WheelBonusBoard.SetActive(false);
+    }
+    else if (feature == "pickJackpot" && RedPinata)
+    {
+      Image img = RedPinata.GetComponent<Image>();
+      if (img && _redPinataOriginalSprite) img.sprite = _redPinataOriginalSprite;
+      // Restore original X only — Y is already at the correct post-animation position
+      RedPinata.anchoredPosition = new Vector2(_redPinataOrigin.x, RedPinata.anchoredPosition.y);
+    }
+    else if (feature == "linkBonus" && BluePinata)
+    {
+      Image img = BluePinata.GetComponent<Image>();
+      if (img && _bluePinataOriginalSprite) img.sprite = _bluePinataOriginalSprite;
+      BluePinata.anchoredPosition = new Vector2(_bluePinataOrigin.x, BluePinata.anchoredPosition.y);
+      if (GreenPinata) GreenPinata.gameObject.SetActive(true);
+      if (RedPinata) RedPinata.gameObject.SetActive(true);
+    }
+  }
+
   internal void InitialiseUI(List<double> bets, List<Symbol> symbols)
   {
     betAmounts = bets;
@@ -746,10 +879,12 @@ public class UIManager : MonoBehaviour
     }
 
     if (JackpotRevealImages != null)
-      foreach (var img in JackpotRevealImages)
+      for (int i = 0; i < JackpotRevealImages.Length; i++)
       {
-        img.gameObject.SetActive(false);
-        img.transform.localScale = Vector3.one;
+        JackpotRevealImages[i].gameObject.SetActive(false);
+        JackpotRevealImages[i].transform.localScale = Vector3.one;
+        if (_jackpotRevealImageOrigins != null)
+          JackpotRevealImages[i].rectTransform.anchoredPosition = _jackpotRevealImageOrigins[i];
       }
 
     for (int i = 0; i < PinataButtons.Length; i++)
@@ -885,6 +1020,9 @@ public class UIManager : MonoBehaviour
         .Join(FallingJackpotRT.DOLocalRotate(new Vector3(0, 0, -180), 0.6f, RotateMode.LocalAxisAdd))
         .WaitForCompletion();
 
+      // at apex: reels slide back up in parallel with the jackpot falling
+      StartCoroutine(SlideContentUp());
+
       // fall to landing point while rotating another 180° CW, ends right-side up
       float landingY = JackpotLandingPoint != null
         ? ((RectTransform)JackpotLandingPoint).anchoredPosition.y : 0;
@@ -918,6 +1056,11 @@ public class UIManager : MonoBehaviour
     if (MajorPayoutText) MajorPayoutText.text = (bet * jackpotMultipliers[2]).ToString("F2");
     if (MegaPayoutText) MegaPayoutText.text = (bet * jackpotMultipliers[3]).ToString("F2");
     if (GrandPayoutText) GrandPayoutText.text = (bet * jackpotMultipliers[4]).ToString("F2");
+    if (WheelBonusMiniText) WheelBonusMiniText.text = (bet * jackpotMultipliers[0]).ToString("F2");
+    if (WheelBonusMinorText) WheelBonusMinorText.text = (bet * jackpotMultipliers[1]).ToString("F2");
+    if (WheelBonusMajorText) WheelBonusMajorText.text = (bet * jackpotMultipliers[2]).ToString("F2");
+    if (WheelBonusMegaText) WheelBonusMegaText.text = (bet * jackpotMultipliers[3]).ToString("F2");
+    if (WheelBonusGrandText) WheelBonusGrandText.text = (bet * jackpotMultipliers[4]).ToString("F2");
   }
 
   private void ShowSlide(int index)

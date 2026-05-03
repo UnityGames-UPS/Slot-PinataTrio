@@ -100,11 +100,14 @@ public class SlotBehaviour : MonoBehaviour
   [SerializeField]
   private SocketIOManager SocketManager;
 
+  [SerializeField] private BonusController bonusController;
+
   private List<Tweener> alltweens = new List<Tweener>();
   private Coroutine AutoSpinRoutine = null;
   private Coroutine tweenroutine;
   private Tween BalanceTween;
   internal bool IsAutoSpin = false;
+  private bool _isFeatureActive = false;
   private bool IsSpinning = false;
   private bool StopSpinToggle = false;
   private bool CheckSpinAudio = false;
@@ -436,6 +439,7 @@ public class SlotBehaviour : MonoBehaviour
     foreach (var feature in features)
     {
       if (!feature.triggered) continue;
+      uiManager.SetReelFrame(feature.feature);
       switch (feature.feature)
       {
         case "pickJackpot":
@@ -448,21 +452,49 @@ public class SlotBehaviour : MonoBehaviour
           // TODO: wire up link bonus
           break;
       }
+      uiManager.SetReelFrame("default");
     }
   }
 
   private IEnumerator HandleWheelBonus(PendingFeature feature)
   {
+    _isFeatureActive = true;
+    uiManager.LockFeatureUI(true);
+    ToggleButtonGrp(false);
     CheckPopups = true;
+
+    uiManager.SetupFeaturePinata("wheelBonus");
+    yield return StartCoroutine(uiManager.SlideContentDown());
+
     SocketManager.SendWheelBonus();
     yield return new WaitUntil(() => SocketManager.isWheelBonusDone);
     SocketManager.isWheelBonusDone = false;
+
+    var wbFeature = SocketManager.ResultData.payload?.triggeredFeatures
+      ?.Find(f => f.feature == "wheelBonus");
+    string jackpotTier = wbFeature?.jackpotTier ?? "mini";
+    double awardValue = wbFeature?.awardValue ?? 0;
+    int segmentIndex = bonusController != null ? bonusController.GetSegmentIndex(jackpotTier) : 0;
+
+    if (bonusController != null) bonusController.StartWheelBonus(segmentIndex, awardValue);
+    yield return new WaitUntil(() => bonusController == null || bonusController.isBonusDone);
+
+    yield return StartCoroutine(uiManager.SlideContentUp());
+
+    uiManager.CleanupFeaturePinata("wheelBonus");
     CheckPopups = false;
+    _isFeatureActive = false;
+    uiManager.LockFeatureUI(false);
   }
 
   private IEnumerator HandleRedPinataPick()
   {
+    _isFeatureActive = true;
+    uiManager.LockFeatureUI(true);
+    ToggleButtonGrp(false);
     CheckPopups = true;
+    uiManager.SetupFeaturePinata("pickJackpot");
+    yield return StartCoroutine(uiManager.SlideContentDown());
     uiManager.ShowPickJackpotScreen();
 
     yield return new WaitUntil(() => uiManager.PickJackpotSelected);
@@ -485,6 +517,9 @@ public class SlotBehaviour : MonoBehaviour
     _isInFreeSpin = false;
 
     yield return StartCoroutine(uiManager.ShowJackpotWin(goalJackpot, awardValue));
+    uiManager.CleanupFeaturePinata("pickJackpot");
+    _isFeatureActive = false;
+    uiManager.LockFeatureUI(false);
   }
 
   private IEnumerator FreeSpinLoop()
@@ -509,10 +544,12 @@ public class SlotBehaviour : MonoBehaviour
 
   private void ToggleButtonGrp(bool toggle)
   {
-    if (MaxBet_Button) MaxBet_Button.interactable = toggle;
-    if (AutoSpin_Button) AutoSpin_Button.interactable = toggle;
-    if (BetMinus_Button) BetMinus_Button.interactable = toggle;
-    if (BetPlus_Button) BetPlus_Button.interactable = toggle;
+    bool active = toggle && !_isFeatureActive;
+    if (Spin_Button) Spin_Button.interactable = active;
+    if (MaxBet_Button) MaxBet_Button.interactable = active;
+    if (AutoSpin_Button) AutoSpin_Button.interactable = active;
+    if (BetMinus_Button) BetMinus_Button.interactable = active;
+    if (BetPlus_Button) BetPlus_Button.interactable = active;
   }
 
   #region GameAnimation
