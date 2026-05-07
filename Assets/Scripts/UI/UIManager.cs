@@ -76,6 +76,8 @@ public class UIManager : MonoBehaviour
   [SerializeField] private float pinataRedDelay = 0.3f;
 
   [Header("Feature Pinata UI")]
+  [SerializeField] private RectTransform Payouts;
+  [SerializeField] private float payoutsExtraSlide = 250f;
   [SerializeField] private float featureHideAmount = 550f;
   [SerializeField] private Sprite BustedRedPinataSprite;
   [SerializeField] private Sprite BustedBluePinataSprite;
@@ -278,6 +280,7 @@ public class UIManager : MonoBehaviour
   [SerializeField]
   private SlotBehaviour slotManager;
 
+  private CanvasGroup _payoutsCanvasGroup;
   private bool isMusic = true;
   private bool isSound = true;
   private Tween WinPopupTextTween;
@@ -301,10 +304,11 @@ public class UIManager : MonoBehaviour
       for (int i = 0; i < JackpotRevealImages.Length; i++)
         _jackpotRevealImageOrigins[i] = JackpotRevealImages[i].rectTransform.anchoredPosition;
     }
+    if (Payouts) _payoutsCanvasGroup = Payouts.GetComponent<CanvasGroup>();
     if (GreenPinata) _greenPinataOrigin = GreenPinata.anchoredPosition;
     if (RedPinata) { _redPinataOrigin = RedPinata.anchoredPosition; _redPinataOriginalSprite = RedPinata.GetComponent<Image>()?.sprite; }
     if (BluePinata) { _bluePinataOrigin = BluePinata.anchoredPosition; _bluePinataOriginalSprite = BluePinata.GetComponent<Image>()?.sprite; }
-    if (SmallReelFrame) _smallReelFrameOrigin = SmallReelFrame.rectTransform.anchoredPosition;
+    if (SmallReelFrame) { _smallReelFrameOrigin = SmallReelFrame.rectTransform.anchoredPosition; SmallReelFrame.gameObject.SetActive(false); }
     StartCoroutine(PlayIntro());
 
     if (Menu_Button) Menu_Button.onClick.RemoveAllListeners();
@@ -752,7 +756,7 @@ public class UIManager : MonoBehaviour
     if (ReelFrame == null) return;
     switch (feature)
     {
-      case "wheelBonus":  ReelFrame.sprite = GreenReelFrameSprite; break;
+      case "wheelBonus":  return;
       case "pickJackpot": ReelFrame.sprite = RedReelFrameSprite;   break;
       case "linkBonus":   ReelFrame.sprite = BlueReelFrameSprite;  break;
       default:            ReelFrame.sprite = DefaultReelFrameSprite; break;
@@ -769,10 +773,22 @@ public class UIManager : MonoBehaviour
     if (RedPinata) RedPinata.anchoredPosition = new Vector2(RedPinata.anchoredPosition.x, _redPinataOrigin.y);
     if (SmallReelFrame && SmallReelFrame.gameObject.activeSelf)
       SmallReelFrame.rectTransform.anchoredPosition = _smallReelFrameOrigin;
+    if (Payouts)
+    {
+      Payouts.DOAnchorPosY(Payouts.anchoredPosition.y - payoutsExtraSlide, 0.3f).SetEase(Ease.InOutCubic);
+      if (_payoutsCanvasGroup) yield return _payoutsCanvasGroup.DOFade(0f, 0.3f).WaitForCompletion();
+      else yield return new WaitForSeconds(0.3f);
+    }
   }
 
   internal IEnumerator SlideContentUp()
   {
+    if (Payouts)
+    {
+      Payouts.DOAnchorPosY(Payouts.anchoredPosition.y + payoutsExtraSlide, 0.3f).SetEase(Ease.InOutCubic);
+      if (_payoutsCanvasGroup) yield return _payoutsCanvasGroup.DOFade(1f, 0.3f).WaitForCompletion();
+      else yield return new WaitForSeconds(0.3f);
+    }
     float slideDuration = 0.5f;
     GameContent.DOAnchorPosY(GameContent.anchoredPosition.y + featureHideAmount, slideDuration).SetEase(Ease.OutCubic);
     yield return new WaitForSeconds(Mathf.Max(0f, slideDuration - pinataEarlyStart));

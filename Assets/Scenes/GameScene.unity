@@ -1060,6 +1060,8 @@ MonoBehaviour:
   BluePinata: {fileID: 450896178}
   pinataScrollAmount: 250
   pinataRedDelay: 0.3
+  Payouts: {fileID: 1446319510}
+  payoutsExtraSlide: 250
   featureHideAmount: 550
   BustedRedPinataSprite: {fileID: 0}
   BustedBluePinataSprite: {fileID: -2615874204119335, guid: e2e4ce60d823fed4f80cdd64e4736d33, type: 3}
@@ -12656,6 +12658,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1446319510}
+  - component: {fileID: 1446319511}
   m_Layer: 5
   m_Name: Payouts
   m_TagString: Untagged
@@ -12684,6 +12687,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 250}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &1446319511
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1446319509}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1446505151
 GameObject:
   m_ObjectHideFlags: 0
