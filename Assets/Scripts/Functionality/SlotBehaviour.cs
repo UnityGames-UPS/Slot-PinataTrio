@@ -472,11 +472,10 @@ public class SlotBehaviour : MonoBehaviour
 
     var wbFeature = SocketManager.ResultData.payload?.triggeredFeatures
       ?.Find(f => f.feature == "wheelBonus");
-    string jackpotTier = wbFeature?.jackpotTier ?? "mini";
     double awardValue = wbFeature?.awardValue ?? 0;
-    int segmentIndex = bonusController != null ? bonusController.GetSegmentIndex(jackpotTier) : 0;
+    List<string> spinHistory = wbFeature?.spinHistory ?? new List<string> { wbFeature?.jackpotTier ?? "mini" };
 
-    if (bonusController != null) bonusController.StartWheelBonus(segmentIndex, awardValue);
+    if (bonusController != null) bonusController.StartWheelBonus(spinHistory, awardValue);
     yield return new WaitUntil(() => bonusController == null || bonusController.isBonusDone);
 
     yield return StartCoroutine(uiManager.SlideContentUp());

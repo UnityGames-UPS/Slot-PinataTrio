@@ -85,11 +85,10 @@ public class UIManager : MonoBehaviour
   [SerializeField] private float pinataEarlyStart = 0.15f;
 
   [Header("Wheel Bonus UI")]
-  [SerializeField] private GameObject WheelBonusBoard;
   [SerializeField] private TMP_Text WheelBonusGrandText;
   [SerializeField] private TMP_Text WheelBonusMegaText;
-  [SerializeField] private TMP_Text WheelBonusMinorText;
   [SerializeField] private TMP_Text WheelBonusMajorText;
+  [SerializeField] private TMP_Text WheelBonusMinorText;
   [SerializeField] private TMP_Text WheelBonusMiniText;
 
   [Header("Pick Jackpot UI")]
@@ -788,11 +787,7 @@ public class UIManager : MonoBehaviour
 
   internal void SetupFeaturePinata(string feature)
   {
-    if (feature == "wheelBonus")
-    {
-      if (WheelBonusBoard) WheelBonusBoard.SetActive(true);
-    }
-    else if (feature == "pickJackpot" && RedPinata)
+    if (feature == "pickJackpot" && RedPinata)
     {
       Image img = RedPinata.GetComponent<Image>();
       if (img && BustedRedPinataSprite) img.sprite = BustedRedPinataSprite;
@@ -812,12 +807,8 @@ public class UIManager : MonoBehaviour
 
   internal void CleanupFeaturePinata(string feature)
   {
-    if (SmallReelFrame) SmallReelFrame.gameObject.SetActive(false);
-    if (feature == "wheelBonus")
-    {
-      if (WheelBonusBoard) WheelBonusBoard.SetActive(false);
-    }
-    else if (feature == "pickJackpot" && RedPinata)
+    if (SmallReelFrame) { SmallReelFrame.rectTransform.anchoredPosition = _smallReelFrameOrigin; SmallReelFrame.gameObject.SetActive(false); }
+    if (feature == "pickJackpot" && RedPinata)
     {
       Image img = RedPinata.GetComponent<Image>();
       if (img && _redPinataOriginalSprite) img.sprite = _redPinataOriginalSprite;
