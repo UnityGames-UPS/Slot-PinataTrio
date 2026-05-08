@@ -78,7 +78,10 @@ public class UIManager : MonoBehaviour
   [Header("Feature Pinata UI")]
   [SerializeField] private RectTransform Payouts;
   [SerializeField] private float payoutsExtraSlide = 250f;
+  [SerializeField] private float payoutsSlideDownDuration = 0.3f;
+  [SerializeField] private float payoutsSlideUpDuration = 0.5f;
   [SerializeField] private float featureHideAmount = 550f;
+  [SerializeField] private float slideContentDuration = 0.8f;
   [SerializeField] private Sprite BustedRedPinataSprite;
   [SerializeField] private Sprite BustedBluePinataSprite;
   [SerializeField] private Image SmallReelFrame;
@@ -765,7 +768,7 @@ public class UIManager : MonoBehaviour
 
   internal IEnumerator SlideContentDown()
   {
-    yield return GameContent.DOAnchorPosY(GameContent.anchoredPosition.y - featureHideAmount, 0.5f)
+    yield return GameContent.DOAnchorPosY(GameContent.anchoredPosition.y - featureHideAmount, slideContentDuration)
       .SetEase(Ease.InOutCubic).WaitForCompletion();
     // Reset pinatas and small frame to pre-intro local Y while hidden, so SlideContentUp can animate them back up
     if (GreenPinata) GreenPinata.anchoredPosition = _greenPinataOrigin;
@@ -775,9 +778,9 @@ public class UIManager : MonoBehaviour
       SmallReelFrame.rectTransform.anchoredPosition = _smallReelFrameOrigin;
     if (Payouts)
     {
-      Payouts.DOAnchorPosY(Payouts.anchoredPosition.y - payoutsExtraSlide, 0.3f).SetEase(Ease.InOutCubic);
-      if (_payoutsCanvasGroup) yield return _payoutsCanvasGroup.DOFade(0f, 0.3f).WaitForCompletion();
-      else yield return new WaitForSeconds(0.3f);
+      Payouts.DOAnchorPosY(Payouts.anchoredPosition.y - payoutsExtraSlide, payoutsSlideDownDuration).SetEase(Ease.InOutCubic);
+      if (_payoutsCanvasGroup) yield return _payoutsCanvasGroup.DOFade(0f, payoutsSlideDownDuration).WaitForCompletion();
+      else yield return new WaitForSeconds(payoutsSlideDownDuration);
     }
   }
 
@@ -785,9 +788,9 @@ public class UIManager : MonoBehaviour
   {
     if (Payouts)
     {
-      Payouts.DOAnchorPosY(Payouts.anchoredPosition.y + payoutsExtraSlide, 0.3f).SetEase(Ease.InOutCubic);
-      if (_payoutsCanvasGroup) yield return _payoutsCanvasGroup.DOFade(1f, 0.3f).WaitForCompletion();
-      else yield return new WaitForSeconds(0.3f);
+      Payouts.DOAnchorPosY(Payouts.anchoredPosition.y + payoutsExtraSlide, payoutsSlideUpDuration).SetEase(Ease.OutCubic);
+      if (_payoutsCanvasGroup) yield return _payoutsCanvasGroup.DOFade(1f, payoutsSlideUpDuration).WaitForCompletion();
+      else yield return new WaitForSeconds(payoutsSlideUpDuration);
     }
     float slideDuration = 0.5f;
     GameContent.DOAnchorPosY(GameContent.anchoredPosition.y + featureHideAmount, slideDuration).SetEase(Ease.OutCubic);

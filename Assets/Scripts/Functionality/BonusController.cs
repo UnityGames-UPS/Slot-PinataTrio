@@ -231,7 +231,6 @@ public class BonusController : MonoBehaviour
 
   private void RotateWheel()
   {
-    if (Wheel_Transform) Wheel_Transform.localEulerAngles = Vector3.zero;
     if (_spinCoroutine != null) StopCoroutine(_spinCoroutine);
     _spinCoroutine = StartCoroutine(SpinUpRoutine());
     if (_audioManager) _audioManager.PlayBonusAudio("cycleSpin");
