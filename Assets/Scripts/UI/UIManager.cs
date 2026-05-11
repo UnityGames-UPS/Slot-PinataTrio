@@ -89,6 +89,10 @@ public class UIManager : MonoBehaviour
   [SerializeField] private Sprite SpinsRemainingFrameSprite;
   [SerializeField] private float pinataEarlyStart = 0.15f;
 
+  [Header("Link Bonus UI")]
+  [SerializeField] private GameObject LinkBonusFeature;
+  [SerializeField] private TMP_Text LinkBonusSpinsRemainingText;
+
   [Header("Wheel Bonus UI")]
   [SerializeField] private TMP_Text WheelBonusGrandText;
   [SerializeField] private TMP_Text WheelBonusMegaText;
@@ -740,6 +744,11 @@ public class UIManager : MonoBehaviour
     }
   }
 
+  internal void UpdateLinkBonusSpinsRemaining(int count)
+  {
+    if (LinkBonusSpinsRemainingText) LinkBonusSpinsRemainingText.text = count.ToString();
+  }
+
   internal void UpdateMeters(int green, int red, int blue)
   {
     // NULL GUARDS SINCE METER UI OBJECTS ARE NOT YET WIRED. WIRE ONCE METER DISPLAY IS BUILT IN SCENE.
@@ -759,9 +768,9 @@ public class UIManager : MonoBehaviour
     if (ReelFrame == null) return;
     switch (feature)
     {
-      case "wheelBonus":  return;
+      case "wheelBonus":
+      case "linkBonus":   return;
       case "pickJackpot": ReelFrame.sprite = RedReelFrameSprite;   break;
-      case "linkBonus":   ReelFrame.sprite = BlueReelFrameSprite;  break;
       default:            ReelFrame.sprite = DefaultReelFrameSprite; break;
     }
   }
@@ -821,6 +830,7 @@ public class UIManager : MonoBehaviour
       if (SmallReelFrame) { SmallReelFrame.sprite = SpinsRemainingFrameSprite; SmallReelFrame.gameObject.SetActive(true); }
       if (GreenPinata) GreenPinata.gameObject.SetActive(false);
       if (RedPinata) RedPinata.gameObject.SetActive(false);
+      if (LinkBonusFeature) LinkBonusFeature.SetActive(true);
     }
   }
 
@@ -841,6 +851,7 @@ public class UIManager : MonoBehaviour
       BluePinata.anchoredPosition = new Vector2(_bluePinataOrigin.x, BluePinata.anchoredPosition.y);
       if (GreenPinata) GreenPinata.gameObject.SetActive(true);
       if (RedPinata) RedPinata.gameObject.SetActive(true);
+      if (LinkBonusFeature) LinkBonusFeature.SetActive(false);
     }
   }
 

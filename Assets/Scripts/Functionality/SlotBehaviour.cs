@@ -101,6 +101,8 @@ public class SlotBehaviour : MonoBehaviour
   private SocketIOManager SocketManager;
 
   [SerializeField] private BonusController bonusController;
+  [SerializeField] private LinkBonusController linkBonusController;
+  [SerializeField] private float linkBonusPreSpinGlowDuration = 0.5f;
 
   private List<Tweener> alltweens = new List<Tweener>();
   private Coroutine AutoSpinRoutine = null;
@@ -449,7 +451,7 @@ public class SlotBehaviour : MonoBehaviour
           yield return StartCoroutine(HandleWheelBonus(feature));
           break;
         case "linkBonus":
-          // TODO: wire up link bonus
+          yield return StartCoroutine(HandleLinkBonus(feature));
           break;
       }
       uiManager.SetReelFrame("default");
@@ -532,6 +534,79 @@ public class SlotBehaviour : MonoBehaviour
       if (!SocketManager.ResultData.payload.isFreeSpinActive)
         break;
     }
+  }
+
+  private IEnumerator HandleLinkBonus(PendingFeature feature)
+  {
+    _isFeatureActive = true;
+    uiManager.LockFeatureUI(true);
+    ToggleButtonGrp(false);
+    CheckPopups = true;
+
+    var targetZones = SocketManager.ResultData.payload?.linkBonusTargetZones;
+    int initialSpins = SocketManager.ResultData.payload?.freeSpinsRemaining ?? 3;
+
+    uiManager.SetupFeaturePinata("linkBonus");
+    uiManager.UpdateLinkBonusSpinsRemaining(initialSpins);
+    yield return StartCoroutine(uiManager.SlideContentDown());
+
+    yield return StartCoroutine(linkBonusController.StartLinkBonus(targetZones));
+
+    _isInFreeSpin = true;
+    yield return StartCoroutine(LinkBonusFreeSpinLoop());
+    _isInFreeSpin = false;
+
+    var lbFeature = SocketManager.ResultData.payload?.triggeredFeatures?.Find(f => f.feature == "linkBonus");
+    double awardValue = lbFeature?.awardValue ?? 0;
+    var allLockedCells = lbFeature?.lockedCells ?? SocketManager.ResultData.payload?.linkBonusLockedCells;
+
+    yield return StartCoroutine(linkBonusController.PlayTotalWinSequence(allLockedCells, awardValue));
+
+    yield return StartCoroutine(uiManager.SlideContentUp());
+    uiManager.CleanupFeaturePinata("linkBonus");
+    linkBonusController.ResetAll();
+
+    BalanceTween?.Kill();
+    if (Balance_text) Balance_text.text = SocketManager.ResultData.player.balance.ToString("F3");
+    currentBalance = SocketManager.PlayerData.balance;
+
+    CheckPopups = false;
+    _isFeatureActive = false;
+    uiManager.LockFeatureUI(false);
+  }
+
+  private IEnumerator LinkBonusFreeSpinLoop()
+  {
+    while (true)
+    {
+      yield return new WaitForSeconds(SpinDelay);
+      yield return StartCoroutine(LinkBonusSpinRound());
+      if (!(SocketManager.ResultData.payload?.isBluePinataLinkBonus ?? false)) break;
+    }
+  }
+
+  private IEnumerator LinkBonusSpinRound()
+  {
+    linkBonusController.ShowPreSpinGlow();
+    yield return new WaitForSeconds(linkBonusPreSpinGlowDuration);
+    linkBonusController.HidePreSpinGlow();
+
+    linkBonusController.StartSpinRound();
+
+    SocketManager.AccumulateResult(BetCounter);
+    yield return new WaitUntil(() => SocketManager.isResultdone);
+
+    var matrix = SocketManager.ResultData.matrix;
+    var lockedCells = SocketManager.ResultData.payload?.linkBonusLockedCells;
+    int spinsRemaining = SocketManager.ResultData.payload?.freeSpinsRemaining ?? 0;
+
+    yield return StartCoroutine(linkBonusController.StopCellsSequential(matrix, lockedCells));
+    linkBonusController.UpdateLockedCells(lockedCells);
+    uiManager.UpdateLinkBonusSpinsRemaining(spinsRemaining);
+
+    BalanceTween?.Kill();
+    if (Balance_text) Balance_text.text = SocketManager.ResultData.player.balance.ToString("F3");
+    currentBalance = SocketManager.PlayerData.balance;
   }
   #endregion
 
