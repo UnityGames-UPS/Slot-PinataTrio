@@ -548,7 +548,6 @@ public class SlotBehaviour : MonoBehaviour
 
     uiManager.SetupFeaturePinata("linkBonus");
     uiManager.UpdateLinkBonusSpinsRemaining(initialSpins);
-    yield return StartCoroutine(uiManager.SlideContentDown());
 
     yield return StartCoroutine(linkBonusController.StartLinkBonus(targetZones));
 
@@ -562,7 +561,6 @@ public class SlotBehaviour : MonoBehaviour
 
     yield return StartCoroutine(linkBonusController.PlayTotalWinSequence(allLockedCells, awardValue));
 
-    yield return StartCoroutine(uiManager.SlideContentUp());
     uiManager.CleanupFeaturePinata("linkBonus");
     linkBonusController.ResetAll();
 

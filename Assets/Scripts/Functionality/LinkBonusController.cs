@@ -35,10 +35,16 @@ public class LinkBonusController : MonoBehaviour
   [SerializeField] private GameObject TotalWinPanel;
   [SerializeField] private TMP_Text TotalWinText;
   [SerializeField] private RectTransform TotalWinTarget;
+  [SerializeField] private RectTransform SpinRemainingArea;
+  [SerializeField] private float spinAreaSlideDistance = 260f;
+  [SerializeField] private RectTransform TotalWinFrame;
+  [SerializeField] private float totalWinSlideDistance = 100f;
   [SerializeField] private float winFlyDuration = 0.4f;
   [SerializeField] private float winFlyStagger = 0.1f;
 
   private List<LockedCell> _currentLockedCells = new List<LockedCell>();
+  private Vector2 _spinRemainingAreaOriginalPos;
+  private Vector2 _totalWinFrameOriginalPos;
 
   private LinkBonusCell GetCell(int row, int col) => cells[row * 5 + col];
 
@@ -55,6 +61,9 @@ public class LinkBonusController : MonoBehaviour
 
   public IEnumerator StartLinkBonus(List<LinkBonusZone> targetZones)
   {
+    if (SpinRemainingArea) _spinRemainingAreaOriginalPos = SpinRemainingArea.anchoredPosition;
+    if (TotalWinFrame) _totalWinFrameOriginalPos = TotalWinFrame.anchoredPosition;
+
     _currentLockedCells.Clear();
     if (TotalWinPanel) TotalWinPanel.SetActive(false);
     if (BlueCircle) BlueCircle.gameObject.SetActive(false);
@@ -175,6 +184,15 @@ public class LinkBonusController : MonoBehaviour
 
   public IEnumerator PlayTotalWinSequence(List<LockedCell> allLockedCells, double totalWin)
   {
+    if (SpinRemainingArea)
+    {
+      SpinRemainingArea.DOAnchorPosY(SpinRemainingArea.anchoredPosition.y - spinAreaSlideDistance, 0.4f).SetEase(Ease.InBack);
+      if (TotalWinFrame)
+        yield return TotalWinFrame.DOAnchorPosY(TotalWinFrame.anchoredPosition.y + totalWinSlideDistance, 0.4f).SetEase(Ease.OutBack).WaitForCompletion();
+      else
+        yield return new WaitForSeconds(0.4f);
+    }
+
     if (TotalWinPanel) TotalWinPanel.SetActive(true);
     if (TotalWinText) TotalWinText.text = "0.000";
 
@@ -227,5 +245,7 @@ public class LinkBonusController : MonoBehaviour
     if (LinkBonusGrid) LinkBonusGrid.SetActive(false);
     if (TotalWinPanel) TotalWinPanel.SetActive(false);
     if (BlueCircle) BlueCircle.gameObject.SetActive(false);
+    if (SpinRemainingArea) SpinRemainingArea.anchoredPosition = _spinRemainingAreaOriginalPos;
+    if (TotalWinFrame) TotalWinFrame.anchoredPosition = _totalWinFrameOriginalPos;
   }
 }

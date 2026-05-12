@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 98a74ef7949e0f244bbfe6d94c830278
+guid: 8f8dc2b67587c484d9df9b289dfb79c4
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - DS-Digital
+  - Marvin
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

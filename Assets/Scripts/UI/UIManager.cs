@@ -59,9 +59,7 @@ public class UIManager : MonoBehaviour
   [Header("Reel Frame")]
   [SerializeField] private Image ReelFrame;
   [SerializeField] private Sprite DefaultReelFrameSprite;
-  [SerializeField] private Sprite GreenReelFrameSprite;
   [SerializeField] private Sprite RedReelFrameSprite;
-  [SerializeField] private Sprite BlueReelFrameSprite;
 
   [Header("Intro")]
   [SerializeField] private RectTransform PinataTrio;
@@ -92,6 +90,8 @@ public class UIManager : MonoBehaviour
   [Header("Link Bonus UI")]
   [SerializeField] private GameObject LinkBonusFeature;
   [SerializeField] private TMP_Text LinkBonusSpinsRemainingText;
+  [SerializeField] private GameObject SlotMain;
+  [SerializeField] private GameObject AnimationLayer;
 
   [Header("Wheel Bonus UI")]
   [SerializeField] private TMP_Text WheelBonusGrandText;
@@ -830,6 +830,8 @@ public class UIManager : MonoBehaviour
       if (SmallReelFrame) { SmallReelFrame.sprite = SpinsRemainingFrameSprite; SmallReelFrame.gameObject.SetActive(true); }
       if (GreenPinata) GreenPinata.gameObject.SetActive(false);
       if (RedPinata) RedPinata.gameObject.SetActive(false);
+      if (SlotMain) SlotMain.SetActive(false);
+      if (AnimationLayer) AnimationLayer.SetActive(false);
       if (LinkBonusFeature) LinkBonusFeature.SetActive(true);
     }
   }
@@ -851,6 +853,8 @@ public class UIManager : MonoBehaviour
       BluePinata.anchoredPosition = new Vector2(_bluePinataOrigin.x, BluePinata.anchoredPosition.y);
       if (GreenPinata) GreenPinata.gameObject.SetActive(true);
       if (RedPinata) RedPinata.gameObject.SetActive(true);
+      if (SlotMain) SlotMain.SetActive(true);
+      if (AnimationLayer) AnimationLayer.SetActive(true);
       if (LinkBonusFeature) LinkBonusFeature.SetActive(false);
     }
   }
