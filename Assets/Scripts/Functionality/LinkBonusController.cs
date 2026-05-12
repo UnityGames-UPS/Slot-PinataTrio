@@ -24,6 +24,9 @@ public class LinkBonusController : MonoBehaviour
   [SerializeField] private float zoneRevealDelay = 0.3f;
   [SerializeField] private float flickerDuration = 1.5f;
   [SerializeField] private float flickerInterval = 0.1f;
+  [SerializeField] private float preSpinGlowDuration = 0.5f;
+  [SerializeField] private int flickerMinCount = 2;
+  [SerializeField] private int flickerMaxCount = 4;
 
   [Header("Spin Settings")]
   [SerializeField] private float cellStopStagger = 0.08f;
@@ -60,9 +63,6 @@ public class LinkBonusController : MonoBehaviour
     foreach (var cell in cells)
       cell.Initialize(GetSprite(2));
 
-    foreach (var cell in cells)
-      cell.StartSpin();
-
     yield return StartCoroutine(PlayFlickerAnimation());
 
     if (targetZones != null)
@@ -71,16 +71,31 @@ public class LinkBonusController : MonoBehaviour
         yield return StartCoroutine(RevealZone(zone));
         yield return new WaitForSeconds(zoneRevealDelay);
       }
+
+    foreach (var cell in cells) cell.ShowPreSpinGlow();
+    yield return new WaitForSeconds(preSpinGlowDuration);
+    foreach (var cell in cells) cell.HidePreSpinGlow();
   }
 
   private IEnumerator PlayFlickerAnimation()
   {
     float elapsed = 0f;
+    List<int> indices = new List<int>();
+    for (int i = 0; i < cells.Length; i++) indices.Add(i);
+
     while (elapsed < flickerDuration)
     {
-      cells[Random.Range(0, cells.Length)].ShowPreSpinGlow();
+      int count = Random.Range(flickerMinCount, flickerMaxCount + 1);
+      for (int i = indices.Count - 1; i > 0; i--)
+      {
+        int j = Random.Range(0, i + 1);
+        int temp = indices[i]; indices[i] = indices[j]; indices[j] = temp;
+      }
+      for (int i = 0; i < count; i++)
+        cells[indices[i]].ShowFlickerZone();
+
       yield return new WaitForSeconds(flickerInterval);
-      foreach (var cell in cells) cell.HidePreSpinGlow();
+      foreach (var cell in cells) cell.HideFlickerZone();
       elapsed += flickerInterval * 2f;
     }
   }
@@ -132,8 +147,12 @@ public class LinkBonusController : MonoBehaviour
           int symbolId = int.Parse(matrix[row][col]);
           double? prizeValue = lockedCells?.Find(c => c.position[0] == row && c.position[1] == col)?.prizeValue;
 
+          bool hasPrize = prizeValue.HasValue && prizeValue.Value > 0;
+          bool isJackpot = symbolId >= 3 && symbolId <= 7;
+          Sprite displaySprite = (hasPrize || isJackpot) ? GetSprite(symbolId) : GetSprite(2);
+
           cell.TriggerFlashPinkGlow();
-          cell.StopAt(GetSprite(symbolId), prizeValue);
+          cell.StopAt(displaySprite, prizeValue);
         }
 
         yield return new WaitForSeconds(cellStopStagger);

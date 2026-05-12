@@ -15,9 +15,11 @@ public class LinkBonusCell : MonoBehaviour
   [SerializeField] private TMP_Text PrizeValueText;
   [SerializeField] private float cellHeight = 160f;
   [SerializeField] private float spinSpeed = 0.15f;
+  [SerializeField] private float flickerFadeDuration = 0.08f;
 
   private bool _isLocked = false;
   private Tween _spinTween;
+  private Image _zoneBackgroundImage;
 
   public bool IsLocked => _isLocked;
   public RectTransform CellRect => (RectTransform)transform;
@@ -32,7 +34,12 @@ public class LinkBonusCell : MonoBehaviour
       if (sym) { sym.sprite = defaultSprite; sym.color = Color.white; }
     if (BoxBackground) { var c = BoxBackground.color; c.a = 1f; BoxBackground.color = c; }
     if (PinkGlow) PinkGlow.SetActive(false);
-    if (ZoneBackground) ZoneBackground.SetActive(false);
+    if (ZoneBackground)
+    {
+      _zoneBackgroundImage = ZoneBackground.GetComponent<Image>();
+      ZoneBackground.SetActive(true);
+      if (_zoneBackgroundImage) _zoneBackgroundImage.color = new Color(1, 1, 1, 0);
+    }
     if (MultiplierText) MultiplierText.gameObject.SetActive(false);
     if (PrizeValueText) PrizeValueText.gameObject.SetActive(false);
   }
@@ -70,7 +77,7 @@ public class LinkBonusCell : MonoBehaviour
 
   public void ShowZoneMultiplier(int multiplier)
   {
-    if (ZoneBackground) ZoneBackground.SetActive(true);
+    if (_zoneBackgroundImage) _zoneBackgroundImage.DOFade(1f, 0.2f);
     if (MultiplierText) { MultiplierText.text = $"{multiplier}x"; MultiplierText.gameObject.SetActive(true); }
   }
 
@@ -83,6 +90,17 @@ public class LinkBonusCell : MonoBehaviour
   public void HidePreSpinGlow()
   {
     if (PinkGlow) PinkGlow.SetActive(false);
+  }
+
+  public void ShowFlickerZone()
+  {
+    if (_zoneBackgroundImage) _zoneBackgroundImage.DOFade(1f, flickerFadeDuration);
+  }
+
+  public void HideFlickerZone()
+  {
+    if (_isLocked) return;
+    if (_zoneBackgroundImage) _zoneBackgroundImage.DOFade(0f, flickerFadeDuration);
   }
 
   public void TriggerFlashPinkGlow() => StartCoroutine(FlashPinkGlow());
@@ -109,7 +127,7 @@ public class LinkBonusCell : MonoBehaviour
     _spinTween?.Kill();
     if (SpinStrip) SpinStrip.anchoredPosition = Vector2.zero;
     if (PinkGlow) PinkGlow.SetActive(false);
-    if (ZoneBackground) ZoneBackground.SetActive(false);
+    if (_zoneBackgroundImage) _zoneBackgroundImage.color = new Color(1, 1, 1, 0);
     if (MultiplierText) MultiplierText.gameObject.SetActive(false);
     if (PrizeValueText) PrizeValueText.gameObject.SetActive(false);
     if (StripSymbols != null)

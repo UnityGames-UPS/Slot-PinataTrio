@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(Get-ChildItem -Path \"C:\\\\Unity\\\\UnderPin\\\\UnderpinPinata\\\\Assets\\\\Scripts\" -ErrorAction SilentlyContinue)",
-      "Bash(Select-Object Name)"
+      "Bash(Select-Object Name)",
+      "Bash(Get-ChildItem -Path \"d:\\\\UnityProjects\\\\Underpin\\\\Pinata\\\\UnderpinPinata\\\\Assets\\\\Scripts\" -Recurse -File)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(Sort-Object)"
     ]
   }
 }

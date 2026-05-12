@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: e705b07bdbf623f489c34365ffcdc5da
+guid: 2c43128ee430b5a46a32a5154ebf53eb
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5233421183543399803
-    second: BlueFrame_0
+      213: -7297716294025192242
+    second: blueboardeq_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BlueFrame_0
+      name: blueboardeq_0
       rect:
         serializedVersion: 2
-        x: 13
-        y: 18
-        width: 1309
-        height: 543
+        x: 2
+        y: 7
+        width: 2943
+        height: 1220
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 58a24e259272f57b0800000000000000
-      internalID: -5233421183543399803
+      spriteID: ecc5c0f02bd49ba90800000000000000
+      internalID: -7297716294025192242
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      BlueFrame_0: -5233421183543399803
+      blueboardeq_0: -7297716294025192242
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
