@@ -117,6 +117,11 @@ public class UIManager : MonoBehaviour
   [SerializeField] private ImageAnimation[] PinataButtonAnimations;
   [SerializeField] private Image FreeSpinsUntilImage;
   [SerializeField] private float jackpotLaunchHeight = 500f;
+  [SerializeField] private CanvasGroup PickingJackpotGroup;
+  [SerializeField] private GameObject JackpotPickedObject;
+  [SerializeField] private CanvasGroup JackpotPickedGroup;
+  [SerializeField] private float jackpotTextFadeDuration = 0.4f;
+  [SerializeField] private Vector2 jackpotCenterTarget = new Vector2(0f, -90f);
 
   internal bool PickJackpotSelected = false;
   private int _selectedPinataIndex = -1;
@@ -1014,13 +1019,20 @@ public class UIManager : MonoBehaviour
         JackpotRevealImages[i].DOFade(0f, 0.5f);
 
     RectTransform selectedRT = JackpotRevealImages[_selectedPinataIndex].rectTransform;
-    yield return selectedRT.DOAnchorPos(Vector2.zero, 0.5f).SetEase(Ease.InOutCubic).WaitForCompletion();
+    yield return selectedRT.DOAnchorPos(jackpotCenterTarget, 0.5f).SetEase(Ease.InOutCubic).WaitForCompletion();
 
     for (int i = 0; i < JackpotRevealImages.Length; i++)
       if (i != _selectedPinataIndex)
         JackpotRevealImages[i].gameObject.SetActive(false);
 
     if (FreeSpinsUntilImage) FreeSpinsUntilImage.gameObject.SetActive(true);
+
+    if (PickingJackpotGroup)
+      yield return PickingJackpotGroup.DOFade(0f, jackpotTextFadeDuration).WaitForCompletion();
+
+    if (JackpotPickedObject) JackpotPickedObject.SetActive(true);
+    if (JackpotPickedGroup)
+      yield return JackpotPickedGroup.DOFade(1f, jackpotTextFadeDuration).WaitForCompletion();
 
     yield return new WaitForSeconds(2f);
 
