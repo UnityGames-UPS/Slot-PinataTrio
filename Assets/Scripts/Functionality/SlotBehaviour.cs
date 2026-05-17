@@ -428,6 +428,9 @@ public class SlotBehaviour : MonoBehaviour
     if (pendingFeatures != null && pendingFeatures.Exists(f => f.triggered))
       yield return StartCoroutine(HandlePendingFeatures(pendingFeatures));
 
+    if (!_isInFreeSpin && !_isFeatureActive)
+      yield return StartCoroutine(CheckAndShowJackpotWin());
+
     CheckPopups = false;
     Spin_Button.GetComponent<Image>().sprite = SpinSprite;
     IsSpinning = false;
@@ -482,6 +485,9 @@ public class SlotBehaviour : MonoBehaviour
 
     yield return StartCoroutine(uiManager.SlideContentUp());
 
+    string wheelTier = wbFeature?.jackpotTier ?? "mini";
+    yield return StartCoroutine(uiManager.ShowJackpotWinSequence(wheelTier, awardValue, awardValue));
+
     uiManager.CleanupFeaturePinata("wheelBonus");
     CheckPopups = false;
     _isFeatureActive = false;
@@ -517,7 +523,8 @@ public class SlotBehaviour : MonoBehaviour
     yield return StartCoroutine(FreeSpinLoop());
     _isInFreeSpin = false;
 
-    yield return StartCoroutine(uiManager.ShowJackpotWin(goalJackpot, awardValue));
+    double freeSpinTotalWin = SocketManager.ResultData.payload?.winAmount ?? 0;
+    yield return StartCoroutine(uiManager.ShowJackpotWinSequence(goalJackpot, awardValue, freeSpinTotalWin));
     uiManager.CleanupFeaturePinata("pickJackpot");
     _isFeatureActive = false;
     uiManager.LockFeatureUI(false);
@@ -534,6 +541,23 @@ public class SlotBehaviour : MonoBehaviour
       if (!SocketManager.ResultData.payload.isFreeSpinActive)
         break;
     }
+  }
+
+  private IEnumerator CheckAndShowJackpotWin()
+  {
+    var waysWins = SocketManager.ResultData.payload?.waysWins;
+    if (waysWins == null) yield break;
+
+    var jackpotWin = waysWins.Find(w => w.symbolId >= 3 && w.symbolId <= 7);
+    if (jackpotWin == null) yield break;
+
+    string tier = jackpotWin.symbolName;
+    double jackpotAmount = jackpotWin.jackpotPayout;
+    double totalWin = SocketManager.ResultData.payload.winAmount;
+
+    CheckPopups = true;
+    yield return StartCoroutine(uiManager.ShowJackpotWinSequence(tier, jackpotAmount, totalWin));
+    CheckPopups = false;
   }
 
   private IEnumerator HandleLinkBonus(PendingFeature feature)

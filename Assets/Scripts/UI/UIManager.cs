@@ -73,6 +73,14 @@ public class UIManager : MonoBehaviour
   [SerializeField] private float pinataScrollAmount = 250f;
   [SerializeField] private float pinataRedDelay = 0.3f;
 
+  [Header("Pinata Stage Animations")]
+  [SerializeField] private Sprite[] GreenPinataStage1Sprites;
+  [SerializeField] private Sprite[] GreenPinataStage2Sprites;
+  [SerializeField] private Sprite[] RedPinataStage1Sprites;
+  [SerializeField] private Sprite[] RedPinataStage2Sprites;
+  [SerializeField] private Sprite[] BluePinataStage1Sprites;
+  [SerializeField] private Sprite[] BluePinataStage2Sprites;
+
   [Header("Feature Pinata UI")]
   [SerializeField] private RectTransform Payouts;
   [SerializeField] private float payoutsExtraSlide = 250f;
@@ -122,6 +130,25 @@ public class UIManager : MonoBehaviour
   [SerializeField] private CanvasGroup JackpotPickedGroup;
   [SerializeField] private float jackpotTextFadeDuration = 0.4f;
   [SerializeField] private Vector2 jackpotCenterTarget = new Vector2(0f, -90f);
+
+  [Header("Jackpot Win Sequence")]
+  [SerializeField] private GameObject CoinsAnimation;
+  [SerializeField] private RectTransform JackpotWinGraphic;
+  [SerializeField] private Image JackpotWinGraphicImage;
+  [SerializeField] private Sprite MiniWinSprite;
+  [SerializeField] private Sprite MinorWinSprite;
+  [SerializeField] private Sprite MajorWinSprite;
+  [SerializeField] private Sprite MegaWinSprite;
+  [SerializeField] private Sprite GrandWinSprite;
+  [SerializeField] private GameObject JackpotWinPanel;
+  [SerializeField] private TMP_Text JackpotWinAmountText;
+  [SerializeField] private GameObject TotalSpinWinPanel;
+  [SerializeField] private TMP_Text TotalSpinWinAmountText;
+  [SerializeField] private float jackpotGraphicDropDuration = 0.6f;
+  [SerializeField] private float jackpotPanelExpandDuration = 0.4f;
+  [SerializeField] private float jackpotCountDuration = 1.5f;
+  [SerializeField] private float jackpotHoldDuration = 2f;
+  [SerializeField] private float coinsLingerDuration = 1f;
 
   internal bool PickJackpotSelected = false;
   private int _selectedPinataIndex = -1;
@@ -307,6 +334,19 @@ public class UIManager : MonoBehaviour
   private Vector2 _smallReelFrameOrigin;
   private Sprite _redPinataOriginalSprite;
   private Sprite _bluePinataOriginalSprite;
+  private ImageAnimation _greenPinataAnim;
+  private ImageAnimation _redPinataAnim;
+  private ImageAnimation _bluePinataAnim;
+  private List<Sprite> _greenPinataBaseSprites;
+  private List<Sprite> _redPinataBaseSprites;
+  private List<Sprite> _bluePinataBaseSprites;
+  private int _greenPinataStage = 0;
+  private int _redPinataStage = 0;
+  private int _bluePinataStage = 0;
+  private int _prevGreenMeter = 0;
+  private int _prevRedMeter = 0;
+  private int _prevBlueMeter = 0;
+
   private void Start()
   {
     if (PickJackpotPanel) _pickJackpotPanelOrigin = PickJackpotPanel.GetComponent<RectTransform>().anchoredPosition;
@@ -317,9 +357,26 @@ public class UIManager : MonoBehaviour
         _jackpotRevealImageOrigins[i] = JackpotRevealImages[i].rectTransform.anchoredPosition;
     }
     if (Payouts) _payoutsCanvasGroup = Payouts.GetComponent<CanvasGroup>();
-    if (GreenPinata) _greenPinataOrigin = GreenPinata.anchoredPosition;
-    if (RedPinata) { _redPinataOrigin = RedPinata.anchoredPosition; _redPinataOriginalSprite = RedPinata.GetComponent<Image>()?.sprite; }
-    if (BluePinata) { _bluePinataOrigin = BluePinata.anchoredPosition; _bluePinataOriginalSprite = BluePinata.GetComponent<Image>()?.sprite; }
+    if (GreenPinata)
+    {
+      _greenPinataOrigin = GreenPinata.anchoredPosition;
+      _greenPinataAnim = GreenPinata.GetComponent<ImageAnimation>();
+      if (_greenPinataAnim) _greenPinataBaseSprites = new List<Sprite>(_greenPinataAnim.textureArray);
+    }
+    if (RedPinata)
+    {
+      _redPinataOrigin = RedPinata.anchoredPosition;
+      _redPinataOriginalSprite = RedPinata.GetComponent<Image>()?.sprite;
+      _redPinataAnim = RedPinata.GetComponent<ImageAnimation>();
+      if (_redPinataAnim) _redPinataBaseSprites = new List<Sprite>(_redPinataAnim.textureArray);
+    }
+    if (BluePinata)
+    {
+      _bluePinataOrigin = BluePinata.anchoredPosition;
+      _bluePinataOriginalSprite = BluePinata.GetComponent<Image>()?.sprite;
+      _bluePinataAnim = BluePinata.GetComponent<ImageAnimation>();
+      if (_bluePinataAnim) _bluePinataBaseSprites = new List<Sprite>(_bluePinataAnim.textureArray);
+    }
     if (SmallReelFrame) { _smallReelFrameOrigin = SmallReelFrame.rectTransform.anchoredPosition; SmallReelFrame.gameObject.SetActive(false); }
     StartCoroutine(PlayIntro());
 
@@ -756,10 +813,41 @@ public class UIManager : MonoBehaviour
 
   internal void UpdateMeters(int green, int red, int blue)
   {
-    // NULL GUARDS SINCE METER UI OBJECTS ARE NOT YET WIRED. WIRE ONCE METER DISPLAY IS BUILT IN SCENE.
     if (GreenMeterText) GreenMeterText.text = green.ToString();
     if (RedMeterText) RedMeterText.text = red.ToString();
     if (BlueMeterText) BlueMeterText.text = blue.ToString();
+
+    if (green > _prevGreenMeter) AdvancePinataStage(ref _greenPinataStage, _greenPinataAnim, GreenPinataStage1Sprites, GreenPinataStage2Sprites, _greenPinataBaseSprites);
+    if (red > _prevRedMeter) AdvancePinataStage(ref _redPinataStage, _redPinataAnim, RedPinataStage1Sprites, RedPinataStage2Sprites, _redPinataBaseSprites);
+    if (blue > _prevBlueMeter) AdvancePinataStage(ref _bluePinataStage, _bluePinataAnim, BluePinataStage1Sprites, BluePinataStage2Sprites, _bluePinataBaseSprites);
+
+    _prevGreenMeter = green;
+    _prevRedMeter = red;
+    _prevBlueMeter = blue;
+  }
+
+  private void AdvancePinataStage(ref int stage, ImageAnimation anim, Sprite[] stage1, Sprite[] stage2, List<Sprite> baseSprites)
+  {
+    if (stage >= 2) return;
+    stage++;
+    Sprite[] newSprites = stage == 1 ? stage1 : stage2;
+    SwapPinataAnimation(anim, newSprites);
+  }
+
+  private void SwapPinataAnimation(ImageAnimation anim, Sprite[] sprites)
+  {
+    if (anim == null || sprites == null || sprites.Length == 0) return;
+    anim.StopAnimation();
+    anim.textureArray.Clear();
+    anim.textureArray.TrimExcess();
+    foreach (var s in sprites) anim.textureArray.Add(s);
+    anim.StartAnimation();
+  }
+
+  private void ResetPinataStage(ImageAnimation anim, List<Sprite> baseSprites, ref int stage)
+  {
+    stage = 0;
+    if (baseSprites != null) SwapPinataAnimation(anim, baseSprites.ToArray());
   }
 
   internal void LockFeatureUI(bool locked)
@@ -844,18 +932,26 @@ public class UIManager : MonoBehaviour
   internal void CleanupFeaturePinata(string feature)
   {
     if (SmallReelFrame) { SmallReelFrame.rectTransform.anchoredPosition = _smallReelFrameOrigin; SmallReelFrame.gameObject.SetActive(false); }
-    if (feature == "pickJackpot" && RedPinata)
+    if (feature == "wheelBonus")
+    {
+      ResetPinataStage(_greenPinataAnim, _greenPinataBaseSprites, ref _greenPinataStage);
+      _prevGreenMeter = 0;
+    }
+    else if (feature == "pickJackpot" && RedPinata)
     {
       Image img = RedPinata.GetComponent<Image>();
       if (img && _redPinataOriginalSprite) img.sprite = _redPinataOriginalSprite;
-      // Restore original X only — Y is already at the correct post-animation position
       RedPinata.anchoredPosition = new Vector2(_redPinataOrigin.x, RedPinata.anchoredPosition.y);
+      ResetPinataStage(_redPinataAnim, _redPinataBaseSprites, ref _redPinataStage);
+      _prevRedMeter = 0;
     }
     else if (feature == "linkBonus" && BluePinata)
     {
       Image img = BluePinata.GetComponent<Image>();
       if (img && _bluePinataOriginalSprite) img.sprite = _bluePinataOriginalSprite;
       BluePinata.anchoredPosition = new Vector2(_bluePinataOrigin.x, BluePinata.anchoredPosition.y);
+      ResetPinataStage(_bluePinataAnim, _bluePinataBaseSprites, ref _bluePinataStage);
+      _prevBlueMeter = 0;
       if (GreenPinata) GreenPinata.gameObject.SetActive(true);
       if (RedPinata) RedPinata.gameObject.SetActive(true);
       if (SlotMain) SlotMain.SetActive(true);
@@ -1083,6 +1179,73 @@ public class UIManager : MonoBehaviour
       case "grand": return GrandJackpotSprite;
       default: return null;
     }
+  }
+
+  private Sprite GetJackpotWinSprite(string tier)
+  {
+    switch (tier)
+    {
+      case "mini": return MiniWinSprite;
+      case "minor": return MinorWinSprite;
+      case "major": return MajorWinSprite;
+      case "mega": return MegaWinSprite;
+      case "grand": return GrandWinSprite;
+      default: return null;
+    }
+  }
+
+  internal IEnumerator ShowJackpotWinSequence(string tier, double jackpotAmount, double totalWin)
+  {
+    if (CoinsAnimation) CoinsAnimation.SetActive(true);
+
+    if (JackpotWinGraphicImage) JackpotWinGraphicImage.sprite = GetJackpotWinSprite(tier);
+    if (JackpotWinGraphic)
+    {
+      JackpotWinGraphic.gameObject.SetActive(true);
+      float targetY = JackpotWinGraphic.anchoredPosition.y;
+      JackpotWinGraphic.anchoredPosition = new Vector2(JackpotWinGraphic.anchoredPosition.x, targetY + offscreenOffset);
+      yield return JackpotWinGraphic.DOAnchorPosY(targetY, jackpotGraphicDropDuration).SetEase(Ease.OutCubic).WaitForCompletion();
+    }
+
+    if (JackpotWinPanel)
+    {
+      JackpotWinPanel.SetActive(true);
+      JackpotWinPanel.transform.localScale = Vector3.zero;
+      JackpotWinPanel.transform.DOScale(Vector3.one, jackpotPanelExpandDuration).SetEase(Ease.OutBack);
+    }
+
+    float jackpotDisplay = 0f;
+    if (JackpotWinAmountText)
+      yield return DOTween.To(() => jackpotDisplay, v => { jackpotDisplay = v; JackpotWinAmountText.text = v.ToString("F3"); },
+        (float)jackpotAmount, jackpotCountDuration).WaitForCompletion();
+    else
+      yield return new WaitForSeconds(jackpotCountDuration);
+
+    yield return new WaitForSeconds(jackpotHoldDuration);
+
+    if (JackpotWinGraphic) JackpotWinGraphic.gameObject.SetActive(false);
+    if (JackpotWinPanel) JackpotWinPanel.SetActive(false);
+
+    yield return new WaitForSeconds(coinsLingerDuration);
+
+    if (TotalSpinWinPanel)
+    {
+      TotalSpinWinPanel.SetActive(true);
+      TotalSpinWinPanel.transform.localScale = Vector3.zero;
+      TotalSpinWinPanel.transform.DOScale(Vector3.one, jackpotPanelExpandDuration).SetEase(Ease.OutBack);
+    }
+
+    float totalDisplay = 0f;
+    if (TotalSpinWinAmountText)
+      yield return DOTween.To(() => totalDisplay, v => { totalDisplay = v; TotalSpinWinAmountText.text = v.ToString("F3"); },
+        (float)totalWin, jackpotCountDuration).WaitForCompletion();
+    else
+      yield return new WaitForSeconds(jackpotCountDuration);
+
+    yield return new WaitForSeconds(jackpotHoldDuration);
+
+    if (CoinsAnimation) CoinsAnimation.SetActive(false);
+    if (TotalSpinWinPanel) TotalSpinWinPanel.SetActive(false);
   }
 
   private void UpdateBetDisplay(double bet)
