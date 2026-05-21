@@ -164,13 +164,16 @@ public class SlotBehaviour : MonoBehaviour
     if (!IsAutoSpin)
     {
       IsAutoSpin = true;
-      if (AutoSpin_Button) AutoSpin_Button.gameObject.SetActive(false);
       if (AutoSpinRoutine != null)
       {
         StopCoroutine(AutoSpinRoutine);
         AutoSpinRoutine = null;
       }
       AutoSpinRoutine = StartCoroutine(AutoSpinCoroutine());
+    }
+    else
+    {
+      StopAutoSpin();
     }
   }
 
@@ -179,7 +182,6 @@ public class SlotBehaviour : MonoBehaviour
     if (IsAutoSpin)
     {
       IsAutoSpin = false;
-      if (AutoSpin_Button) AutoSpin_Button.gameObject.SetActive(true);
     }
   }
 
@@ -187,11 +189,15 @@ public class SlotBehaviour : MonoBehaviour
   {
     while (IsAutoSpin)
     {
+      Debug.Log($"[AutoSpin] Loop start — IsAutoSpin:{IsAutoSpin} CheckPopups:{CheckPopups} IsSpinning:{IsSpinning}");
       yield return new WaitUntil(() => !CheckPopups);
+      Debug.Log("[AutoSpin] CheckPopups cleared, calling StartSlots");
       StartSlots();
       yield return new WaitUntil(() => !IsSpinning);
+      Debug.Log($"[AutoSpin] Spin complete — SpinDelay:{SpinDelay} IsAutoSpin:{IsAutoSpin}");
       yield return new WaitForSeconds(SpinDelay);
     }
+    Debug.Log("[AutoSpin] Exited while loop");
     yield return new WaitUntil(() => !IsSpinning);
     ToggleButtonGrp(true);
     if (AutoSpin_Button) AutoSpin_Button.gameObject.SetActive(true);
@@ -414,6 +420,7 @@ public class SlotBehaviour : MonoBehaviour
     }
     StopSpinToggle = false;
     yield return alltweens[^1].WaitForCompletion();
+    Spin_Button.GetComponent<Image>().sprite = SpinSprite;
     yield return new WaitUntil(() => _activePinataAnims == 0);
     KillAllTweens();
     CheckForFeaturesAnimation();
@@ -425,14 +432,14 @@ public class SlotBehaviour : MonoBehaviour
     SpinDelay = SocketManager.ResultData.payload.winAmount > 0 ? 1.2f : 0.2f;
 
     var pendingFeatures = SocketManager.ResultData.payload?.pendingFeatures;
-    if (pendingFeatures != null && pendingFeatures.Exists(f => f.triggered))
+    bool hadPendingFeature = pendingFeatures != null && pendingFeatures.Exists(f => f.triggered);
+    if (hadPendingFeature)
       yield return StartCoroutine(HandlePendingFeatures(pendingFeatures));
 
-    if (!_isInFreeSpin && !_isFeatureActive)
+    if (!_isInFreeSpin && !_isFeatureActive && !hadPendingFeature)
       yield return StartCoroutine(CheckAndShowJackpotWin());
 
     CheckPopups = false;
-    Spin_Button.GetComponent<Image>().sprite = SpinSprite;
     IsSpinning = false;
     ToggleButtonGrp(true);
   }
@@ -643,7 +650,6 @@ public class SlotBehaviour : MonoBehaviour
     bool active = toggle && !_isFeatureActive;
     if (Spin_Button) Spin_Button.interactable = active;
     if (MaxBet_Button) MaxBet_Button.interactable = active;
-    if (AutoSpin_Button) AutoSpin_Button.interactable = active;
     if (BetMinus_Button) BetMinus_Button.interactable = active;
     if (BetPlus_Button) BetPlus_Button.interactable = active;
   }

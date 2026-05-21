@@ -315,6 +315,8 @@ public class UIManager : MonoBehaviour
 
   [SerializeField]
   private Button GameExit_Button;
+  [SerializeField]
+  private Button Home_Button;
 
   [SerializeField]
   private SlotBehaviour slotManager;
@@ -442,6 +444,9 @@ public class UIManager : MonoBehaviour
     {
       OpenPopup(QuitPopup_Object);
     });
+
+    if (Home_Button) Home_Button.onClick.RemoveAllListeners();
+    if (Home_Button) Home_Button.onClick.AddListener(CallOnExitFunction);
 
     if (NoQuit_Button) NoQuit_Button.onClick.RemoveAllListeners();
     if (NoQuit_Button) NoQuit_Button.onClick.AddListener(delegate
@@ -1246,6 +1251,8 @@ public class UIManager : MonoBehaviour
 
     if (CoinsAnimation) CoinsAnimation.SetActive(false);
     if (TotalSpinWinPanel) TotalSpinWinPanel.SetActive(false);
+    if (FallingJackpotRT) FallingJackpotRT.gameObject.SetActive(false);
+    if (JackpotPickedObject) JackpotPickedObject.SetActive(false);
   }
 
   private void UpdateBetDisplay(double bet)

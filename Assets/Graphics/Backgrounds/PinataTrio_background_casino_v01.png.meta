@@ -1,13 +1,10 @@
 fileFormatVersion: 2
-guid: c82d8da830e45d345aa1b7146abcc8fa
+guid: 3a6f9cc331a64ee4990b29ffe2754d5a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3924699367480480351
-    second: ORBS_DARK_0
-  - first:
-      213: -6101199054177150708
-    second: ORBS_DARK_1
+      213: 3272910214986895021
+    second: PinataTrio_background_casino_v01_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,19 +97,6 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
-    buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
     buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -129,45 +113,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ORBS_DARK_0
+      name: PinataTrio_background_casino_v01_0
       rect:
         serializedVersion: 2
-        x: 20
+        x: 0
         y: 0
-        width: 188
-        height: 171
+        width: 2340
+        height: 1080
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1ad202f18baa889c0800000000000000
-      internalID: -3924699367480480351
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ORBS_DARK_1
-      rect:
-        serializedVersion: 2
-        x: 248
-        y: 0
-        width: 188
-        height: 171
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: c0952d729cf245ba0800000000000000
-      internalID: -6101199054177150708
+      spriteID: dae8a0aff76bb6d20800000000000000
+      internalID: 3272910214986895021
       vertices: []
       indices: 
       edges: []
@@ -176,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 2357076686a33224584d7baf48380416
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -186,8 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      ORBS_DARK_0: -3924699367480480351
-      ORBS_DARK_1: -6101199054177150708
+      PinataTrio_background_casino_v01_0: 3272910214986895021
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
