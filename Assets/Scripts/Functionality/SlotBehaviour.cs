@@ -397,6 +397,17 @@ public class SlotBehaviour : MonoBehaviour
     BalanceDeduction();
     SocketManager.AccumulateResult(BetCounter);
     yield return new WaitUntil(() => SocketManager.isResultdone && Time.time - spinStartTime >= minSpinDuration);
+
+    if (SocketManager.ResultData?.payload == null)
+    {
+      KillAllTweens();
+      Spin_Button.GetComponent<Image>().sprite = SpinSprite;
+      CheckPopups = false;
+      IsSpinning = false;
+      ToggleButtonGrp(true);
+      yield break;
+    }
+
     for (int row = 0; row < 3; row++)
     {
       for (int col = 0; col < 5; col++)
@@ -530,6 +541,7 @@ public class SlotBehaviour : MonoBehaviour
     yield return StartCoroutine(FreeSpinLoop());
     _isInFreeSpin = false;
 
+    uiManager.PlayBustedPinataOnce("red");
     double freeSpinTotalWin = SocketManager.ResultData.payload?.winAmount ?? 0;
     yield return StartCoroutine(uiManager.ShowJackpotWinSequence(goalJackpot, awardValue, freeSpinTotalWin));
     uiManager.CleanupFeaturePinata("pickJackpot");
@@ -616,6 +628,7 @@ public class SlotBehaviour : MonoBehaviour
 
   private IEnumerator LinkBonusSpinRound()
   {
+    uiManager.PlayBustedPinataOnce("blue");
     linkBonusController.ShowPreSpinGlow();
     yield return new WaitForSeconds(linkBonusPreSpinGlowDuration);
     linkBonusController.HidePreSpinGlow();
@@ -710,7 +723,7 @@ public class SlotBehaviour : MonoBehaviour
       int row = coin.position[0];
       int col = coin.position[1];
       float x = -320f + col * 160f;
-      float y = 160f - row * 160f;
+      float y = IconSizeFactor - row * IconSizeFactor;
       GameObject instance = Instantiate(CoinValuePrefab, CoinValueParent);
       instance.GetComponent<RectTransform>().anchoredPosition = new Vector2(x, y);
       instance.GetComponentInChildren<TMP_Text>().text = coin.value.ToString("F2");

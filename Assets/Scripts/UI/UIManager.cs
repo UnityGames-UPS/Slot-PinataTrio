@@ -80,6 +80,8 @@ public class UIManager : MonoBehaviour
   [SerializeField] private Sprite[] RedPinataStage2Sprites;
   [SerializeField] private Sprite[] BluePinataStage1Sprites;
   [SerializeField] private Sprite[] BluePinataStage2Sprites;
+  [SerializeField] private Sprite[] BustedRedPinataAnimSprites;
+  [SerializeField] private Sprite[] BustedBluePinataAnimSprites;
 
   [Header("Feature Pinata UI")]
   [SerializeField] private RectTransform Payouts;
@@ -855,6 +857,19 @@ public class UIManager : MonoBehaviour
     if (baseSprites != null) SwapPinataAnimation(anim, baseSprites.ToArray());
   }
 
+  internal void PlayBustedPinataOnce(string color)
+  {
+    ImageAnimation anim = color == "red" ? _redPinataAnim : _bluePinataAnim;
+    Sprite[] sprites = color == "red" ? BustedRedPinataAnimSprites : BustedBluePinataAnimSprites;
+    if (anim == null || sprites == null || sprites.Length == 0) return;
+    anim.StopAnimation();
+    anim.textureArray.Clear();
+    anim.textureArray.TrimExcess();
+    foreach (var s in sprites) anim.textureArray.Add(s);
+    anim.doLoopAnimation = false;
+    anim.StartAnimation();
+  }
+
   internal void LockFeatureUI(bool locked)
   {
     if (Menu_Button) Menu_Button.interactable = !locked;
@@ -915,6 +930,7 @@ public class UIManager : MonoBehaviour
   {
     if (feature == "pickJackpot" && RedPinata)
     {
+      if (_redPinataAnim) _redPinataAnim.StopAnimation();
       Image img = RedPinata.GetComponent<Image>();
       if (img && BustedRedPinataSprite) img.sprite = BustedRedPinataSprite;
       RedPinata.anchoredPosition = new Vector2(0f, RedPinata.anchoredPosition.y);
@@ -922,6 +938,7 @@ public class UIManager : MonoBehaviour
     }
     else if (feature == "linkBonus" && BluePinata)
     {
+      if (_bluePinataAnim) _bluePinataAnim.StopAnimation();
       Image img = BluePinata.GetComponent<Image>();
       if (img && BustedBluePinataSprite) img.sprite = BustedBluePinataSprite;
       BluePinata.anchoredPosition = new Vector2(0f, BluePinata.anchoredPosition.y);
