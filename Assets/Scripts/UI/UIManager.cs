@@ -96,6 +96,13 @@ public class UIManager : MonoBehaviour
   [SerializeField] private float featureNameScaleDuration = 0.4f;
   [SerializeField] private float featureNameHoldDuration = 1f;
   [SerializeField] private float featureNameFadeDuration = 0.4f;
+  [SerializeField] private float introShakeStartOffset = 2.5f;
+  [SerializeField] private float introScaleAmount = 0.93f;
+  [SerializeField] private float introScaleDownDuration = 0.25f;
+  [SerializeField] private float introShakeDuration = 1.8f;
+  [SerializeField] private float introShakeStrength = 0.015f;
+  [SerializeField] private int introShakeVibrato = 20;
+  [SerializeField] private float introScaleUpDuration = 0.35f;
 
   [Header("Feature Pinata UI")]
   [SerializeField] private RectTransform Payouts;
@@ -882,6 +889,7 @@ public class UIManager : MonoBehaviour
     foreach (var s in sprites) anim.textureArray.Add(s);
     anim.doLoopAnimation = false;
     anim.StartAnimation();
+    anim.doLoopAnimation = true;
   }
 
   internal IEnumerator PlayFeatureIntro(string feature)
@@ -913,6 +921,8 @@ public class UIManager : MonoBehaviour
     if (introAnim)
     {
       introAnim.doLoopAnimation = false;
+      float shakeDelay = Mathf.Max(0f, introAnim.GetTotalDuration() - introShakeStartOffset);
+      StartCoroutine(PunchGameContent(shakeDelay));
       introAnim.StartAnimation();
       yield return new WaitUntil(() => introAnim.IsComplete);
     }
@@ -928,6 +938,16 @@ public class UIManager : MonoBehaviour
       yield return nameGraphic.DOFade(0f, featureNameFadeDuration).WaitForCompletion();
       nameGraphic.gameObject.SetActive(false);
     }
+  }
+
+  private IEnumerator PunchGameContent(float delay)
+  {
+    if (delay > 0f) yield return new WaitForSeconds(delay);
+    if (GameContent == null) yield break;
+    Vector3 original = GameContent.localScale;
+    yield return GameContent.DOScale(original * introScaleAmount, introScaleDownDuration).SetEase(Ease.InOutQuad).WaitForCompletion();
+    yield return GameContent.DOShakeScale(introShakeDuration, introShakeStrength, introShakeVibrato).WaitForCompletion();
+    yield return GameContent.DOScale(original, introScaleUpDuration).SetEase(Ease.OutBack).WaitForCompletion();
   }
 
   internal void LockFeatureUI(bool locked)

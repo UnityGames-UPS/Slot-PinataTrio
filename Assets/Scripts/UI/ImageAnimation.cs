@@ -128,6 +128,12 @@ public class ImageAnimation : MonoBehaviour
 		SetTextureOfIndex();
 	}
 
+	public float GetTotalDuration()
+	{
+		float delay = idealFrameRate * textureArray.Count / AnimationSpeed;
+		return delay * textureArray.Count;
+	}
+
 	private void SetTextureOfIndex()
 	{
 		if (useSharedMaterial)
