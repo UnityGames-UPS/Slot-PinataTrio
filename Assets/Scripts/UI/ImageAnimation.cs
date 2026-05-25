@@ -20,6 +20,7 @@ public class ImageAnimation : MonoBehaviour
 	public bool useSharedMaterial = true;
 
 	public bool doLoopAnimation = true;
+	public bool IsComplete { get; private set; }
 	[SerializeField] private bool StartOnAwake;
 
 	[HideInInspector]
@@ -68,6 +69,11 @@ public class ImageAnimation : MonoBehaviour
 			{
 				Invoke("AnimationProcess", delayBetweenAnimation + delayBetweenLoop);
 			}
+			else
+			{
+				IsComplete = true;
+				currentAnimationState = ImageState.NONE;
+			}
 		}
 		else
 		{
@@ -78,6 +84,7 @@ public class ImageAnimation : MonoBehaviour
 	public void StartAnimation()
 	{
 		indexOfTexture = 0;
+		IsComplete = false;
 		if (currentAnimationState == ImageState.NONE)
 		{
 			RevertToInitialState();

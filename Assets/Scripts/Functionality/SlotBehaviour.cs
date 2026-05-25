@@ -485,9 +485,9 @@ public class SlotBehaviour : MonoBehaviour
     uiManager.LockFeatureUI(true);
     ToggleButtonGrp(false);
     CheckPopups = true;
-
     uiManager.SetupFeaturePinata("wheelBonus");
-    yield return StartCoroutine(uiManager.SlideContentDown());
+    StartCoroutine(uiManager.SlideContentDown());
+    yield return StartCoroutine(uiManager.PlayFeatureIntro("wheelBonus"));
 
     SocketManager.SendWheelBonus();
     yield return new WaitUntil(() => SocketManager.isWheelBonusDone);
@@ -519,7 +519,8 @@ public class SlotBehaviour : MonoBehaviour
     ToggleButtonGrp(false);
     CheckPopups = true;
     uiManager.SetupFeaturePinata("pickJackpot");
-    yield return StartCoroutine(uiManager.SlideContentDown());
+    StartCoroutine(uiManager.SlideContentDown());
+    yield return StartCoroutine(uiManager.PlayFeatureIntro("pickJackpot"));
     uiManager.ShowPickJackpotScreen();
 
     yield return new WaitUntil(() => uiManager.PickJackpotSelected);
@@ -581,6 +582,7 @@ public class SlotBehaviour : MonoBehaviour
 
   private IEnumerator HandleLinkBonus(PendingFeature feature)
   {
+    yield return StartCoroutine(uiManager.PlayFeatureIntro("linkBonus"));
     _isFeatureActive = true;
     uiManager.LockFeatureUI(true);
     ToggleButtonGrp(false);

@@ -83,6 +83,20 @@ public class UIManager : MonoBehaviour
   [SerializeField] private Sprite[] BustedRedPinataAnimSprites;
   [SerializeField] private Sprite[] BustedBluePinataAnimSprites;
 
+  [Header("Feature Intro")]
+  [SerializeField] private GameObject GreenPinataIntroObject;
+  [SerializeField] private ImageAnimation GreenPinataIntroAnim;
+  [SerializeField] private Image WheelBonusNameGraphic;
+  [SerializeField] private GameObject RedPinataIntroObject;
+  [SerializeField] private ImageAnimation RedPinataIntroAnim;
+  [SerializeField] private Image PickJackpotNameGraphic;
+  [SerializeField] private GameObject BluePinataIntroObject;
+  [SerializeField] private ImageAnimation BluePinataIntroAnim;
+  [SerializeField] private Image LinkBonusNameGraphic;
+  [SerializeField] private float featureNameScaleDuration = 0.4f;
+  [SerializeField] private float featureNameHoldDuration = 1f;
+  [SerializeField] private float featureNameFadeDuration = 0.4f;
+
   [Header("Feature Pinata UI")]
   [SerializeField] private RectTransform Payouts;
   [SerializeField] private float payoutsExtraSlide = 250f;
@@ -870,6 +884,52 @@ public class UIManager : MonoBehaviour
     anim.StartAnimation();
   }
 
+  internal IEnumerator PlayFeatureIntro(string feature)
+  {
+    GameObject introObj = null;
+    ImageAnimation introAnim = null;
+    Image nameGraphic = null;
+
+    switch (feature)
+    {
+      case "wheelBonus":
+        introObj = GreenPinataIntroObject;
+        introAnim = GreenPinataIntroAnim;
+        nameGraphic = WheelBonusNameGraphic;
+        break;
+      case "pickJackpot":
+        introObj = RedPinataIntroObject;
+        introAnim = RedPinataIntroAnim;
+        nameGraphic = PickJackpotNameGraphic;
+        break;
+      case "linkBonus":
+        introObj = BluePinataIntroObject;
+        introAnim = BluePinataIntroAnim;
+        nameGraphic = LinkBonusNameGraphic;
+        break;
+    }
+
+    if (introObj) introObj.SetActive(true);
+    if (introAnim)
+    {
+      introAnim.doLoopAnimation = false;
+      introAnim.StartAnimation();
+      yield return new WaitUntil(() => introAnim.IsComplete);
+    }
+    if (introObj) introObj.SetActive(false);
+
+    if (nameGraphic)
+    {
+      nameGraphic.gameObject.SetActive(true);
+      nameGraphic.transform.localScale = Vector3.zero;
+      nameGraphic.color = new Color(1f, 1f, 1f, 1f);
+      yield return nameGraphic.transform.DOScale(Vector3.one, featureNameScaleDuration).SetEase(Ease.OutBack).WaitForCompletion();
+      yield return new WaitForSeconds(featureNameHoldDuration);
+      yield return nameGraphic.DOFade(0f, featureNameFadeDuration).WaitForCompletion();
+      nameGraphic.gameObject.SetActive(false);
+    }
+  }
+
   internal void LockFeatureUI(bool locked)
   {
     if (Menu_Button) Menu_Button.interactable = !locked;
@@ -1216,60 +1276,62 @@ public class UIManager : MonoBehaviour
     }
   }
 
+  // TODO: uncomment ShowJackpotWinSequence body once win sequence UI is set up in editor
   internal IEnumerator ShowJackpotWinSequence(string tier, double jackpotAmount, double totalWin)
   {
-    if (CoinsAnimation) CoinsAnimation.SetActive(true);
+    // if (CoinsAnimation) CoinsAnimation.SetActive(true);
 
-    if (JackpotWinGraphicImage) JackpotWinGraphicImage.sprite = GetJackpotWinSprite(tier);
-    if (JackpotWinGraphic)
-    {
-      JackpotWinGraphic.gameObject.SetActive(true);
-      float targetY = JackpotWinGraphic.anchoredPosition.y;
-      JackpotWinGraphic.anchoredPosition = new Vector2(JackpotWinGraphic.anchoredPosition.x, targetY + offscreenOffset);
-      yield return JackpotWinGraphic.DOAnchorPosY(targetY, jackpotGraphicDropDuration).SetEase(Ease.OutCubic).WaitForCompletion();
-    }
+    // if (JackpotWinGraphicImage) JackpotWinGraphicImage.sprite = GetJackpotWinSprite(tier);
+    // if (JackpotWinGraphic)
+    // {
+    //   JackpotWinGraphic.gameObject.SetActive(true);
+    //   float targetY = JackpotWinGraphic.anchoredPosition.y;
+    //   JackpotWinGraphic.anchoredPosition = new Vector2(JackpotWinGraphic.anchoredPosition.x, targetY + offscreenOffset);
+    //   yield return JackpotWinGraphic.DOAnchorPosY(targetY, jackpotGraphicDropDuration).SetEase(Ease.OutCubic).WaitForCompletion();
+    // }
 
-    if (JackpotWinPanel)
-    {
-      JackpotWinPanel.SetActive(true);
-      JackpotWinPanel.transform.localScale = Vector3.zero;
-      JackpotWinPanel.transform.DOScale(Vector3.one, jackpotPanelExpandDuration).SetEase(Ease.OutBack);
-    }
+    // if (JackpotWinPanel)
+    // {
+    //   JackpotWinPanel.SetActive(true);
+    //   JackpotWinPanel.transform.localScale = Vector3.zero;
+    //   JackpotWinPanel.transform.DOScale(Vector3.one, jackpotPanelExpandDuration).SetEase(Ease.OutBack);
+    // }
 
-    float jackpotDisplay = 0f;
-    if (JackpotWinAmountText)
-      yield return DOTween.To(() => jackpotDisplay, v => { jackpotDisplay = v; JackpotWinAmountText.text = v.ToString("F3"); },
-        (float)jackpotAmount, jackpotCountDuration).WaitForCompletion();
-    else
-      yield return new WaitForSeconds(jackpotCountDuration);
+    // float jackpotDisplay = 0f;
+    // if (JackpotWinAmountText)
+    //   yield return DOTween.To(() => jackpotDisplay, v => { jackpotDisplay = v; JackpotWinAmountText.text = v.ToString("F3"); },
+    //     (float)jackpotAmount, jackpotCountDuration).WaitForCompletion();
+    // else
+    //   yield return new WaitForSeconds(jackpotCountDuration);
 
-    yield return new WaitForSeconds(jackpotHoldDuration);
+    // yield return new WaitForSeconds(jackpotHoldDuration);
 
-    if (JackpotWinGraphic) JackpotWinGraphic.gameObject.SetActive(false);
-    if (JackpotWinPanel) JackpotWinPanel.SetActive(false);
+    // if (JackpotWinGraphic) JackpotWinGraphic.gameObject.SetActive(false);
+    // if (JackpotWinPanel) JackpotWinPanel.SetActive(false);
 
-    yield return new WaitForSeconds(coinsLingerDuration);
+    // yield return new WaitForSeconds(coinsLingerDuration);
 
-    if (TotalSpinWinPanel)
-    {
-      TotalSpinWinPanel.SetActive(true);
-      TotalSpinWinPanel.transform.localScale = Vector3.zero;
-      TotalSpinWinPanel.transform.DOScale(Vector3.one, jackpotPanelExpandDuration).SetEase(Ease.OutBack);
-    }
+    // if (TotalSpinWinPanel)
+    // {
+    //   TotalSpinWinPanel.SetActive(true);
+    //   TotalSpinWinPanel.transform.localScale = Vector3.zero;
+    //   TotalSpinWinPanel.transform.DOScale(Vector3.one, jackpotPanelExpandDuration).SetEase(Ease.OutBack);
+    // }
 
-    float totalDisplay = 0f;
-    if (TotalSpinWinAmountText)
-      yield return DOTween.To(() => totalDisplay, v => { totalDisplay = v; TotalSpinWinAmountText.text = v.ToString("F3"); },
-        (float)totalWin, jackpotCountDuration).WaitForCompletion();
-    else
-      yield return new WaitForSeconds(jackpotCountDuration);
+    // float totalDisplay = 0f;
+    // if (TotalSpinWinAmountText)
+    //   yield return DOTween.To(() => totalDisplay, v => { totalDisplay = v; TotalSpinWinAmountText.text = v.ToString("F3"); },
+    //     (float)totalWin, jackpotCountDuration).WaitForCompletion();
+    // else
+    //   yield return new WaitForSeconds(jackpotCountDuration);
 
-    yield return new WaitForSeconds(jackpotHoldDuration);
+    // yield return new WaitForSeconds(jackpotHoldDuration);
 
-    if (CoinsAnimation) CoinsAnimation.SetActive(false);
-    if (TotalSpinWinPanel) TotalSpinWinPanel.SetActive(false);
+    // if (CoinsAnimation) CoinsAnimation.SetActive(false);
+    // if (TotalSpinWinPanel) TotalSpinWinPanel.SetActive(false);
     if (FallingJackpotRT) FallingJackpotRT.gameObject.SetActive(false);
     if (JackpotPickedObject) JackpotPickedObject.SetActive(false);
+    yield return null;
   }
 
   private void UpdateBetDisplay(double bet)
