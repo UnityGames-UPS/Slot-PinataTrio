@@ -116,12 +116,12 @@ TextureImporter:
       name: bluebox_0
       rect:
         serializedVersion: 2
-        x: 15
-        y: 19
-        width: 223
-        height: 169
+        x: 18
+        y: 23
+        width: 216
+        height: 161
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 028b5e6183bf73540aaba74fb291adc8
     internalID: 0
     vertices: []
     indices: 
