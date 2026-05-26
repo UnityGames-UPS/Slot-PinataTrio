@@ -11,27 +11,6 @@ TextureImporter:
   - first:
       213: -1406846551777052675
     second: Minor Final_00005_2
-  - first:
-      213: 6244745416618343677
-    second: Minor Final_00005_3
-  - first:
-      213: 3315788002106874153
-    second: Minor Final_00005_4
-  - first:
-      213: -6402446858311721337
-    second: Minor Final_00005_5
-  - first:
-      213: 6201787248255870057
-    second: Minor Final_00005_6
-  - first:
-      213: -6191825693440925793
-    second: Minor Final_00005_7
-  - first:
-      213: 5984123055057920131
-    second: Minor Final_00005_8
-  - first:
-      213: -5056541949111043288
-    second: Minor Final_00005_9
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -143,10 +122,10 @@ TextureImporter:
       name: Minor Final_00005_0
       rect:
         serializedVersion: 2
-        x: 399
-        y: 888
-        width: 14
-        height: 8
+        x: 0
+        y: 27
+        width: 200
+        height: 166
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -165,10 +144,10 @@ TextureImporter:
       name: Minor Final_00005_1
       rect:
         serializedVersion: 2
-        x: 412
-        y: 885
-        width: 24
-        height: 11
+        x: 28
+        y: 188
+        width: 8
+        height: 8
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -187,10 +166,10 @@ TextureImporter:
       name: Minor Final_00005_2
       rect:
         serializedVersion: 2
-        x: 736
-        y: 843
-        width: 24
-        height: 17
+        x: 139
+        y: 192
+        width: 6
+        height: 6
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -201,160 +180,6 @@ TextureImporter:
       bones: []
       spriteID: df778d3d380e97ce0800000000000000
       internalID: -1406846551777052675
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Minor Final_00005_3
-      rect:
-        serializedVersion: 2
-        x: 317
-        y: 746
-        width: 13
-        height: 14
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: dfcf84ecedac9a650800000000000000
-      internalID: 6244745416618343677
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Minor Final_00005_4
-      rect:
-        serializedVersion: 2
-        x: 322
-        y: 366
-        width: 575
-        height: 471
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 9291510ce9b040e20800000000000000
-      internalID: 3315788002106874153
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Minor Final_00005_5
-      rect:
-        serializedVersion: 2
-        x: 303
-        y: 726
-        width: 10
-        height: 8
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 78e93050180f527a0800000000000000
-      internalID: -6402446858311721337
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Minor Final_00005_6
-      rect:
-        serializedVersion: 2
-        x: 974
-        y: 723
-        width: 11
-        height: 9
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 964a6d0d4ac211650800000000000000
-      internalID: 6201787248255870057
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Minor Final_00005_7
-      rect:
-        serializedVersion: 2
-        x: 143
-        y: 649
-        width: 12
-        height: 10
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: f9f11576657321aa0800000000000000
-      internalID: -6191825693440925793
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Minor Final_00005_8
-      rect:
-        serializedVersion: 2
-        x: 283
-        y: 419
-        width: 23
-        height: 20
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 380e3fc9630eb0350800000000000000
-      internalID: 5984123055057920131
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Minor Final_00005_9
-      rect:
-        serializedVersion: 2
-        x: 923
-        y: 418
-        width: 13
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 82bff5353ed83d9b0800000000000000
-      internalID: -5056541949111043288
       vertices: []
       indices: 
       edges: []
@@ -376,13 +201,6 @@ TextureImporter:
       Minor Final_00005_0: 8050206896384168512
       Minor Final_00005_1: -2551218484087764019
       Minor Final_00005_2: -1406846551777052675
-      Minor Final_00005_3: 6244745416618343677
-      Minor Final_00005_4: 3315788002106874153
-      Minor Final_00005_5: -6402446858311721337
-      Minor Final_00005_6: 6201787248255870057
-      Minor Final_00005_7: -6191825693440925793
-      Minor Final_00005_8: 5984123055057920131
-      Minor Final_00005_9: -5056541949111043288
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

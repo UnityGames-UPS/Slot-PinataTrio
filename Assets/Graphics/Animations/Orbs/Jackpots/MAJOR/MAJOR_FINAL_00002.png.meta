@@ -11,24 +11,6 @@ TextureImporter:
   - first:
       213: 8822377246837196227
     second: MAJOR_FINAL_00002_2
-  - first:
-      213: -7470104638164555662
-    second: MAJOR_FINAL_00002_3
-  - first:
-      213: 3439425784654787936
-    second: MAJOR_FINAL_00002_4
-  - first:
-      213: 7514520988916192994
-    second: MAJOR_FINAL_00002_5
-  - first:
-      213: 5337727564676498655
-    second: MAJOR_FINAL_00002_6
-  - first:
-      213: 2846156549876373464
-    second: MAJOR_FINAL_00002_7
-  - first:
-      213: -7337210347905464894
-    second: MAJOR_FINAL_00002_8
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -70,7 +52,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -140,10 +122,10 @@ TextureImporter:
       name: MAJOR_FINAL_00002_0
       rect:
         serializedVersion: 2
-        x: 616
-        y: 874
-        width: 19
-        height: 14
+        x: 4
+        y: 23
+        width: 192
+        height: 173
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -162,10 +144,10 @@ TextureImporter:
       name: MAJOR_FINAL_00002_1
       rect:
         serializedVersion: 2
-        x: 816
-        y: 881
-        width: 8
-        height: 9
+        x: 142
+        y: 177
+        width: 10
+        height: 8
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -184,10 +166,10 @@ TextureImporter:
       name: MAJOR_FINAL_00002_2
       rect:
         serializedVersion: 2
-        x: 800
-        y: 866
-        width: 14
-        height: 11
+        x: 0
+        y: 41
+        width: 7
+        height: 9
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -202,143 +184,11 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
-    - serializedVersion: 2
-      name: MAJOR_FINAL_00002_3
-      rect:
-        serializedVersion: 2
-        x: 440
-        y: 844
-        width: 15
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 278243fe86bd45890800000000000000
-      internalID: -7470104638164555662
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: MAJOR_FINAL_00002_4
-      rect:
-        serializedVersion: 2
-        x: 300
-        y: 365
-        width: 601
-        height: 455
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 065faad378b4bbf20800000000000000
-      internalID: 3439425784654787936
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: MAJOR_FINAL_00002_5
-      rect:
-        serializedVersion: 2
-        x: 464
-        y: 817
-        width: 24
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 2e611999601f84860800000000000000
-      internalID: 7514520988916192994
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: MAJOR_FINAL_00002_6
-      rect:
-        serializedVersion: 2
-        x: 231
-        y: 653
-        width: 19
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: fd48a5880fa631a40800000000000000
-      internalID: 5337727564676498655
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: MAJOR_FINAL_00002_7
-      rect:
-        serializedVersion: 2
-        x: 208
-        y: 544
-        width: 11
-        height: 11
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 8d758827d449f7720800000000000000
-      internalID: 2846156549876373464
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: MAJOR_FINAL_00002_8
-      rect:
-        serializedVersion: 2
-        x: 732
-        y: 370
-        width: 8
-        height: 9
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 2c546c2101efc2a90800000000000000
-      internalID: -7337210347905464894
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -351,12 +201,6 @@ TextureImporter:
       MAJOR_FINAL_00002_0: -2610614906980761465
       MAJOR_FINAL_00002_1: 6612247720365993700
       MAJOR_FINAL_00002_2: 8822377246837196227
-      MAJOR_FINAL_00002_3: -7470104638164555662
-      MAJOR_FINAL_00002_4: 3439425784654787936
-      MAJOR_FINAL_00002_5: 7514520988916192994
-      MAJOR_FINAL_00002_6: 5337727564676498655
-      MAJOR_FINAL_00002_7: 2846156549876373464
-      MAJOR_FINAL_00002_8: -7337210347905464894
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

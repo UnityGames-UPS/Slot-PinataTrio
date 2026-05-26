@@ -20,12 +20,6 @@ TextureImporter:
   - first:
       213: 5200461533861406794
     second: GRAND_00001_5
-  - first:
-      213: -4426263783287696371
-    second: GRAND_00001_6
-  - first:
-      213: 2942276295848521970
-    second: GRAND_00001_7
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -67,7 +61,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -137,10 +131,10 @@ TextureImporter:
       name: GRAND_00001_0
       rect:
         serializedVersion: 2
-        x: 737
-        y: 876
-        width: 17
-        height: 16
+        x: 104
+        y: 190
+        width: 9
+        height: 6
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -159,10 +153,10 @@ TextureImporter:
       name: GRAND_00001_1
       rect:
         serializedVersion: 2
-        x: 613
-        y: 855
-        width: 21
-        height: 19
+        x: 165
+        y: 187
+        width: 7
+        height: 6
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -181,10 +175,10 @@ TextureImporter:
       name: GRAND_00001_2
       rect:
         serializedVersion: 2
-        x: 786
-        y: 852
-        width: 15
-        height: 12
+        x: 45
+        y: 180
+        width: 7
+        height: 7
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -203,10 +197,10 @@ TextureImporter:
       name: GRAND_00001_3
       rect:
         serializedVersion: 2
-        x: 798
-        y: 863
-        width: 9
-        height: 10
+        x: 52
+        y: 172
+        width: 10
+        height: 11
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -225,10 +219,10 @@ TextureImporter:
       name: GRAND_00001_4
       rect:
         serializedVersion: 2
-        x: 452
-        y: 829
-        width: 16
-        height: 18
+        x: 2
+        y: 26
+        width: 198
+        height: 145
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -247,10 +241,10 @@ TextureImporter:
       name: GRAND_00001_5
       rect:
         serializedVersion: 2
-        x: 260
-        y: 653
-        width: 20
-        height: 13
+        x: 142
+        y: 24
+        width: 10
+        height: 10
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -265,55 +259,11 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
-    - serializedVersion: 2
-      name: GRAND_00001_6
-      rect:
-        serializedVersion: 2
-        x: 292
-        y: 381
-        width: 622
-        height: 440
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: d04d5fa5a80c292c0800000000000000
-      internalID: -4426263783287696371
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: GRAND_00001_7
-      rect:
-        serializedVersion: 2
-        x: 234
-        y: 552
-        width: 12
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 2f07a15c3b015d820800000000000000
-      internalID: 2942276295848521970
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -329,8 +279,6 @@ TextureImporter:
       GRAND_00001_3: 3185529476928653098
       GRAND_00001_4: -5036999216867591437
       GRAND_00001_5: 5200461533861406794
-      GRAND_00001_6: -4426263783287696371
-      GRAND_00001_7: 2942276295848521970
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

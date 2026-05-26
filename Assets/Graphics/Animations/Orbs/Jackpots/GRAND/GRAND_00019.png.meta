@@ -5,9 +5,6 @@ TextureImporter:
   - first:
       213: 1976134032324440577
     second: GRAND_00019_0
-  - first:
-      213: -2496669242234568087
-    second: GRAND_00019_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -49,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -119,10 +116,10 @@ TextureImporter:
       name: GRAND_00019_0
       rect:
         serializedVersion: 2
-        x: 324
-        y: 371
-        width: 558
-        height: 459
+        x: 18
+        y: 31
+        width: 167
+        height: 138
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -137,33 +134,11 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
-    - serializedVersion: 2
-      name: GRAND_00019_1
-      rect:
-        serializedVersion: 2
-        x: 830
-        y: 423
-        width: 54
-        height: 58
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 96207f65d8c0a5dd0800000000000000
-      internalID: -2496669242234568087
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -174,7 +149,6 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       GRAND_00019_0: 1976134032324440577
-      GRAND_00019_1: -2496669242234568087
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -11,27 +11,6 @@ TextureImporter:
   - first:
       213: -8932718497107886216
     second: GRAND_00004_2
-  - first:
-      213: 3918628914364730447
-    second: GRAND_00004_3
-  - first:
-      213: -120137662734833988
-    second: GRAND_00004_4
-  - first:
-      213: -6917292909955357588
-    second: GRAND_00004_5
-  - first:
-      213: -3158618087019157660
-    second: GRAND_00004_6
-  - first:
-      213: -7638208129315950280
-    second: GRAND_00004_7
-  - first:
-      213: -1136640571751381033
-    second: GRAND_00004_8
-  - first:
-      213: 1499947066521785863
-    second: GRAND_00004_9
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -73,7 +52,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -143,10 +122,10 @@ TextureImporter:
       name: GRAND_00004_0
       rect:
         serializedVersion: 2
-        x: 393
-        y: 902
-        width: 17
-        height: 19
+        x: 0
+        y: 22
+        width: 200
+        height: 163
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -165,10 +144,10 @@ TextureImporter:
       name: GRAND_00004_1
       rect:
         serializedVersion: 2
-        x: 411
-        y: 889
-        width: 29
-        height: 28
+        x: 35
+        y: 180
+        width: 9
+        height: 9
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -187,10 +166,10 @@ TextureImporter:
       name: GRAND_00004_2
       rect:
         serializedVersion: 2
-        x: 300
-        y: 352
-        width: 611
-        height: 497
+        x: 129
+        y: 174
+        width: 11
+        height: 11
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -205,165 +184,11 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
-    - serializedVersion: 2
-      name: GRAND_00004_3
-      rect:
-        serializedVersion: 2
-        x: 735
-        y: 844
-        width: 27
-        height: 24
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: f4cc84f5c34c16630800000000000000
-      internalID: 3918628914364730447
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: GRAND_00004_4
-      rect:
-        serializedVersion: 2
-        x: 980
-        y: 729
-        width: 13
-        height: 11
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: cb66b88ae6f255ef0800000000000000
-      internalID: -120137662734833988
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: GRAND_00004_5
-      rect:
-        serializedVersion: 2
-        x: 124
-        y: 657
-        width: 21
-        height: 10
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: c6468ce6fb6d000a0800000000000000
-      internalID: -6917292909955357588
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: GRAND_00004_6
-      rect:
-        serializedVersion: 2
-        x: 100
-        y: 515
-        width: 11
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 467691eb5955a24d0800000000000000
-      internalID: -3158618087019157660
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: GRAND_00004_7
-      rect:
-        serializedVersion: 2
-        x: 281
-        y: 422
-        width: 26
-        height: 23
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 8313f93ec22aff590800000000000000
-      internalID: -7638208129315950280
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: GRAND_00004_8
-      rect:
-        serializedVersion: 2
-        x: 930
-        y: 419
-        width: 18
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 7d746731c67d930f0800000000000000
-      internalID: -1136640571751381033
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: GRAND_00004_9
-      rect:
-        serializedVersion: 2
-        x: 854
-        y: 344
-        width: 19
-        height: 17
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 7069be1f8e1e0d410800000000000000
-      internalID: 1499947066521785863
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -376,13 +201,6 @@ TextureImporter:
       GRAND_00004_0: -8371490490623327077
       GRAND_00004_1: 5685593443929820794
       GRAND_00004_2: -8932718497107886216
-      GRAND_00004_3: 3918628914364730447
-      GRAND_00004_4: -120137662734833988
-      GRAND_00004_5: -6917292909955357588
-      GRAND_00004_6: -3158618087019157660
-      GRAND_00004_7: -7638208129315950280
-      GRAND_00004_8: -1136640571751381033
-      GRAND_00004_9: 1499947066521785863
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

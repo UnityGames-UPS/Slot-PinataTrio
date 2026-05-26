@@ -5,9 +5,6 @@ TextureImporter:
   - first:
       213: -7058886423207523573
     second: MINI_FINAL_00000_0
-  - first:
-      213: 6306274697972619620
-    second: MINI_FINAL_00000_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -49,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -119,10 +116,10 @@ TextureImporter:
       name: MINI_FINAL_00000_0
       rect:
         serializedVersion: 2
-        x: 347
-        y: 396
-        width: 490
-        height: 408
+        x: 16
+        y: 32
+        width: 167
+        height: 136
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -137,33 +134,11 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
-    - serializedVersion: 2
-      name: MINI_FINAL_00000_1
-      rect:
-        serializedVersion: 2
-        x: 800
-        y: 440
-        width: 48
-        height: 51
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 46911bcfc63648750800000000000000
-      internalID: 6306274697972619620
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -174,7 +149,6 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       MINI_FINAL_00000_0: -7058886423207523573
-      MINI_FINAL_00000_1: 6306274697972619620
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

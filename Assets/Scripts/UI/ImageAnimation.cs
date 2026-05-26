@@ -28,7 +28,7 @@ public class ImageAnimation : MonoBehaviour
 
 	private int indexOfTexture;
 
-	private float idealFrameRate = 0.0416666679f;
+	[SerializeField] private float idealFrameRate = 0.0416666679f;
 
 	private float delayBetweenAnimation;
 

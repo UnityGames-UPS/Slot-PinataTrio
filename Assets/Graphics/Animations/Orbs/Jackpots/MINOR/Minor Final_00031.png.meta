@@ -5,9 +5,6 @@ TextureImporter:
   - first:
       213: 3979989317249581705
     second: Minor Final_00031_0
-  - first:
-      213: 6634263048107871530
-    second: Minor Final_00031_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -119,10 +116,10 @@ TextureImporter:
       name: Minor Final_00031_0
       rect:
         serializedVersion: 2
-        x: 348
-        y: 386
-        width: 506
-        height: 429
+        x: 16
+        y: 34
+        width: 173
+        height: 143
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -133,28 +130,6 @@ TextureImporter:
       bones: []
       spriteID: 982c2887233cb3730800000000000000
       internalID: 3979989317249581705
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Minor Final_00031_1
-      rect:
-        serializedVersion: 2
-        x: 816
-        y: 432
-        width: 50
-        height: 54
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a2d48f8a713a11c50800000000000000
-      internalID: 6634263048107871530
       vertices: []
       indices: 
       edges: []
@@ -174,7 +149,6 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       Minor Final_00031_0: 3979989317249581705
-      Minor Final_00031_1: 6634263048107871530
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

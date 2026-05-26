@@ -5,42 +5,6 @@ TextureImporter:
   - first:
       213: 9015742332283825130
     second: GRAND_00009_0
-  - first:
-      213: 4073335523983696239
-    second: GRAND_00009_1
-  - first:
-      213: -162535416088408616
-    second: GRAND_00009_2
-  - first:
-      213: -8602126478219743984
-    second: GRAND_00009_3
-  - first:
-      213: 7493322496961533266
-    second: GRAND_00009_4
-  - first:
-      213: 3681972605455645257
-    second: GRAND_00009_5
-  - first:
-      213: 3990935111254776617
-    second: GRAND_00009_6
-  - first:
-      213: 3515502901611366433
-    second: GRAND_00009_7
-  - first:
-      213: 138258399247990091
-    second: GRAND_00009_8
-  - first:
-      213: 6564597524234876198
-    second: GRAND_00009_9
-  - first:
-      213: -7058432877730592215
-    second: GRAND_00009_10
-  - first:
-      213: 5284627259697340320
-    second: GRAND_00009_11
-  - first:
-      213: -8296410593433574278
-    second: GRAND_00009_12
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -82,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -152,10 +116,10 @@ TextureImporter:
       name: GRAND_00009_0
       rect:
         serializedVersion: 2
-        x: 396
-        y: 864
-        width: 23
-        height: 22
+        x: 18
+        y: 31
+        width: 167
+        height: 138
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -170,275 +134,11 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
-    - serializedVersion: 2
-      name: GRAND_00009_1
-      rect:
-        serializedVersion: 2
-        x: 481
-        y: 867
-        width: 11
-        height: 10
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: f61270ed315678830800000000000000
-      internalID: 4073335523983696239
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: GRAND_00009_2
-      rect:
-        serializedVersion: 2
-        x: 695
-        y: 844
-        width: 26
-        height: 25
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 8dd41a476ee8ebdf0800000000000000
-      internalID: -162535416088408616
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: GRAND_00009_3
-      rect:
-        serializedVersion: 2
-        x: 267
-        y: 352
-        width: 673
-        height: 497
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 01deab84b8b1f9880800000000000000
-      internalID: -8602126478219743984
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: GRAND_00009_4
-      rect:
-        serializedVersion: 2
-        x: 949
-        y: 824
-        width: 20
-        height: 21
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 255d5d21c11adf760800000000000000
-      internalID: 7493322496961533266
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: GRAND_00009_5
-      rect:
-        serializedVersion: 2
-        x: 210
-        y: 776
-        width: 15
-        height: 11
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 94a37e4a39ef81330800000000000000
-      internalID: 3681972605455645257
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: GRAND_00009_6
-      rect:
-        serializedVersion: 2
-        x: 168
-        y: 752
-        width: 13
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 92b99fbb656a26730800000000000000
-      internalID: 3990935111254776617
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: GRAND_00009_7
-      rect:
-        serializedVersion: 2
-        x: 260
-        y: 716
-        width: 15
-        height: 10
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 1288669534399c030800000000000000
-      internalID: 3515502901611366433
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: GRAND_00009_8
-      rect:
-        serializedVersion: 2
-        x: 226
-        y: 626
-        width: 27
-        height: 22
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: b4df36618413be100800000000000000
-      internalID: 138258399247990091
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: GRAND_00009_9
-      rect:
-        serializedVersion: 2
-        x: 967
-        y: 593
-        width: 23
-        height: 15
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 625bd65eaa22a1b50800000000000000
-      internalID: 6564597524234876198
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: GRAND_00009_10
-      rect:
-        serializedVersion: 2
-        x: 990
-        y: 541
-        width: 23
-        height: 20
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 92a0ee3e1b86b0e90800000000000000
-      internalID: -7058432877730592215
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: GRAND_00009_11
-      rect:
-        serializedVersion: 2
-        x: 966
-        y: 355
-        width: 19
-        height: 9
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 0af1b985e74c65940800000000000000
-      internalID: 5284627259697340320
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: GRAND_00009_12
-      rect:
-        serializedVersion: 2
-        x: 790
-        y: 342
-        width: 24
-        height: 10
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a74aa93858a3ddc80800000000000000
-      internalID: -8296410593433574278
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -449,18 +149,6 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       GRAND_00009_0: 9015742332283825130
-      GRAND_00009_1: 4073335523983696239
-      GRAND_00009_10: -7058432877730592215
-      GRAND_00009_11: 5284627259697340320
-      GRAND_00009_12: -8296410593433574278
-      GRAND_00009_2: -162535416088408616
-      GRAND_00009_3: -8602126478219743984
-      GRAND_00009_4: 7493322496961533266
-      GRAND_00009_5: 3681972605455645257
-      GRAND_00009_6: 3990935111254776617
-      GRAND_00009_7: 3515502901611366433
-      GRAND_00009_8: 138258399247990091
-      GRAND_00009_9: 6564597524234876198
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
