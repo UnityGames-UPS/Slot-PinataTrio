@@ -666,7 +666,7 @@ public class SlotBehaviour : MonoBehaviour
   private void ToggleButtonGrp(bool toggle)
   {
     bool active = toggle && !_isFeatureActive;
-    if (Spin_Button) Spin_Button.interactable = active;
+    if (Spin_Button) Spin_Button.interactable = toggle ? active : !_isFeatureActive;
     if (MaxBet_Button) MaxBet_Button.interactable = active;
     if (BetMinus_Button) BetMinus_Button.interactable = active;
     if (BetPlus_Button) BetPlus_Button.interactable = active;
