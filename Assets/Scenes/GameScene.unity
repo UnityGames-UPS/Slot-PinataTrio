@@ -1196,7 +1196,7 @@ MonoBehaviour:
   WheelBonusNameGraphic: {fileID: 1145725167}
   RedPinataIntroObject: {fileID: 1090311071}
   RedPinataIntroAnim: {fileID: 1090311073}
-  PickJackpotNameGraphic: {fileID: 1113060646}
+  PickJackpotNameGraphic: {fileID: 1485038774}
   BluePinataIntroObject: {fileID: 0}
   BluePinataIntroAnim: {fileID: 0}
   LinkBonusNameGraphic: {fileID: 0}
@@ -3669,7 +3669,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1090311072}
-  - {fileID: 1113060645}
+  - {fileID: 1485038773}
   m_Father: {fileID: 1298497625}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -8421,7 +8421,7 @@ PrefabInstance:
       objectReference: {fileID: 1728521618}
     - target: {fileID: 7610637853776029503, guid: fbbc9264dc50de44589243147c5ea3dc, type: 3}
       propertyPath: testToken
-      value: 0889f36e45ba4be99d53a37369ed19e5
+      value: 014530ffc0284c79bdd5941d6d401cd0
       objectReference: {fileID: 0}
     - target: {fileID: 7610637853776029503, guid: fbbc9264dc50de44589243147c5ea3dc, type: 3}
       propertyPath: uiManager
@@ -9749,8 +9749,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -875.01544, y: 495.0388}
-  m_SizeDelta: {x: 169.969, y: 89.922}
+  m_AnchoredPosition: {x: -886.46674, y: 495.0388}
+  m_SizeDelta: {x: 147.066, y: 89.922}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1035774565
 MonoBehaviour:
@@ -11375,7 +11375,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1113060645
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11383,12 +11383,12 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1113060644}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 302678129}
+  m_Father: {fileID: 1485038773}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -11591,12 +11591,12 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1145725165}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2106265668}
+  m_Father: {fileID: 1679888281}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -16005,6 +16005,82 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1483068681}
   m_CullTransparentMesh: 1
+--- !u!1 &1485038772
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1485038773}
+  - component: {fileID: 1485038775}
+  - component: {fileID: 1485038774}
+  m_Layer: 5
+  m_Name: RedBackgroundGlow
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &1485038773
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1485038772}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1113060645}
+  m_Father: {fileID: 302678129}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1920, y: 1080}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1485038774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1485038772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: -4271811813026375047, guid: 5f615f85967660a4897637d9ededa248, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1485038775
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1485038772}
+  m_CullTransparentMesh: 1
 --- !u!1 &1489929834
 GameObject:
   m_ObjectHideFlags: 0
@@ -18452,6 +18528,82 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1671243207}
+  m_CullTransparentMesh: 1
+--- !u!1 &1679888280
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1679888281}
+  - component: {fileID: 1679888283}
+  - component: {fileID: 1679888282}
+  m_Layer: 5
+  m_Name: GreenBackgroundGlow
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &1679888281
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1679888280}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1145725166}
+  m_Father: {fileID: 2106265668}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1920, y: 1080}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1679888282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1679888280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 43d899e9aa22e8641ae20ece1904e27f, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1679888283
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1679888280}
   m_CullTransparentMesh: 1
 --- !u!1 &1680508453
 GameObject:
@@ -23309,9 +23461,93 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 092bff7e976d37b4c9ac79b0af08f250, type: 3}
   - {fileID: 21300000, guid: aeee3a6462866394e853aa6240764160, type: 3}
   - {fileID: 21300000, guid: ad6f75e285bb4a94c9ef446a6196eb98, type: 3}
-  GreenPinata_Sprite: []
-  RedPinata_Sprite: []
-  BluePinata_Sprite: []
+  GreenPinata_Sprite:
+  - {fileID: -4097323767999402948, guid: 0eb3ea7f188075542b38275a89aa7826, type: 3}
+  - {fileID: 7191981558730045929, guid: c68ce1021f6c8fd47a5cb1e90aca27f6, type: 3}
+  - {fileID: 2112704128176193642, guid: 9b4b8b7d3bd90b542adb2701b8e50b43, type: 3}
+  - {fileID: -5910551535364872443, guid: 0687a78ea38f7a447a37bf487bc7a9fe, type: 3}
+  - {fileID: 5702594554174578208, guid: 099493178f2ccce41a79bb03a222ac96, type: 3}
+  - {fileID: 1452042555195182150, guid: 310bdd7d5c8b36745a7be35b6fb86619, type: 3}
+  - {fileID: 3422117092198253768, guid: 378ed5d8bc40dc24e8633b147f7cfecb, type: 3}
+  - {fileID: -7762381922029543900, guid: 53057587925fed043b661a723e05873a, type: 3}
+  - {fileID: -6640413854237050963, guid: 737d39504caceee4291fcc9c4818e354, type: 3}
+  - {fileID: -24265100346842206, guid: 980d7d22d4a49e646941705687ec94bc, type: 3}
+  - {fileID: 4889062522342126979, guid: 0025415bfd9161a4c815cf178d76d681, type: 3}
+  - {fileID: 4173611864295767793, guid: 69e8425177a23da4fb5adcafbada4a01, type: 3}
+  - {fileID: -925912032721189512, guid: 1d0ad06d21fde2648a7914aa2e014212, type: 3}
+  - {fileID: -2831073129657514285, guid: 3443c9f9621e64c4bb709d5f26c16f19, type: 3}
+  - {fileID: -1376710218056222121, guid: c789ded44371b5a499f8b2ec32f38c71, type: 3}
+  - {fileID: -2960554884203749416, guid: 375cb75aff560ef4e868a602af403cda, type: 3}
+  - {fileID: 3064529963957378345, guid: b5aa1fc2b3dce4e43bcabe8ac59b7b86, type: 3}
+  - {fileID: -3317341294986499108, guid: 867e638fb266c8e4987f946fd9aa974d, type: 3}
+  - {fileID: 6814826850323800997, guid: f251313b3512f244bac026348da56a47, type: 3}
+  - {fileID: 4763767410104154695, guid: 557a5cd7e4aaacb4baf6f0cd2e64e771, type: 3}
+  - {fileID: -4706542830262132938, guid: 64116cf3d59f85d4ba849be404b24d70, type: 3}
+  - {fileID: 2774911459152071791, guid: 0e66fff6d12cb044cb08e106e24301e9, type: 3}
+  - {fileID: -8229556416595755368, guid: cba9c01056213594da1cbbae9bdf6904, type: 3}
+  - {fileID: 1147781024394771826, guid: a760019ac7e5dd846ad2f008245f9253, type: 3}
+  - {fileID: 1861154762488995146, guid: 47e9372d0a1eaa74fa4fe5587ac2d60a, type: 3}
+  - {fileID: -8408239179849352091, guid: e78b1d855088f4146aceb7b2a3676156, type: 3}
+  - {fileID: -4691957071584239079, guid: 19f33c311097eaf448618cfa9c852456, type: 3}
+  - {fileID: 136882035799184441, guid: f905f4fcf2ab09149927c529f817bc13, type: 3}
+  RedPinata_Sprite:
+  - {fileID: 3132006644694457945, guid: e2ee954f19a47704395e845bc943b3b8, type: 3}
+  - {fileID: -7698528204127317401, guid: 00f936b13bd47fe42ba431cbe0603712, type: 3}
+  - {fileID: -8810172929926544144, guid: aefd82a80f04a8944917a6dc1b2bbe59, type: 3}
+  - {fileID: 5780499964053120868, guid: 2b35083354631e34f87303f51d17dacd, type: 3}
+  - {fileID: -5205618421971079238, guid: 05dc07032935b9147bf6b6896f4ae4ae, type: 3}
+  - {fileID: -1927241576613410038, guid: aad9d78c2ed77904589795193a688ff9, type: 3}
+  - {fileID: 8980502605088357234, guid: 5cf7ef7047ac1794a9f8afc7b88f78c7, type: 3}
+  - {fileID: -5319267117052354547, guid: d1d55575a7c113d4893fe662e5d92a32, type: 3}
+  - {fileID: 8247614416199915818, guid: 0ca2cff8d5fe7584b8e505e8f3e5ed02, type: 3}
+  - {fileID: 7641562940903952392, guid: d0d358d78c5dd6a41a9dec6091f2f553, type: 3}
+  - {fileID: 6365366818578943737, guid: b4660cb241af02b488585e7e3a3db899, type: 3}
+  - {fileID: 7953326963485363710, guid: 1eb5da1be464e004b956a4abb8d73af7, type: 3}
+  - {fileID: 2582766470195380907, guid: f5ea00672e6394943b036e22f95b557d, type: 3}
+  - {fileID: 7875335493622052469, guid: a7508d39f15f1484ca1dffb761f7c637, type: 3}
+  - {fileID: -4798438150917223432, guid: 958b93bbc5f0f334c95b18419edb8a8d, type: 3}
+  - {fileID: -9161503943397318588, guid: 2c151254e0a67374db7ff6d7341297f3, type: 3}
+  - {fileID: 1714845815397280166, guid: c0e6eb8ef73d90f4eb16977e83b9e995, type: 3}
+  - {fileID: 4246769916704611365, guid: 4dda039ef5b5e0c44b1f633039c80b3d, type: 3}
+  - {fileID: 344329296281884108, guid: 77b04a5b3f726674fa91b3427f1e43f7, type: 3}
+  - {fileID: -6060563459614199026, guid: de3bd18af95f3d04d8c93db4d6a6083c, type: 3}
+  - {fileID: 6979218855343081986, guid: 8c6da920e9336f94dad3b374b057d151, type: 3}
+  - {fileID: -6135955783650459947, guid: bf413648f8ec3cb4b8ceb127fe339a5a, type: 3}
+  - {fileID: 3636445265608305349, guid: 0a8d2b75102ffb74bbe49144f4da2a60, type: 3}
+  - {fileID: -3593302392558064632, guid: 12f5c3e52b22ffe4286796f445e9cd59, type: 3}
+  - {fileID: -3118798535315439824, guid: fe6dac92dd9c8a844afab8860f150abc, type: 3}
+  - {fileID: 8616861572153083304, guid: 2038d210c132acc4baf77a97fc5e64f2, type: 3}
+  - {fileID: -4300751857496666123, guid: 4b6226fa07d9d7b4fbd1d82f853fe3bf, type: 3}
+  - {fileID: 4506127397882538800, guid: 87176e4645b15a845b40ea585f409956, type: 3}
+  BluePinata_Sprite:
+  - {fileID: 1458577340983186184, guid: 72ef25748c2d26043829c2a8011d0642, type: 3}
+  - {fileID: 3167503476701187927, guid: cfb4ae937fbc8564994e4e9d0fca3c87, type: 3}
+  - {fileID: -2071565468339969420, guid: afd3b56b951f9624c8fc926a129937f3, type: 3}
+  - {fileID: 130506342287386640, guid: fdc4512058ab1454a851a5fbbb77ff47, type: 3}
+  - {fileID: -6620273797289052453, guid: 4a119ace1041f41429bd702380716e99, type: 3}
+  - {fileID: 6410156914556601022, guid: 93cf225e96c3e784b9aa1ca63192f484, type: 3}
+  - {fileID: -6833008379319837578, guid: 0747ff8b43cadaa4a8eb667b64ab46b7, type: 3}
+  - {fileID: 7319397664599972105, guid: 5b0c268e3a1e5ac4b993fde7295a5506, type: 3}
+  - {fileID: 5334856404691874789, guid: 9ee19209ff0767c4584eb99dbbeb46b3, type: 3}
+  - {fileID: -7349451076609628375, guid: 040f598d692365e489773687e5f5a10e, type: 3}
+  - {fileID: 1668385980109745378, guid: 0d8113f7144d4b94daa610fef299bca8, type: 3}
+  - {fileID: 6895044834568412823, guid: 80ee38ea14a184b49b95e6b1d3dc183e, type: 3}
+  - {fileID: 13020187688203639, guid: 9b59f45acc984664dae2ec20e7d68c1a, type: 3}
+  - {fileID: -1067180122716813731, guid: fd2d0a99506e18f4590e7997673af8e6, type: 3}
+  - {fileID: -2293365456268253967, guid: d90c576738bb68342a8500b9474e4233, type: 3}
+  - {fileID: -270775733534819138, guid: 885ee5cbdbafd124ea18f375ccfc85ec, type: 3}
+  - {fileID: -8574023199507804295, guid: 295f2b4b57cae184c8c10c41ebdf93b7, type: 3}
+  - {fileID: -6884058241057169489, guid: 7dabf795d6ff668498f683e7a8d41910, type: 3}
+  - {fileID: -4006688463383919764, guid: fe025f8a6d77e18459bdd0a5f3eac5c0, type: 3}
+  - {fileID: -8286030931935423402, guid: adbb256f70c0b174897680efd9c77af0, type: 3}
+  - {fileID: -874112404634476632, guid: 358a254b4376ca54784c55203cba6196, type: 3}
+  - {fileID: 5053401548946125177, guid: f4879f0fee92c3f488f97d2f08bc31e3, type: 3}
+  - {fileID: -7483423586318747752, guid: 9376293183db83046abf748571477434, type: 3}
+  - {fileID: 2567850951004553505, guid: 7ea50166f91e5da43a149dffd129bb24, type: 3}
+  - {fileID: 8115035455938425031, guid: 78ecbd78bbdd9a94eb666d0e0a301f39, type: 3}
+  - {fileID: -1581545427657774849, guid: 77f4e26b48f13f4409e06328a31c6a58, type: 3}
+  - {fileID: 7041113308009099886, guid: f64add3c7527a984f9be516ec86cacd8, type: 3}
+  - {fileID: 4659584634933898091, guid: 99752ec52b4e3c541ad52b78d696eba2, type: 3}
   YellowBubble_Sprite:
   - {fileID: 21300000, guid: ae91589d51337e449b4561b50aafe982, type: 3}
   - {fileID: 21300000, guid: 2ad938982ec64f94699fe2f7f65531cf, type: 3}
@@ -23456,7 +23692,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1819570683}
-  - {fileID: 1145725166}
+  - {fileID: 1679888281}
   m_Father: {fileID: 1298497625}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}

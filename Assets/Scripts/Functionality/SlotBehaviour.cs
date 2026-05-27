@@ -784,7 +784,7 @@ public class SlotBehaviour : MonoBehaviour
 
     ImageAnimation animScript = animImg.GetComponent<ImageAnimation>();
     animImg.gameObject.SetActive(true);
-    if (animScript != null) animScript.StartAnimation();
+    if (animScript != null && animScript.textureArray?.Count > 0) animScript.StartAnimation();
 
     Sequence flySeq = DOTween.Sequence();
     flySeq.Append(animImg.transform.DOMove(target.position, pinataFlyDuration).SetEase(Ease.InOutQuad));
@@ -792,7 +792,7 @@ public class SlotBehaviour : MonoBehaviour
     flySeq.Insert(pinataFlyDuration * 0.6f, animRT.DOScale(Vector3.zero, pinataFlyDuration * 0.4f).SetEase(Ease.InQuad));
     yield return flySeq.WaitForCompletion();
 
-    if (animScript != null) animScript.StopAnimation();
+    if (animScript != null && animScript.textureArray?.Count > 0) animScript.StopAnimation();
     animImg.gameObject.SetActive(false);
     animRT.anchoredPosition = startAnchoredPos;
     animRT.localScale = startScale;
