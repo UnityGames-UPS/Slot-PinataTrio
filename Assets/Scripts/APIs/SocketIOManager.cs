@@ -48,7 +48,7 @@ public class SocketIOManager : MonoBehaviour
   private float pongTimeout = 3f;
   private bool waitingForPong = false;
   private int missedPongs = 0;
-  private const int MaxMissedPongs = 5;
+  private const int MaxMissedPongs = 15;
   private Coroutine PingRoutine; //Back2 end
   private void Awake()
   {
@@ -272,11 +272,9 @@ private void OnError(Error err)
       // If waiting for pong, and timeout passed
       if (waitingForPong)
       {
-        if (missedPongs == 2)
-        {
-          uiManager.ReconnectionPopup();
-        }
         missedPongs++;
+        if (missedPongs >= 2)
+          uiManager.ReconnectionPopup(missedPongs, MaxMissedPongs);
         Debug.LogWarning($"⚠️ Pong missed #{missedPongs}/{MaxMissedPongs}");
 
         if (missedPongs >= MaxMissedPongs)

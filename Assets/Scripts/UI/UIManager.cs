@@ -312,7 +312,9 @@ public class UIManager : MonoBehaviour
 
   [Header("Reconnection Popup")]
   [SerializeField]
-  private TMP_Text reconnect_Text;
+  private TMP_Text ReconnectingText;
+  [SerializeField]
+  private TMP_Text ReconnectingAttemptText;
   [SerializeField]
   private GameObject ReconnectPopup_Object;
 
@@ -562,8 +564,10 @@ public class UIManager : MonoBehaviour
     }
   }
 
-  internal void ReconnectionPopup()
+  internal void ReconnectionPopup(int attempt, int max)
   {
+    if (ReconnectingText) ReconnectingText.text = "Reconnecting...";
+    if (ReconnectingAttemptText) ReconnectingAttemptText.text = $"{attempt}/{max}";
     OpenPopup(ReconnectPopup_Object);
   }
 
