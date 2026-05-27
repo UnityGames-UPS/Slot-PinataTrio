@@ -64,6 +64,7 @@ public class UIManager : MonoBehaviour
   [Header("Intro")]
   [SerializeField] private RectTransform PinataTrio;
   [SerializeField] private RectTransform GameContent;
+  [SerializeField] private RectTransform MoveUpAfterIntro;
   [SerializeField] private float introHoldDuration = 3f;
   [SerializeField] private float offscreenOffset = 1200f;
   [SerializeField] private float gameContentScrollAmount = 700f;
@@ -539,6 +540,7 @@ public class UIManager : MonoBehaviour
     yield return new WaitForSeconds(introHoldDuration);
 
     if (PinataTrio) PinataTrio.DOAnchorPosY(PinataTrio.anchoredPosition.y + offscreenOffset, 0.6f).SetEase(Ease.InBack);
+    if (MoveUpAfterIntro) MoveUpAfterIntro.DOAnchorPosY(MoveUpAfterIntro.anchoredPosition.y + 275f, 0.8f).SetEase(Ease.OutCubic);
     if (GameContent)
       yield return GameContent.DOAnchorPosY(gameContentRestY, 0.8f).SetEase(Ease.OutCubic).WaitForCompletion();
 
