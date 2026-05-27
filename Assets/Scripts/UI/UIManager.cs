@@ -67,6 +67,7 @@ public class UIManager : MonoBehaviour
   [SerializeField] private float introHoldDuration = 3f;
   [SerializeField] private float offscreenOffset = 1200f;
   [SerializeField] private float gameContentScrollAmount = 700f;
+  [SerializeField] private float gameContentRestY = -0.66f;
   [SerializeField] private RectTransform GreenPinata;
   [SerializeField] private RectTransform RedPinata;
   [SerializeField] private RectTransform BluePinata;
@@ -537,7 +538,7 @@ public class UIManager : MonoBehaviour
 
     if (PinataTrio) PinataTrio.DOAnchorPosY(PinataTrio.anchoredPosition.y + offscreenOffset, 0.6f).SetEase(Ease.InBack);
     if (GameContent)
-      yield return GameContent.DOAnchorPosY(GameContent.anchoredPosition.y + gameContentScrollAmount, 0.8f).SetEase(Ease.OutCubic).WaitForCompletion();
+      yield return GameContent.DOAnchorPosY(gameContentRestY, 0.8f).SetEase(Ease.OutCubic).WaitForCompletion();
 
     if (GreenPinata) GreenPinata.DOAnchorPosY(GreenPinata.anchoredPosition.y + pinataScrollAmount, 0.6f).SetEase(Ease.OutBack);
     if (BluePinata) BluePinata.DOAnchorPosY(BluePinata.anchoredPosition.y + pinataScrollAmount, 0.6f).SetEase(Ease.OutBack);

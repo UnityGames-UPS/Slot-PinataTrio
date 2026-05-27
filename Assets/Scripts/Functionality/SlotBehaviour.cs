@@ -459,6 +459,8 @@ public class SlotBehaviour : MonoBehaviour
   #region PendingFeatures
   private IEnumerator HandlePendingFeatures(List<PendingFeature> features)
   {
+    bool wasAutoSpinning = IsAutoSpin;
+    StopAutoSpin();
     foreach (var feature in features)
     {
       if (!feature.triggered) continue;
@@ -477,6 +479,7 @@ public class SlotBehaviour : MonoBehaviour
       }
       uiManager.SetReelFrame("default");
     }
+    if (wasAutoSpinning) AutoSpin();
   }
 
   private IEnumerator HandleWheelBonus(PendingFeature feature)

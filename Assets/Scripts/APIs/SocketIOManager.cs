@@ -13,7 +13,8 @@ public class SocketIOManager : MonoBehaviour
   [SerializeField] private UIManager uiManager;
   [SerializeField] internal JSFunctCalls JSManager;
   [SerializeField] private string testToken;
-  [SerializeField] private GameObject RaycastBlocker;
+  // TODO: create a full-screen raycast blocker panel in the scene and assign it here
+  // [SerializeField] private GameObject RaycastBlocker;
   internal GameData InitialData = null;
   internal UiData UIData = null;
   internal Features GameFeatures = null;
@@ -318,7 +319,7 @@ private void OnError(Error err)
 
   internal IEnumerator CloseSocket() //Back2 Start
   {
-    RaycastBlocker.SetActive(true);
+    // TODO: RaycastBlocker.SetActive(true);
     ResetPingRoutine();
 
     Debug.Log("Closing Socket");
@@ -401,7 +402,7 @@ private void OnError(Error err)
 #if UNITY_WEBGL && !UNITY_EDITOR
     JSManager.SendCustomMessage("OnEnter");
 #endif
-    if (RaycastBlocker) RaycastBlocker.SetActive(false);
+    // TODO: RaycastBlocker.SetActive(false);
   }
 
   // VIKING GAME - LINES-BASED SOCKET POPULATION - NOT USED IN THIS GAME
