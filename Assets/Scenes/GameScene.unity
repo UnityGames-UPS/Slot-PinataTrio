@@ -1476,7 +1476,7 @@ MonoBehaviour:
   YesQuit_Button: {fileID: 0}
   NoQuit_Button: {fileID: 0}
   CrossQuit_Button: {fileID: 0}
-  audioController: {fileID: 357240839}
+  audioManager: {fileID: 0}
   m_AwakeGameButton: {fileID: 0}
   GameExit_Button: {fileID: 0}
   Home_Button: {fileID: 1035774565}
@@ -4833,34 +4833,19 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3852213879517017561, guid: 0574a4cf18d5cd94b97009e12488e861, type: 3}
-      propertyPath: bg_adudio
+    - target: {fileID: 6293375610026765241, guid: 0574a4cf18d5cd94b97009e12488e861, type: 3}
+      propertyPath: clipBonusBg
       value: 
-      objectReference: {fileID: 909611962}
-    - target: {fileID: 7671732010189892726, guid: 0574a4cf18d5cd94b97009e12488e861, type: 3}
-      propertyPath: Loop
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7671732010189892726, guid: 0574a4cf18d5cd94b97009e12488e861, type: 3}
+      objectReference: {fileID: 8300000, guid: 1452fbcdc7a11bf408aa7e40ed9a1e28, type: 3}
+    - target: {fileID: 8507266886385244306, guid: 0574a4cf18d5cd94b97009e12488e861, type: 3}
       propertyPath: m_Resource
       value: 
-      objectReference: {fileID: 8300000, guid: 5f26591990952b741a0d4d87d38e2ce6, type: 3}
+      objectReference: {fileID: 8300000, guid: 1452fbcdc7a11bf408aa7e40ed9a1e28, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0574a4cf18d5cd94b97009e12488e861, type: 3}
---- !u!114 &357240839 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3852213879517017561, guid: 0574a4cf18d5cd94b97009e12488e861, type: 3}
-  m_PrefabInstance: {fileID: 357240838}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 782a047ea6ad54319834e4c76486aab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AudioController
 --- !u!1 &384035119
 GameObject:
   m_ObjectHideFlags: 0
@@ -9514,7 +9499,7 @@ PrefabInstance:
       objectReference: {fileID: 1728521618}
     - target: {fileID: 7610637853776029503, guid: fbbc9264dc50de44589243147c5ea3dc, type: 3}
       propertyPath: testToken
-      value: fe427d73e3214b04ab9e67f8a334d267
+      value: 83f7c7b810fb4f03918e8abfb4b18faa
       objectReference: {fileID: 0}
     - target: {fileID: 7610637853776029503, guid: fbbc9264dc50de44589243147c5ea3dc, type: 3}
       propertyPath: uiManager
@@ -10144,11 +10129,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 904965258}
   m_CullTransparentMesh: 1
---- !u!82 &909611962 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 7671732010189892726, guid: 0574a4cf18d5cd94b97009e12488e861, type: 3}
-  m_PrefabInstance: {fileID: 357240838}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &931759740
 GameObject:
   m_ObjectHideFlags: 0
@@ -10859,7 +10839,7 @@ MonoBehaviour:
   WinAmountText: {fileID: 299277393}
   Bonus_Object: {fileID: 1803399849}
   slotManager: {fileID: 2073624787}
-  _audioManager: {fileID: 357240839}
+  _audioManager: {fileID: 0}
   PopupPanel: {fileID: 2009788518}
   Win_Transform: {fileID: 1268043718}
   Boost_Transform: {fileID: 384035120}
@@ -25941,7 +25921,7 @@ MonoBehaviour:
   BluePinataTarget: {fileID: 450896178}
   pinataFlyDuration: 0.8
   pinataPeakScale: 1.8
-  audioController: {fileID: 357240839}
+  audioManager: {fileID: 0}
   uiManager: {fileID: 117472470}
   TempList: []
   SocketManager: {fileID: 839819183}

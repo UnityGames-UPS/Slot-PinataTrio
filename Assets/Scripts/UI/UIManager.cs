@@ -336,7 +336,7 @@ public class UIManager : MonoBehaviour
   private Button CrossQuit_Button;
 
   [SerializeField]
-  private AudioController audioController;
+  private AudioManager audioManager;
   [SerializeField]
   private Button m_AwakeGameButton;
 
@@ -513,7 +513,7 @@ public class UIManager : MonoBehaviour
     if (QuitSplash_button) QuitSplash_button.onClick.RemoveAllListeners();
     if (QuitSplash_button) QuitSplash_button.onClick.AddListener(delegate { OpenPopup(QuitPopup_Object); });
 
-    if (audioController) audioController.ToggleMute(false);
+    if (audioManager) audioManager.SetSfxEnabled(true);
 
     isMusic = true;
     isSound = true;
@@ -720,14 +720,14 @@ public class UIManager : MonoBehaviour
     if (!isExit)
     {
       isExit = true;
-      audioController.PlayButtonAudio();
+      if (audioManager) audioManager.PlayButton();
       slotManager.CallCloseSocket();
     }
   }
 
   private void OpenMenu()
   {
-    audioController.PlayButtonAudio();
+    audioManager.PlayButton();
     if (Menu_Object) Menu_Object.SetActive(false);
     if (Exit_Object) Exit_Object.SetActive(true);
     //if (About_Object) About_Object.SetActive(true);
@@ -755,7 +755,7 @@ public class UIManager : MonoBehaviour
   private void CloseMenu()
   {
 
-    if (audioController) audioController.PlayButtonAudio();
+    if (audioManager) audioManager.PlayButton();
     //DOTween.To(() => About_RT.anchoredPosition, (val) => About_RT.anchoredPosition = val, new Vector2(About_RT.anchoredPosition.x, About_RT.anchoredPosition.y - 150), 0.1f).OnUpdate(() =>
     //{
     //    LayoutRebuilder.ForceRebuildLayoutImmediate(About_RT);
@@ -785,14 +785,14 @@ public class UIManager : MonoBehaviour
 
   private void OpenPopup(GameObject Popup)
   {
-    if (audioController) audioController.PlayButtonAudio();
+    if (audioManager) audioManager.PlayButton();
     if (Popup) Popup.SetActive(true);
     if (MainPopup_Object) MainPopup_Object.SetActive(true);
   }
 
   internal void ClosePopup(GameObject Popup)
   {
-    if (audioController) audioController.PlayButtonAudio();
+    if (audioManager) audioManager.PlayButton();
     if (Popup) Popup.SetActive(false);
     if (!DisconnectPopup_Object.activeSelf)
     {
@@ -807,13 +807,13 @@ public class UIManager : MonoBehaviour
     {
       if (MusicOn_Object) MusicOn_Object.SetActive(true);
       if (MusicOff_Object) MusicOff_Object.SetActive(false);
-      audioController.ToggleMute(false, "bg");
+      if (audioManager) audioManager.SetMusicEnabled(true);
     }
     else
     {
       if (MusicOn_Object) MusicOn_Object.SetActive(false);
       if (MusicOff_Object) MusicOff_Object.SetActive(true);
-      audioController.ToggleMute(true, "bg");
+      if (audioManager) audioManager.SetMusicEnabled(false);
     }
   }
 
@@ -829,15 +829,13 @@ public class UIManager : MonoBehaviour
     {
       if (SoundOn_Object) SoundOn_Object.SetActive(true);
       if (SoundOff_Object) SoundOff_Object.SetActive(false);
-      if (audioController) audioController.ToggleMute(false, "button");
-      if (audioController) audioController.ToggleMute(false, "wl");
+      if (audioManager) audioManager.SetSfxEnabled(true);
     }
     else
     {
       if (SoundOn_Object) SoundOn_Object.SetActive(false);
       if (SoundOff_Object) SoundOff_Object.SetActive(true);
-      if (audioController) audioController.ToggleMute(true, "button");
-      if (audioController) audioController.ToggleMute(true, "wl");
+      if (audioManager) audioManager.SetSfxEnabled(false);
     }
   }
 

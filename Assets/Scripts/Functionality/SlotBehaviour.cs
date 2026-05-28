@@ -86,7 +86,7 @@ public class SlotBehaviour : MonoBehaviour
 
   [Header("Audio Management")]
   [SerializeField]
-  private AudioController audioController;
+  private AudioManager audioManager;
 
   [SerializeField]
   private UIManager uiManager;
@@ -220,7 +220,7 @@ public class SlotBehaviour : MonoBehaviour
   private void MaxBet()
   {
     if (uiManager.BetCount == 0) return;
-    if (audioController) audioController.PlayButtonAudio();
+    if (audioManager) audioManager.PlayButton();
     BetCounter = uiManager.BetCount - 1;
     currentTotalBet = uiManager.GetBetAmount(BetCounter);
     uiManager.SetBet(BetCounter);
@@ -229,7 +229,7 @@ public class SlotBehaviour : MonoBehaviour
   private void ChangeBet(bool IncDec)
   {
     if (uiManager.BetCount == 0) return;
-    if (audioController) audioController.PlayButtonAudio();
+    if (audioManager) audioManager.PlayButton();
     if (IncDec)
     {
       BetCounter++;
@@ -305,7 +305,6 @@ public class SlotBehaviour : MonoBehaviour
 
   private void OnApplicationFocus(bool focus)
   {
-    audioController.CheckFocusFunction(focus, CheckSpinAudio);
   }
 
   #region AnimationSprites
@@ -386,6 +385,7 @@ public class SlotBehaviour : MonoBehaviour
     ClearCoinOverlays();
     _activePinataAnims = 0;
     IsSpinning = true;
+    if (audioManager) audioManager.PlaySpinLoop();
     spinStartTime = Time.time;
     Spin_Button.GetComponent<Image>().sprite = StopSprite;
     ToggleButtonGrp(false);
@@ -430,6 +430,7 @@ public class SlotBehaviour : MonoBehaviour
       yield return StopTweening(Slot_Transform[i], i, stagger);
     }
     StopSpinToggle = false;
+    if (audioManager) audioManager.StopSpinLoop();
     yield return alltweens[^1].WaitForCompletion();
     Spin_Button.GetComponent<Image>().sprite = SpinSprite;
     yield return new WaitUntil(() => _activePinataAnims == 0);
@@ -491,6 +492,7 @@ public class SlotBehaviour : MonoBehaviour
     uiManager.SetupFeaturePinata("wheelBonus");
     StartCoroutine(uiManager.SlideContentDown());
     yield return StartCoroutine(uiManager.PlayFeatureIntro("wheelBonus"));
+    if (audioManager) audioManager.PlayBonusBgMusic();
 
     SocketManager.SendWheelBonus();
     yield return new WaitUntil(() => SocketManager.isWheelBonusDone);
@@ -509,6 +511,7 @@ public class SlotBehaviour : MonoBehaviour
     string wheelTier = wbFeature?.jackpotTier ?? "mini";
     yield return StartCoroutine(uiManager.ShowJackpotWinSequence(wheelTier, awardValue, awardValue));
 
+    if (audioManager) audioManager.StopBonusBgMusic();
     uiManager.CleanupFeaturePinata("wheelBonus");
     CheckPopups = false;
     _isFeatureActive = false;
@@ -524,6 +527,7 @@ public class SlotBehaviour : MonoBehaviour
     uiManager.SetupFeaturePinata("pickJackpot");
     StartCoroutine(uiManager.SlideContentDown());
     yield return StartCoroutine(uiManager.PlayFeatureIntro("pickJackpot"));
+    if (audioManager) audioManager.PlayBonusBgMusic();
     uiManager.ShowPickJackpotScreen();
 
     yield return new WaitUntil(() => uiManager.PickJackpotSelected);
@@ -548,6 +552,7 @@ public class SlotBehaviour : MonoBehaviour
     uiManager.PlayBustedPinataOnce("red");
     double freeSpinTotalWin = SocketManager.ResultData.payload?.winAmount ?? 0;
     yield return StartCoroutine(uiManager.ShowJackpotWinSequence(goalJackpot, awardValue, freeSpinTotalWin));
+    if (audioManager) audioManager.StopBonusBgMusic();
     uiManager.CleanupFeaturePinata("pickJackpot");
     _isFeatureActive = false;
     uiManager.LockFeatureUI(false);
@@ -586,6 +591,7 @@ public class SlotBehaviour : MonoBehaviour
   private IEnumerator HandleLinkBonus(PendingFeature feature)
   {
     yield return StartCoroutine(uiManager.PlayFeatureIntro("linkBonus"));
+    if (audioManager) audioManager.PlayBonusBgMusic();
     _isFeatureActive = true;
     uiManager.LockFeatureUI(true);
     ToggleButtonGrp(false);
@@ -609,6 +615,7 @@ public class SlotBehaviour : MonoBehaviour
 
     yield return StartCoroutine(linkBonusController.PlayTotalWinSequence(allLockedCells, awardValue));
 
+    if (audioManager) audioManager.StopBonusBgMusic();
     uiManager.CleanupFeaturePinata("linkBonus");
     linkBonusController.ResetAll();
 
@@ -760,6 +767,7 @@ public class SlotBehaviour : MonoBehaviour
     alltweens[index].Kill();
     slotTransform.localPosition = new Vector2(slotTransform.localPosition.x, IconSizeFactor);
     alltweens[index] = slotTransform.DOLocalMoveY(0, 0.5f).SetEase(Ease.OutElastic);
+    if (audioManager) audioManager.PlayReelStop();
     StartCoroutine(AnimatePinatasOnReelStop(index));
     yield return new WaitForSeconds(stagger);
   }
