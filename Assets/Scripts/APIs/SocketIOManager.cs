@@ -347,6 +347,7 @@ private void OnError(Error err)
     {
       case "initData":
         {
+          Debug.Log("Fourth Build Confirmation");
           InitialData = myData.gameData;
           UIData = myData.uiData;
           PlayerData = myData.player;
