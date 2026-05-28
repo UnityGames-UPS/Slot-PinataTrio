@@ -128,8 +128,8 @@ TextureImporter:
       name: Free Game Bonus_Text_00014_0
       rect:
         serializedVersion: 2
-        x: 51
-        y: 202
+        x: 1
+        y: 57
         width: 92
         height: 47
       alignment: 0
@@ -150,8 +150,8 @@ TextureImporter:
       name: Free Game Bonus_Text_00014_1
       rect:
         serializedVersion: 2
-        x: 139
-        y: 204
+        x: 89
+        y: 59
         width: 33
         height: 45
       alignment: 0
@@ -172,8 +172,8 @@ TextureImporter:
       name: Free Game Bonus_Text_00014_2
       rect:
         serializedVersion: 2
-        x: 188
-        y: 202
+        x: 138
+        y: 57
         width: 131
         height: 46
       alignment: 0
@@ -194,8 +194,8 @@ TextureImporter:
       name: Free Game Bonus_Text_00014_3
       rect:
         serializedVersion: 2
-        x: 316
-        y: 204
+        x: 266
+        y: 59
         width: 33
         height: 45
       alignment: 0
@@ -216,8 +216,8 @@ TextureImporter:
       name: Free Game Bonus_Text_00014_4
       rect:
         serializedVersion: 2
-        x: 105
-        y: 151
+        x: 55
+        y: 6
         width: 187
         height: 47
       alignment: 0
