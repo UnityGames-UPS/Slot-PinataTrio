@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2199726505335029357}
   - component: {fileID: 7671732010189892726}
   - component: {fileID: 8507266886385244306}
-  - component: {fileID: 3852213879517017561}
+  - component: {fileID: 6293375610026765241}
   m_Layer: 0
   m_Name: AudioController
   m_TagString: Untagged
@@ -45,11 +45,11 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 5f26591990952b741a0d4d87d38e2ce6, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -228,7 +228,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &3852213879517017561
+--- !u!114 &6293375610026765241
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -237,14 +237,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 882695972752793837}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 782a047ea6ad54319834e4c76486aab1, type: 3}
+  m_Script: {fileID: 11500000, guid: 471a4705556b575409f6775b2f1788ec, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AudioController
-  bg_adudio: {fileID: 0}
-  audioPlayer_wl: {fileID: 0}
-  audioPlayer_button: {fileID: 0}
-  audioSpin_button: {fileID: 0}
-  clips: []
-  Bonusclips: []
-  bg_audioBonus: {fileID: 0}
-  audioPlayer_Bonus: {fileID: 0}
+  m_EditorClassIdentifier: Assembly-CSharp::AudioManager
+  bgMusicSource: {fileID: 0}
+  bonusBgSource: {fileID: 0}
+  spinSource: {fileID: 0}
+  sfxSource: {fileID: 0}
+  overlapSource: {fileID: 0}
+  clipBg: {fileID: 0}
+  clipBonusBg: {fileID: 0}
+  clipButton: {fileID: 0}
+  clipGameStarted: {fileID: 0}
+  clipSpinLoop: {fileID: 0}
+  clipReelStop: {fileID: 0}
+  clipNormalIcon: {fileID: 0}
+  clipJackpotIcon: {fileID: 0}
+  clipBubblePop: {fileID: 0}
+  clipCoinValueAppear: {fileID: 0}
+  clipBatHit: {fileID: 0}
+  clipFreeGameStarted: {fileID: 0}
+  clipFreeGameBonus: {fileID: 0}
+  clipBigBonus: {fileID: 0}
+  clipInsideJackpot: {fileID: 0}
+  clipChoosedJackpot: {fileID: 0}
+  clipTimerClock: {fileID: 0}
+  clipMiniJackpot: {fileID: 0}
+  clipMinorJackpot: {fileID: 0}
+  clipBigWin: {fileID: 0}
