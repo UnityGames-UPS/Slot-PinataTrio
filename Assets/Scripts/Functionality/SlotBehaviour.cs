@@ -717,22 +717,28 @@ public class SlotBehaviour : MonoBehaviour
     foreach (GameObject go in _coinOverlays)
       Destroy(go);
     _coinOverlays.Clear();
+    for (int col = 0; col < Animimages.Count; col++)
+      for (int row = 0; row < Animimages[col].coinValueTexts.Count; row++)
+        if (Animimages[col].coinValueTexts[row]) Animimages[col].coinValueTexts[row].gameObject.SetActive(false);
   }
 
   private void SpawnCoinOverlays()
   {
     var coins = SocketManager.ResultData.payload.coinWins;
-    if (coins == null || CoinValuePrefab == null || CoinValueParent == null) return;
+    if (coins == null) return;
     foreach (var coin in coins)
     {
       int row = coin.position[0];
       int col = coin.position[1];
-      float x = -320f + col * 160f;
-      float y = IconSizeFactor - row * IconSizeFactor;
-      GameObject instance = Instantiate(CoinValuePrefab, CoinValueParent);
-      instance.GetComponent<RectTransform>().anchoredPosition = new Vector2(x, y);
-      instance.GetComponentInChildren<TMP_Text>().text = coin.value.ToString("F2");
-      _coinOverlays.Add(instance);
+      if (col < Animimages.Count && row < Animimages[col].coinValueTexts.Count)
+      {
+        TMP_Text txt = Animimages[col].coinValueTexts[row];
+        if (txt)
+        {
+          txt.text = coin.value.ToString("F2");
+          txt.gameObject.SetActive(true);
+        }
+      }
     }
   }
   #endregion
@@ -819,5 +825,6 @@ public class SlotBehaviour : MonoBehaviour
 public class SlotImage
 {
   public List<Image> slotImages = new List<Image>(10);
+  public List<TMP_Text> coinValueTexts = new List<TMP_Text>(10);
 }
 
