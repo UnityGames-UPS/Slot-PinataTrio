@@ -1310,7 +1310,7 @@ MonoBehaviour:
   BlueMeterText: {fileID: 0}
   ReelFrame: {fileID: 937432619}
   DefaultReelFrameSprite: {fileID: 7501387830980884940, guid: fe81156bb7e6f814286a0d441ab8ca13, type: 3}
-  RedReelFrameSprite: {fileID: 0}
+  RedReelFrameSprite: {fileID: -6278091362992825281, guid: e17f87218954fe24e9e371b8745e414c, type: 3}
   PinataTrio: {fileID: 2069039263}
   GameContent: {fileID: 1298497625}
   MoveUpAfterIntro: {fileID: 163614924}
@@ -1397,7 +1397,7 @@ MonoBehaviour:
   MegaJackpotSprite: {fileID: 21300000, guid: 5abc0bd391d0c5f45ae2a60427950f6c, type: 3}
   GrandJackpotSprite: {fileID: 21300000, guid: b18f9b0be2e629a4eaa665a77dedd0ca, type: 3}
   pickJackpotTimerDuration: 10
-  TimerClockAnimation: {fileID: 0}
+  TimerClockAnimation: {fileID: 1779688049}
   PinataButtonAnimations: []
   FreeSpinsUntilImage: {fileID: 1823735770}
   jackpotLaunchHeight: 500
@@ -9583,7 +9583,7 @@ PrefabInstance:
       objectReference: {fileID: 1728521618}
     - target: {fileID: 7610637853776029503, guid: fbbc9264dc50de44589243147c5ea3dc, type: 3}
       propertyPath: testToken
-      value: f188b194f789419aa967a4c02b4da4d4
+      value: 342533b940da45508a277b77f11cfff6
       objectReference: {fileID: 0}
     - target: {fileID: 7610637853776029503, guid: fbbc9264dc50de44589243147c5ea3dc, type: 3}
       propertyPath: uiManager

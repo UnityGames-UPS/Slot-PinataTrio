@@ -990,6 +990,7 @@ public class UIManager : MonoBehaviour
 
   internal IEnumerator SlideContentDown()
   {
+    if (ReelFrame) ReelFrame.rectTransform.DOAnchorPosY(ReelFrame.rectTransform.anchoredPosition.y - 275f, slideContentDuration).SetEase(Ease.InOutCubic);
     yield return GameContent.DOAnchorPosY(GameContent.anchoredPosition.y - featureHideAmount, slideContentDuration)
       .SetEase(Ease.InOutCubic).WaitForCompletion();
     // Reset pinatas and small frame to pre-intro local Y while hidden, so SlideContentUp can animate them back up
@@ -998,23 +999,14 @@ public class UIManager : MonoBehaviour
     if (RedPinata) RedPinata.anchoredPosition = new Vector2(RedPinata.anchoredPosition.x, _redPinataOrigin.y);
     if (SmallReelFrame && SmallReelFrame.gameObject.activeSelf)
       SmallReelFrame.rectTransform.anchoredPosition = _smallReelFrameOrigin;
-    if (Payouts)
-    {
-      Payouts.DOAnchorPosY(Payouts.anchoredPosition.y - payoutsExtraSlide, payoutsSlideDownDuration).SetEase(Ease.InOutCubic);
-      if (_payoutsCanvasGroup) yield return _payoutsCanvasGroup.DOFade(0f, payoutsSlideDownDuration).WaitForCompletion();
-      else yield return new WaitForSeconds(payoutsSlideDownDuration);
-    }
+    if (MoveUpAfterIntro) MoveUpAfterIntro.DOAnchorPosY(MoveUpAfterIntro.anchoredPosition.y - 325f, slideContentDuration).SetEase(Ease.InOutCubic);
   }
 
   internal IEnumerator SlideContentUp()
   {
-    if (Payouts)
-    {
-      Payouts.DOAnchorPosY(Payouts.anchoredPosition.y + payoutsExtraSlide, payoutsSlideUpDuration).SetEase(Ease.OutCubic);
-      if (_payoutsCanvasGroup) yield return _payoutsCanvasGroup.DOFade(1f, payoutsSlideUpDuration).WaitForCompletion();
-      else yield return new WaitForSeconds(payoutsSlideUpDuration);
-    }
+    if (MoveUpAfterIntro) MoveUpAfterIntro.DOAnchorPosY(MoveUpAfterIntro.anchoredPosition.y + 325f, 0.5f).SetEase(Ease.OutCubic);
     float slideDuration = 0.5f;
+    if (ReelFrame) ReelFrame.rectTransform.DOAnchorPosY(ReelFrame.rectTransform.anchoredPosition.y + 275f, slideDuration).SetEase(Ease.OutCubic);
     GameContent.DOAnchorPosY(GameContent.anchoredPosition.y + featureHideAmount, slideDuration).SetEase(Ease.OutCubic);
     yield return new WaitForSeconds(Mathf.Max(0f, slideDuration - pinataEarlyStart));
     if (GreenPinata) GreenPinata.DOAnchorPosY(GreenPinata.anchoredPosition.y + pinataScrollAmount, 0.6f).SetEase(Ease.OutBack);
