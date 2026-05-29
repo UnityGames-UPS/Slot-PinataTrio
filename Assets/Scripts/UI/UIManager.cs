@@ -100,7 +100,8 @@ public class UIManager : MonoBehaviour
   [SerializeField] private Image LinkBonusGlowGraphic;
   [SerializeField] private float featureNameScaleDuration = 0.4f;
   [SerializeField] private float featureNameHoldDuration = 1f;
-  [SerializeField] private float featureNameFadeDuration = 0.4f;
+  [SerializeField] private float featureNameExpandDuration = 1.5f;
+  [SerializeField] private float featureNameFadeDuration = 0.5f;
   [SerializeField] private float introShakeStartOffset = 2.5f;
   [SerializeField] private float introScaleAmount = 0.93f;
   [SerializeField] private float introScaleDownDuration = 0.25f;
@@ -950,13 +951,13 @@ public class UIManager : MonoBehaviour
       {
         glowGraphic.gameObject.SetActive(true);
         glowGraphic.color = new Color(1f, 1f, 1f, 1f);
+        glowGraphic.transform.localScale = Vector3.zero;
       }
-      yield return nameGraphic.transform.DOScale(Vector3.one, featureNameScaleDuration).SetEase(Ease.OutBack).WaitForCompletion();
-      yield return new WaitForSeconds(featureNameHoldDuration);
-      if (glowGraphic) glowGraphic.DOFade(0f, featureNameFadeDuration);
-      yield return nameGraphic.DOFade(0f, featureNameFadeDuration).WaitForCompletion();
-      nameGraphic.gameObject.SetActive(false);
-      if (glowGraphic) glowGraphic.gameObject.SetActive(false);
+      nameGraphic.transform.DOScale(1.2f, featureNameExpandDuration).SetEase(Ease.OutQuad);
+      if (glowGraphic) glowGraphic.transform.DOScale(1.2f, featureNameExpandDuration).SetEase(Ease.OutQuad);
+      yield return new WaitForSeconds(featureNameExpandDuration - featureNameFadeDuration);
+      if (glowGraphic) glowGraphic.DOFade(0f, featureNameFadeDuration).OnComplete(() => glowGraphic.gameObject.SetActive(false));
+      nameGraphic.DOFade(0f, featureNameFadeDuration).OnComplete(() => nameGraphic.gameObject.SetActive(false));
     }
   }
 
@@ -991,6 +992,7 @@ public class UIManager : MonoBehaviour
   internal IEnumerator SlideContentDown()
   {
     if (ReelFrame) ReelFrame.rectTransform.DOAnchorPosY(ReelFrame.rectTransform.anchoredPosition.y - 275f, slideContentDuration).SetEase(Ease.InOutCubic);
+    if (MoveUpAfterIntro) MoveUpAfterIntro.DOAnchorPosY(MoveUpAfterIntro.anchoredPosition.y - 325f, slideContentDuration).SetEase(Ease.InOutCubic);
     yield return GameContent.DOAnchorPosY(GameContent.anchoredPosition.y - featureHideAmount, slideContentDuration)
       .SetEase(Ease.InOutCubic).WaitForCompletion();
     // Reset pinatas and small frame to pre-intro local Y while hidden, so SlideContentUp can animate them back up
@@ -999,7 +1001,6 @@ public class UIManager : MonoBehaviour
     if (RedPinata) RedPinata.anchoredPosition = new Vector2(RedPinata.anchoredPosition.x, _redPinataOrigin.y);
     if (SmallReelFrame && SmallReelFrame.gameObject.activeSelf)
       SmallReelFrame.rectTransform.anchoredPosition = _smallReelFrameOrigin;
-    if (MoveUpAfterIntro) MoveUpAfterIntro.DOAnchorPosY(MoveUpAfterIntro.anchoredPosition.y - 325f, slideContentDuration).SetEase(Ease.InOutCubic);
   }
 
   internal IEnumerator SlideContentUp()
@@ -1117,6 +1118,13 @@ public class UIManager : MonoBehaviour
     {
       PickJackpotPanel.GetComponent<RectTransform>().anchoredPosition = _pickJackpotPanelOrigin;
       PickJackpotPanel.SetActive(true);
+      if (PickingJackpotGroup)
+      {
+        PickingJackpotGroup.alpha = 0f;
+        PickingJackpotGroup.DOFade(1f, 1f);
+        PickJackpotPanel.transform.localScale = Vector3.one * 0.9f;
+        PickJackpotPanel.transform.DOScale(Vector3.one, 1f).SetEase(Ease.OutQuad);
+      }
     }
 
     if (JackpotRevealImages != null)

@@ -524,7 +524,7 @@ public class SlotBehaviour : MonoBehaviour
     uiManager.LockFeatureUI(true);
     ToggleButtonGrp(false);
     CheckPopups = true;
-    yield return StartCoroutine(uiManager.SlideContentDown());
+    StartCoroutine(uiManager.SlideContentDown());
     uiManager.SetupFeaturePinata("pickJackpot");
     yield return StartCoroutine(uiManager.PlayFeatureIntro("pickJackpot"));
     if (audioManager) audioManager.PlayBonusBgMusic();
