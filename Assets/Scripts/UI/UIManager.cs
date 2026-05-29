@@ -89,12 +89,15 @@ public class UIManager : MonoBehaviour
   [SerializeField] private GameObject GreenPinataIntroObject;
   [SerializeField] private ImageAnimation GreenPinataIntroAnim;
   [SerializeField] private Image WheelBonusNameGraphic;
+  [SerializeField] private Image WheelBonusGlowGraphic;
   [SerializeField] private GameObject RedPinataIntroObject;
   [SerializeField] private ImageAnimation RedPinataIntroAnim;
   [SerializeField] private Image PickJackpotNameGraphic;
+  [SerializeField] private Image PickJackpotGlowGraphic;
   [SerializeField] private GameObject BluePinataIntroObject;
   [SerializeField] private ImageAnimation BluePinataIntroAnim;
   [SerializeField] private Image LinkBonusNameGraphic;
+  [SerializeField] private Image LinkBonusGlowGraphic;
   [SerializeField] private float featureNameScaleDuration = 0.4f;
   [SerializeField] private float featureNameHoldDuration = 1f;
   [SerializeField] private float featureNameFadeDuration = 0.4f;
@@ -113,7 +116,7 @@ public class UIManager : MonoBehaviour
   [SerializeField] private float payoutsSlideUpDuration = 0.5f;
   [SerializeField] private float featureHideAmount = 550f;
   [SerializeField] private float slideContentDuration = 0.8f;
-  [SerializeField] private Sprite BustedRedPinataSprite;
+  [SerializeField] private GameObject BustedRedPinata;
   [SerializeField] private Sprite BustedBluePinataSprite;
   [SerializeField] private Image SmallReelFrame;
   [SerializeField] private Sprite GoalFrameSprite;
@@ -147,6 +150,7 @@ public class UIManager : MonoBehaviour
   [SerializeField] private Sprite MegaJackpotSprite;
   [SerializeField] private Sprite GrandJackpotSprite;
   [SerializeField] private float pickJackpotTimerDuration = 10f;
+  [SerializeField] private ImageAnimation TimerClockAnimation;
   [SerializeField] private ImageAnimation[] PinataButtonAnimations;
   [SerializeField] private Image FreeSpinsUntilImage;
   [SerializeField] private float jackpotLaunchHeight = 500f;
@@ -902,6 +906,7 @@ public class UIManager : MonoBehaviour
     GameObject introObj = null;
     ImageAnimation introAnim = null;
     Image nameGraphic = null;
+    Image glowGraphic = null;
 
     switch (feature)
     {
@@ -909,16 +914,19 @@ public class UIManager : MonoBehaviour
         introObj = GreenPinataIntroObject;
         introAnim = GreenPinataIntroAnim;
         nameGraphic = WheelBonusNameGraphic;
+        glowGraphic = WheelBonusGlowGraphic;
         break;
       case "pickJackpot":
         introObj = RedPinataIntroObject;
         introAnim = RedPinataIntroAnim;
         nameGraphic = PickJackpotNameGraphic;
+        glowGraphic = PickJackpotGlowGraphic;
         break;
       case "linkBonus":
         introObj = BluePinataIntroObject;
         introAnim = BluePinataIntroAnim;
         nameGraphic = LinkBonusNameGraphic;
+        glowGraphic = LinkBonusGlowGraphic;
         break;
     }
 
@@ -938,10 +946,17 @@ public class UIManager : MonoBehaviour
       nameGraphic.gameObject.SetActive(true);
       nameGraphic.transform.localScale = Vector3.zero;
       nameGraphic.color = new Color(1f, 1f, 1f, 1f);
+      if (glowGraphic)
+      {
+        glowGraphic.gameObject.SetActive(true);
+        glowGraphic.color = new Color(1f, 1f, 1f, 1f);
+      }
       yield return nameGraphic.transform.DOScale(Vector3.one, featureNameScaleDuration).SetEase(Ease.OutBack).WaitForCompletion();
       yield return new WaitForSeconds(featureNameHoldDuration);
+      if (glowGraphic) glowGraphic.DOFade(0f, featureNameFadeDuration);
       yield return nameGraphic.DOFade(0f, featureNameFadeDuration).WaitForCompletion();
       nameGraphic.gameObject.SetActive(false);
+      if (glowGraphic) glowGraphic.gameObject.SetActive(false);
     }
   }
 
@@ -1017,9 +1032,9 @@ public class UIManager : MonoBehaviour
     {
       if (_redPinataAnim) _redPinataAnim.StopAnimation();
       Image img = RedPinata.GetComponent<Image>();
-      if (img && BustedRedPinataSprite) img.sprite = BustedRedPinataSprite;
+      if (img) img.enabled = false;
       RedPinata.anchoredPosition = new Vector2(0f, RedPinata.anchoredPosition.y);
-      if (SmallReelFrame) { SmallReelFrame.sprite = GoalFrameSprite; SmallReelFrame.gameObject.SetActive(true); }
+      if (BustedRedPinata) BustedRedPinata.SetActive(true);
     }
     else if (feature == "linkBonus" && BluePinata)
     {
@@ -1046,8 +1061,9 @@ public class UIManager : MonoBehaviour
     }
     else if (feature == "pickJackpot" && RedPinata)
     {
+      if (BustedRedPinata) BustedRedPinata.SetActive(false);
       Image img = RedPinata.GetComponent<Image>();
-      if (img && _redPinataOriginalSprite) img.sprite = _redPinataOriginalSprite;
+      if (img) img.enabled = true;
       RedPinata.anchoredPosition = new Vector2(_redPinataOrigin.x, RedPinata.anchoredPosition.y);
       ResetPinataStage(_redPinataAnim, _redPinataBaseSprites, ref _redPinataStage);
       _prevRedMeter = 0;
@@ -1135,6 +1151,11 @@ public class UIManager : MonoBehaviour
 
     foreach (var anim in PinataButtonAnimations)
       if (anim != null) anim.StartAnimation();
+    if (TimerClockAnimation)
+    {
+      if (TimerClockAnimation.rendererDelegate) TimerClockAnimation.rendererDelegate.color = Color.white;
+      TimerClockAnimation.StartAnimation();
+    }
   }
 
   private void OnPinataSelected(int index)
@@ -1149,6 +1170,8 @@ public class UIManager : MonoBehaviour
     foreach (var btn in PinataButtons) btn.interactable = false;
     foreach (var anim in PinataButtonAnimations)
       if (anim != null) anim.StopAnimation();
+    if (TimerClockAnimation && TimerClockAnimation.rendererDelegate)
+      TimerClockAnimation.rendererDelegate.DOFade(0f, 0.3f);
     PickJackpotSelected = true;
   }
 
