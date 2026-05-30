@@ -90,13 +90,18 @@ public class BonusController : MonoBehaviour
       Wheel.localScale = Vector3.zero;
     }
 
-    // Phase 1: Appear big at center
+    RotateWheel();
+
+    // Phase 1: Appear big at center — spinning
     yield return Wheel.DOScale(wheelBigScale, entranceAppearDuration).SetEase(Ease.OutBack).WaitForCompletion();
 
-    // Phase 2: Scale down at center
+    // Phase 2: Scale down at center — still spinning
     yield return Wheel.DOScale(wheelSmallScale, entranceScaleDownDuration).SetEase(Ease.InOutCubic).WaitForCompletion();
 
-    // Phase 3: Move to bottom, no scale change; green pinata appears
+    // Stop spinning before moving down
+    if (_spinCoroutine != null) { StopCoroutine(_spinCoroutine); _spinCoroutine = null; }
+
+    // Phase 3: Move to bottom; green pinata appears
     if (GreenPinataOnWheel) GreenPinataOnWheel.SetActive(true);
     yield return Wheel.DOAnchorPos(wheelFinalAnchoredPos, entranceMoveDuration).SetEase(Ease.InOutCubic).WaitForCompletion();
 

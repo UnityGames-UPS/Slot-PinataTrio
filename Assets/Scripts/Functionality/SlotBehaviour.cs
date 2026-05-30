@@ -731,6 +731,9 @@ public class SlotBehaviour : MonoBehaviour
     for (int col = 0; col < Animimages.Count; col++)
       for (int row = 0; row < Animimages[col].coinValueTexts.Count; row++)
         if (Animimages[col].coinValueTexts[row]) Animimages[col].coinValueTexts[row].gameObject.SetActive(false);
+    for (int col = 0; col < Tempimages.Count; col++)
+      for (int row = 0; row < Tempimages[col].coinValueTexts.Count; row++)
+        if (Tempimages[col].coinValueTexts[row]) Tempimages[col].coinValueTexts[row].gameObject.SetActive(false);
   }
 
   private void SpawnCoinOverlays()
@@ -772,8 +775,25 @@ public class SlotBehaviour : MonoBehaviour
     slotTransform.localPosition = new Vector2(slotTransform.localPosition.x, IconSizeFactor);
     alltweens[index] = slotTransform.DOLocalMoveY(0, 0.5f).SetEase(Ease.OutElastic);
     if (audioManager) audioManager.PlayReelStop();
+    ShowTempCoinValuesForColumn(index);
     StartCoroutine(AnimatePinatasOnReelStop(index));
     yield return new WaitForSeconds(stagger);
+  }
+
+  private void ShowTempCoinValuesForColumn(int col)
+  {
+    var coins = SocketManager.ResultData.payload?.coinWins;
+    if (coins == null || col >= Tempimages.Count) return;
+    foreach (var coin in coins)
+    {
+      if (coin.position[1] != col) continue;
+      int row = coin.position[0];
+      if (row < Tempimages[col].coinValueTexts.Count)
+      {
+        TMP_Text txt = Tempimages[col].coinValueTexts[row];
+        if (txt) { txt.text = coin.value.ToString("F2"); txt.gameObject.SetActive(true); }
+      }
+    }
   }
 
   private IEnumerator AnimatePinatasOnReelStop(int col)
