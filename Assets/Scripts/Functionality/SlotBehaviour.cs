@@ -436,7 +436,6 @@ public class SlotBehaviour : MonoBehaviour
     yield return new WaitUntil(() => _activePinataAnims == 0);
     KillAllTweens();
     CheckForFeaturesAnimation();
-    SpawnCoinOverlays();
     if (TotalWin_text) TotalWin_text.text = SocketManager.ResultData.payload.winAmount.ToString("F3");
     BalanceTween?.Kill();
     if (Balance_text) Balance_text.text = SocketManager.ResultData.player.balance.ToString("F3");
@@ -518,14 +517,19 @@ public class SlotBehaviour : MonoBehaviour
     uiManager.LockFeatureUI(false);
   }
 
+  private IEnumerator SetupRedPinataAfterSlide()
+  {
+    yield return StartCoroutine(uiManager.SlideContentDown());
+    uiManager.SetupFeaturePinata("pickJackpot");
+  }
+
   private IEnumerator HandleRedPinataPick()
   {
     _isFeatureActive = true;
     uiManager.LockFeatureUI(true);
     ToggleButtonGrp(false);
     CheckPopups = true;
-    StartCoroutine(uiManager.SlideContentDown());
-    uiManager.SetupFeaturePinata("pickJackpot");
+    StartCoroutine(SetupRedPinataAfterSlide());
     yield return StartCoroutine(uiManager.PlayFeatureIntro("pickJackpot"));
     if (audioManager) audioManager.PlayBonusBgMusic();
     uiManager.ShowPickJackpotScreen();
@@ -776,6 +780,7 @@ public class SlotBehaviour : MonoBehaviour
   {
     _activePinataAnims++;
     yield return alltweens[col].WaitForCompletion();
+    ShowCoinValuesForColumn(col);
     List<Coroutine> flyRoutines = new List<Coroutine>();
     for (int row = 0; row < 3; row++)
     {
@@ -785,6 +790,30 @@ public class SlotBehaviour : MonoBehaviour
     }
     foreach (var r in flyRoutines) yield return r;
     _activePinataAnims--;
+  }
+
+  private void ShowCoinValuesForColumn(int col)
+  {
+    var coins = SocketManager.ResultData.payload?.coinWins;
+    if (coins == null || col >= Animimages.Count) return;
+    foreach (var coin in coins)
+    {
+      if (coin.position[1] != col) continue;
+      int row = coin.position[0];
+      Image animImg = Animimages[col].slotImages[row];
+      animImg.gameObject.SetActive(true);
+      ImageAnimation animScript = animImg.GetComponent<ImageAnimation>();
+      if (animScript != null && animScript.textureArray?.Count > 0)
+      {
+        animScript.StartAnimation();
+        TempList.Add(animScript);
+      }
+      if (row < Animimages[col].coinValueTexts.Count)
+      {
+        TMP_Text txt = Animimages[col].coinValueTexts[row];
+        if (txt) { txt.text = coin.value.ToString("F2"); txt.gameObject.SetActive(true); }
+      }
+    }
   }
 
   private IEnumerator FlyPinataToMeter(int col, int row, int colorId)
