@@ -45,6 +45,9 @@ public class UIManager : MonoBehaviour
 
   [Header("Betting UI")]
   [SerializeField] private TMP_Text TotalBetAmountText;
+  [SerializeField] private TMP_Text Balance_text;
+  [SerializeField] private TMP_Text TotalBet_text;
+  [SerializeField] private TMP_Text TotalWin_text;
   [SerializeField] private TMP_Text MiniPayoutText;
   [SerializeField] private TMP_Text MinorPayoutText;
   [SerializeField] private TMP_Text MajorPayoutText;
@@ -354,6 +357,7 @@ public class UIManager : MonoBehaviour
   private SlotBehaviour slotManager;
 
   private CanvasGroup _payoutsCanvasGroup;
+  private Tween _balanceTween;
   private bool isMusic = true;
   private bool isSound = true;
   private Tween WinPopupTextTween;
@@ -847,6 +851,36 @@ public class UIManager : MonoBehaviour
   internal void UpdateLinkBonusSpinsRemaining(int count)
   {
     if (LinkBonusSpinsRemainingText) LinkBonusSpinsRemainingText.text = count.ToString();
+  }
+
+  internal void InitialiseBalanceAndWin(double balance, double bet)
+  {
+    if (Balance_text) Balance_text.text = balance.ToString("F3");
+    if (TotalBet_text) TotalBet_text.text = bet.ToString();
+    if (TotalWin_text) TotalWin_text.text = "0.000";
+  }
+
+  internal void ResetTotalWin()
+  {
+    if (TotalWin_text) TotalWin_text.text = "0.000";
+  }
+
+  internal void UpdateTotalWin(double amount)
+  {
+    if (TotalWin_text) TotalWin_text.text = amount.ToString("F3");
+  }
+
+  internal void UpdateBalance(double amount)
+  {
+    _balanceTween?.Kill();
+    if (Balance_text) Balance_text.text = amount.ToString("F3");
+  }
+
+  internal void AnimateBalanceDeduction(double from, double to)
+  {
+    _balanceTween?.Kill();
+    double current = from;
+    _balanceTween = DOTween.To(() => current, v => { current = v; if (Balance_text) Balance_text.text = current.ToString("F3"); }, to, 0.8f);
   }
 
   internal void UpdateMeters(int green, int red, int blue)

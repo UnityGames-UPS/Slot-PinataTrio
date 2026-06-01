@@ -66,12 +66,6 @@ public class SlotBehaviour : MonoBehaviour
 
   [Header("Miscellaneous UI")]
   [SerializeField]
-  private TMP_Text Balance_text;
-  [SerializeField]
-  private TMP_Text TotalBet_text;
-  [SerializeField]
-  private TMP_Text TotalWin_text;
-  [SerializeField]
   private GameObject CoinValuePrefab;
   [SerializeField]
   private Transform CoinValueParent;
@@ -107,7 +101,6 @@ public class SlotBehaviour : MonoBehaviour
   private List<Tweener> alltweens = new List<Tweener>();
   private Coroutine AutoSpinRoutine = null;
   private Coroutine tweenroutine;
-  private Tween BalanceTween;
   internal bool IsAutoSpin = false;
   private bool _isFeatureActive = false;
   private bool IsSpinning = false;
@@ -293,11 +286,7 @@ public class SlotBehaviour : MonoBehaviour
   {
     BetCounter = 0;
     uiManager.InitialiseUI(SocketManager.InitialData.bets, SocketManager.UIData.paylines.symbols);
-    if (TotalBet_text)
-      TotalBet_text.text = SocketManager.InitialData.bets[BetCounter].ToString();
-    if (TotalWin_text) TotalWin_text.text = "0.000";
-    if (Balance_text)
-      Balance_text.text = SocketManager.PlayerData.balance.ToString("F3");
+    uiManager.InitialiseBalanceAndWin(SocketManager.PlayerData.balance, SocketManager.InitialData.bets[BetCounter]);
     currentBalance = SocketManager.PlayerData.balance;
     currentTotalBet = SocketManager.InitialData.bets[BetCounter];
   }
@@ -353,7 +342,7 @@ public class SlotBehaviour : MonoBehaviour
   #region SlotSpin
   private void StartSlots()
   {
-    if (TotalWin_text) TotalWin_text.text = "0.000";
+    uiManager.ResetTotalWin();
     if (TempList.Count > 0)
     {
       StopGameAnimation();
@@ -365,12 +354,7 @@ public class SlotBehaviour : MonoBehaviour
   private void BalanceDeduction()
   {
     if (_isInFreeSpin) return;
-    double initAmount = currentBalance;
-    double targetAmount = currentBalance - currentTotalBet;
-    BalanceTween = DOTween.To(() => initAmount, (val) => initAmount = val, targetAmount, 0.8f).OnUpdate(() =>
-    {
-      if (Balance_text) Balance_text.text = initAmount.ToString("F3");
-    });
+    uiManager.AnimateBalanceDeduction(currentBalance, currentBalance - currentTotalBet);
   }
 
   private IEnumerator TweenRoutine()
@@ -436,9 +420,8 @@ public class SlotBehaviour : MonoBehaviour
     yield return new WaitUntil(() => _activePinataAnims == 0);
     KillAllTweens();
     CheckForFeaturesAnimation();
-    if (TotalWin_text) TotalWin_text.text = SocketManager.ResultData.payload.winAmount.ToString("F3");
-    BalanceTween?.Kill();
-    if (Balance_text) Balance_text.text = SocketManager.ResultData.player.balance.ToString("F3");
+    uiManager.UpdateTotalWin(SocketManager.ResultData.payload.winAmount);
+    uiManager.UpdateBalance(SocketManager.ResultData.player.balance);
     currentBalance = SocketManager.PlayerData.balance;
     SpinDelay = SocketManager.ResultData.payload.winAmount > 0 ? 1.2f : 0.2f;
 
@@ -623,8 +606,7 @@ public class SlotBehaviour : MonoBehaviour
     uiManager.CleanupFeaturePinata("linkBonus");
     linkBonusController.ResetAll();
 
-    BalanceTween?.Kill();
-    if (Balance_text) Balance_text.text = SocketManager.ResultData.player.balance.ToString("F3");
+    uiManager.UpdateBalance(SocketManager.ResultData.player.balance);
     currentBalance = SocketManager.PlayerData.balance;
 
     CheckPopups = false;
@@ -662,8 +644,7 @@ public class SlotBehaviour : MonoBehaviour
     linkBonusController.UpdateLockedCells(lockedCells);
     uiManager.UpdateLinkBonusSpinsRemaining(spinsRemaining);
 
-    BalanceTween?.Kill();
-    if (Balance_text) Balance_text.text = SocketManager.ResultData.player.balance.ToString("F3");
+    uiManager.UpdateBalance(SocketManager.ResultData.player.balance);
     currentBalance = SocketManager.PlayerData.balance;
   }
   #endregion
