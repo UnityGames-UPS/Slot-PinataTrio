@@ -25,7 +25,7 @@ public class BonusController : MonoBehaviour
   [SerializeField] private TMP_Text WinAmountText;
   [SerializeField] private GameObject Bonus_Object;
   [SerializeField] private SlotBehaviour slotManager;
-  [SerializeField] private AudioController _audioManager;
+  [SerializeField] private AudioManager _audioManager;
   [SerializeField] private GameObject PopupPanel;
   [SerializeField] private Transform Win_Transform;
   [SerializeField] private Transform Boost_Transform;
@@ -74,7 +74,7 @@ public class BonusController : MonoBehaviour
     if (Win_Transform) Win_Transform.gameObject.SetActive(false);
     if (Boost_Transform) Boost_Transform.gameObject.SetActive(false);
     if (WinAmountText) WinAmountText.text = winAmount.ToString("F3");
-    if (_audioManager) _audioManager.SwitchBGSound(true);
+    if (_audioManager) _audioManager.PlayBonusBgMusic();
     if (GreenPinataOnWheel) GreenPinataOnWheel.SetActive(false);
     if (WheelBonusPanel) { WheelBonusPanel.SetActive(false); WheelBonusPanel.transform.localScale = Vector3.one; }
     if (Bonus_Object) Bonus_Object.SetActive(true);
@@ -144,7 +144,7 @@ public class BonusController : MonoBehaviour
     }
 
     yield return new WaitForSeconds(1.5f);
-    if (_audioManager) _audioManager.SwitchBGSound(false);
+    if (_audioManager) _audioManager.StopBonusBgMusic();
     if (Wheel) { Wheel.anchoredPosition = Vector2.zero; Wheel.localScale = Vector3.one; }
     isBonusDone = true;
     if (Bonus_Object) Bonus_Object.SetActive(false);
@@ -238,7 +238,7 @@ public class BonusController : MonoBehaviour
   {
     if (_spinCoroutine != null) StopCoroutine(_spinCoroutine);
     _spinCoroutine = StartCoroutine(SpinUpRoutine());
-    if (_audioManager) _audioManager.PlayBonusAudio("cycleSpin");
+    if (_audioManager) _audioManager.PlaySpinLoop();
   }
 
   private IEnumerator SpinUpRoutine()
@@ -269,11 +269,11 @@ public class BonusController : MonoBehaviour
   {
     if (isWin)
     {
-      if (_audioManager) _audioManager.PlayBonusAudio("win");
+      if (_audioManager) _audioManager.PlayBigWin();
     }
     else
     {
-      if (_audioManager) _audioManager.PlayBonusAudio("boost");
+      if (_audioManager) _audioManager.PlayFreeGameBonus();
     }
   }
 }

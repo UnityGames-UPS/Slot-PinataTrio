@@ -821,6 +821,7 @@ public class SlotBehaviour : MonoBehaviour
   {
     Image animImg = Animimages[col].slotImages[row];
     RectTransform animRT = (RectTransform)animImg.transform;
+    animRT.SetAsLastSibling();
     Vector2 startAnchoredPos = animRT.anchoredPosition;
     Vector3 startScale = animRT.localScale;
 

@@ -194,6 +194,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1233269}
   m_CullTransparentMesh: 1
+--- !u!114 &7884539 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6293375610026765241, guid: 0574a4cf18d5cd94b97009e12488e861, type: 3}
+  m_PrefabInstance: {fileID: 357240838}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 471a4705556b575409f6775b2f1788ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioManager
 --- !u!1 &8048790
 GameObject:
   m_ObjectHideFlags: 0
@@ -6889,7 +6900,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 525240731}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
   m_Name: 
@@ -10704,7 +10715,7 @@ PrefabInstance:
       objectReference: {fileID: 1728521618}
     - target: {fileID: 7610637853776029503, guid: fbbc9264dc50de44589243147c5ea3dc, type: 3}
       propertyPath: testToken
-      value: aa7044afcdf6466597d376a10e8425c5
+      value: f6e5dc45ed7e4ae4b90830f541eab170
       objectReference: {fileID: 0}
     - target: {fileID: 7610637853776029503, guid: fbbc9264dc50de44589243147c5ea3dc, type: 3}
       propertyPath: uiManager
@@ -12150,7 +12161,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 78.219, y: 3.5}
+  m_AnchoredPosition: {x: 78.218994, y: 3.5}
   m_SizeDelta: {x: 150, y: 38.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &985756469
@@ -12394,7 +12405,7 @@ MonoBehaviour:
   WinAmountText: {fileID: 299277393}
   Bonus_Object: {fileID: 1803399849}
   slotManager: {fileID: 2073624787}
-  _audioManager: {fileID: 0}
+  _audioManager: {fileID: 7884539}
   PopupPanel: {fileID: 2009788518}
   Win_Transform: {fileID: 1268043718}
   Boost_Transform: {fileID: 384035120}
@@ -28004,7 +28015,9 @@ MonoBehaviour:
   - {fileID: -4263974128747944858, guid: ff4f981514c98254390456951339fd2a, type: 3}
   - {fileID: -3269711819585954624, guid: ff4f981514c98254390456951339fd2a, type: 3}
   - {fileID: -7183211506193134899, guid: ff4f981514c98254390456951339fd2a, type: 3}
-  images: []
+  images:
+  - slotImages: []
+    coinValueTexts: []
   Tempimages:
   - slotImages:
     - {fileID: 1810004418}
@@ -28467,7 +28480,7 @@ MonoBehaviour:
   BluePinataTarget: {fileID: 450896178}
   pinataFlyDuration: 0.8
   pinataPeakScale: 1.8
-  audioManager: {fileID: 0}
+  audioManager: {fileID: 7884539}
   uiManager: {fileID: 117472470}
   TempList: []
   SocketManager: {fileID: 839819183}
