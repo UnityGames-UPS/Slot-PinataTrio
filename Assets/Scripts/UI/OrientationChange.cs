@@ -47,6 +47,26 @@ public class OrientationChange : MonoBehaviour
       float referenceAspectRatio = ReferenceAspect.x / ReferenceAspect.y;
 
       float targetMatch = isLandscape ? (currentAspectRatio > referenceAspectRatio ? MatchHeight : MatchWidth) : PortraitMatchWandH;
+      float ratio = (float)width / height;
+      const float e = 0.0001f;
+      if (Mathf.Abs(ratio - (float)2340/1080) < e) targetMatch = 1.0f;
+      else if (Mathf.Abs(ratio - (float)1080/2340) < e) targetMatch = 0.43f;
+      else if (Mathf.Abs(ratio - (float)1080/1920) < e) targetMatch = 0.503f;
+      else if (Mathf.Abs(ratio - (float)1920/1080) < e) targetMatch = 0.5f;
+      else if (Mathf.Abs(ratio - (float)375/667) < e) targetMatch = 0.503f;
+      else if (Mathf.Abs(ratio - (float)667/375) < e) targetMatch = 0.46f;
+      else if (Mathf.Abs(ratio - (float)853/1280) < e) targetMatch = 0.412f;
+      else if (Mathf.Abs(ratio - (float)1280/853) < e) targetMatch = 0.0f;
+      else if (Mathf.Abs(ratio - (float)768/1024) < e) targetMatch = 0.333f;
+      else if (Mathf.Abs(ratio - (float)1024/768) < e) targetMatch = 0.0f;
+      else if (Mathf.Abs(ratio - (float)820/1180) < e) targetMatch = 0.39f;
+      else if (Mathf.Abs(ratio - (float)1180/820) < e) targetMatch = 0.0f;
+      else if (Mathf.Abs(ratio - (float)1366/1024) < e) targetMatch = 0.0f;
+      else if (Mathf.Abs(ratio - (float)1024/1366) < e) targetMatch = 0.333f;
+      else if (Mathf.Abs(ratio - (float)344/882) < e) targetMatch = 0.388f;
+      else if (Mathf.Abs(ratio - (float)882/344) < e) targetMatch = 1.0f;
+      else if (Mathf.Abs(ratio - (float)390/844) < e) targetMatch = 0.424f;
+      else if (Mathf.Abs(ratio - (float)844/390) < e) targetMatch = 1.0f;
       if (matchTween != null && matchTween.IsActive()) matchTween.Kill();
       matchTween = DOTween.To(() => CanvasScaler.matchWidthOrHeight, x => CanvasScaler.matchWidthOrHeight = x, targetMatch, transitionDuration).SetEase(Ease.InOutQuad);
 

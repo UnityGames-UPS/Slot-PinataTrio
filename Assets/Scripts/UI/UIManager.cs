@@ -272,6 +272,12 @@ public class UIManager : MonoBehaviour
   [SerializeField]
   private GameObject SoundOff_Object;
 
+  [Header("Spin Win Display")]
+  [SerializeField] private GameObject SpinWinPanel;
+  [SerializeField] private TMP_Text SpinWinText;
+  [SerializeField] private GameObject SpinWinCoinSplash;
+  [SerializeField] private float spinWinCountDuration = 1f;
+
   [Header("Win Popup")]
   [SerializeField]
   private Sprite BigWin_Sprite;
@@ -858,6 +864,31 @@ public class UIManager : MonoBehaviour
     if (Balance_text) Balance_text.text = balance.ToString("F3");
     if (TotalBet_text) TotalBet_text.text = bet.ToString();
     if (TotalWin_text) TotalWin_text.text = "0.000";
+  }
+
+  internal IEnumerator ShowSpinWin(double winAmount)
+  {
+    if (winAmount <= 0) yield break;
+    if (SpinWinPanel)
+    {
+      SpinWinPanel.SetActive(true);
+      SpinWinPanel.transform.localScale = Vector3.one;
+      SpinWinPanel.transform.DOScale(1.2f, spinWinCountDuration).SetEase(Ease.OutQuad);
+    }
+    if (SpinWinCoinSplash) SpinWinCoinSplash.SetActive(true);
+    float display = 0f;
+    if (SpinWinText)
+      yield return DOTween.To(() => display, v => { display = v; SpinWinText.text = v.ToString("F3"); },
+        (float)winAmount, spinWinCountDuration).WaitForCompletion();
+    yield return new WaitForSeconds(0.5f);
+    HideSpinWin();
+  }
+
+  internal void HideSpinWin()
+  {
+    if (SpinWinPanel) SpinWinPanel.SetActive(false);
+    if (SpinWinCoinSplash) SpinWinCoinSplash.SetActive(false);
+    if (SpinWinText) SpinWinText.text = "";
   }
 
   internal void ResetTotalWin()

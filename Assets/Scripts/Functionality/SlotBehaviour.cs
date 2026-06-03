@@ -344,6 +344,7 @@ public class SlotBehaviour : MonoBehaviour
   private void StartSlots()
   {
     uiManager.ResetTotalWin();
+    uiManager.HideSpinWin();
     if (TempList.Count > 0)
     {
       StopGameAnimation();
@@ -431,6 +432,7 @@ public class SlotBehaviour : MonoBehaviour
     if (hadPendingFeature)
       yield return StartCoroutine(HandlePendingFeatures(pendingFeatures));
 
+    yield return StartCoroutine(uiManager.ShowSpinWin(SocketManager.ResultData.payload.winAmount));
     if (!_isInFreeSpin && !_isFeatureActive && !hadPendingFeature)
       yield return StartCoroutine(CheckAndShowJackpotWin());
 

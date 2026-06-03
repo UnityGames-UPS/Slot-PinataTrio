@@ -857,6 +857,43 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Mask
   m_ShowMaskGraphic: 0
+--- !u!1 &65884113
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 65884114}
+  m_Layer: 5
+  m_Name: SpinWinPanel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &65884114
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 65884113}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 228852817}
+  - {fileID: 968163785}
+  m_Father: {fileID: 594183475}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -254.9}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &78875509
 GameObject:
   m_ObjectHideFlags: 0
@@ -1605,6 +1642,10 @@ MonoBehaviour:
   MusicOff_Object: {fileID: 0}
   SoundOn_Object: {fileID: 0}
   SoundOff_Object: {fileID: 0}
+  SpinWinPanel: {fileID: 65884113}
+  SpinWinText: {fileID: 968163786}
+  SpinWinCoinSplash: {fileID: 228852816}
+  spinWinCountDuration: 1
   BigWin_Sprite: {fileID: 0}
   HugeWin_Sprite: {fileID: 0}
   MegaWin_Sprite: {fileID: 0}
@@ -2878,6 +2919,123 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 206376848}
   m_CullTransparentMesh: 1
+--- !u!1 &228852816
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 228852817}
+  - component: {fileID: 228852819}
+  - component: {fileID: 228852818}
+  - component: {fileID: 228852820}
+  m_Layer: 5
+  m_Name: SpinWinCoinSplash
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &228852817
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 228852816}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 65884114}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &228852818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 228852816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 8995154407686431259, guid: 9c6b8b4c7daa5ee408ad6753d9aebea5, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &228852819
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 228852816}
+  m_CullTransparentMesh: 1
+--- !u!114 &228852820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 228852816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d9ae1bf2ec654621a0c3eaff2a909fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ImageAnimation
+  textureArray:
+  - {fileID: -365059437647937477, guid: 7358f61a269d3684a8c0586512ca1a52, type: 3}
+  - {fileID: 330681908389599713, guid: a0851a1e69a3cd341aa4a3affca8a610, type: 3}
+  - {fileID: -3163418899137706561, guid: 0cadc4cc267e2694ea1e2fade89817d7, type: 3}
+  - {fileID: 9066292254177635820, guid: b77577e87b2f9f4499dcb7f74d3d84d7, type: 3}
+  - {fileID: 9205636963526832924, guid: 222d6cdfcd2d6cd4fac47d88fc3b8884, type: 3}
+  - {fileID: 4392127856184598412, guid: 5a8527272887e8c49b16626c08c79faf, type: 3}
+  - {fileID: 415054061275663959, guid: 4f44d5337e1e2cb4686e099c83a425f9, type: 3}
+  - {fileID: 2390702993979413825, guid: 7da10506a8b31fd4ba3b6f75312ef471, type: 3}
+  - {fileID: 8320474497502140388, guid: 2dfd140f1ecdf90448055b43b5034473, type: 3}
+  - {fileID: 4286069216454882708, guid: a6525f907963a6b49ad915b2788a7a3f, type: 3}
+  - {fileID: 6726494631381213327, guid: 08f6537bb4a86484e846725aaacf764f, type: 3}
+  - {fileID: 7748821640593661680, guid: 4cce396e3a500084b976a39a89188072, type: 3}
+  - {fileID: 2643907328306549381, guid: 65ab9673c6044c94db4e74979eb5e7db, type: 3}
+  - {fileID: 7938438602260118433, guid: f5d96285b3a9c394daa29b90c8efcc88, type: 3}
+  - {fileID: -5099125770125206531, guid: 2e5ba02eed6f8c14391d12f2dfe0259b, type: 3}
+  - {fileID: 8022048781357085805, guid: 4419d55c8c1d6074ebf6b1b4c1f0e23c, type: 3}
+  - {fileID: -2018426616388001139, guid: efe9b48235fcceb46b2380baefd0c371, type: 3}
+  - {fileID: -3012368854293449377, guid: b1386d35072a20a4f801573d63eb5375, type: 3}
+  - {fileID: 3721189679474328363, guid: a175ad64d939bca41a9f0eeeebc526ca, type: 3}
+  - {fileID: -8505074726237115192, guid: fb3393ef18c225a40b9d82b5af88b5dc, type: 3}
+  rendererDelegate: {fileID: 228852818}
+  useSharedMaterial: 1
+  doLoopAnimation: 0
+  StartOnAwake: 1
+  currentAnimationState: 0
+  idealFrameRate: 0.041666668
+  AnimationSpeed: 20
+  delayBetweenLoop: 0
 --- !u!1 &232207247
 GameObject:
   m_ObjectHideFlags: 0
@@ -6854,10 +7012,10 @@ RectTransform:
   - {fileID: 2040380323}
   m_Father: {fileID: 2071494247}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &525240733
 MonoBehaviour:
@@ -6904,7 +7062,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 525240731}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
   m_Name: 
@@ -7848,6 +8006,7 @@ RectTransform:
   - {fileID: 1593376393}
   - {fileID: 1035774564}
   - {fileID: 299442033}
+  - {fileID: 65884114}
   m_Father: {fileID: 2040380323}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -10016,9 +10175,9 @@ MonoBehaviour:
     m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 8416363877207195326, guid: 3fe10e5abf7426340b71115030dc0148, type: 3}
+    m_PressedSprite: {fileID: 0}
     m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: -7709580045799199164, guid: b42b9dd6b24e11f48bc0865d9e3c959c, type: 3}
+    m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
@@ -10719,7 +10878,7 @@ PrefabInstance:
       objectReference: {fileID: 1728521618}
     - target: {fileID: 7610637853776029503, guid: fbbc9264dc50de44589243147c5ea3dc, type: 3}
       propertyPath: testToken
-      value: 70c33f942e1741d696297857fd04a7df
+      value: 66b4c95048c64a548def5b95910b748a
       objectReference: {fileID: 0}
     - target: {fileID: 7610637853776029503, guid: fbbc9264dc50de44589243147c5ea3dc, type: 3}
       propertyPath: uiManager
@@ -12056,6 +12215,143 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -127.2}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &968163784
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 968163785}
+  - component: {fileID: 968163787}
+  - component: {fileID: 968163786}
+  m_Layer: 5
+  m_Name: SpinWinText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &968163785
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 968163784}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 65884114}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 200, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &968163786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 968163784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: 0
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 14b1ada9a2bc391479e248e03cff656b, type: 2}
+  m_sharedMaterial: {fileID: -3589725126949932625, guid: 14b1ada9a2bc391479e248e03cff656b, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 50
+  m_fontSizeBase: 50
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 1
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_characterHorizontalScale: 1
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &968163787
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 968163784}
+  m_CullTransparentMesh: 1
 --- !u!1 &983670004
 GameObject:
   m_ObjectHideFlags: 0
@@ -18481,7 +18777,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a23199bffa9b6d46b4183d59e920bed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OrientationChange
-  UIWrapper: {fileID: 2040380323}
+  UIWrapper: {fileID: 525240732}
   CanvasScaler: {fileID: 2071494245}
   MatchWidth: 0
   MatchHeight: 1
@@ -28115,8 +28411,8 @@ MonoBehaviour:
   AutoSpin_Button: {fileID: 1630318944}
   BetPlus_Button: {fileID: 2020818275}
   BetMinus_Button: {fileID: 1420531925}
-  SpinSprite: {fileID: -7814535901586335685, guid: 143c8c8ecbd91b7429c5f519495839df, type: 3}
-  StopSprite: {fileID: 3001100795974763818, guid: 54f60754a195875458083e18f7cf5ec9, type: 3}
+  SpinSprite: {fileID: -5837608266073338380, guid: d82be21c0f86eb54aadb8b5d1e9e3fe3, type: 3}
+  StopSprite: {fileID: 8522716768120736018, guid: d82be21c0f86eb54aadb8b5d1e9e3fe3, type: 3}
   Mini_Sprite:
   - {fileID: 21300000, guid: c4d68da1f90f3234583aa273783de67e, type: 3}
   - {fileID: 21300000, guid: 1169180bd3b0b3f49aca1764b09268f8, type: 3}
