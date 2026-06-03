@@ -1,19 +1,28 @@
 fileFormatVersion: 2
-guid: 0a4f6fac5c0996d48b539477be592163
+guid: b42b9dd6b24e11f48bc0865d9e3c959c
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7905542940668594592
-    second: BUTTONS_DARK_0
+      213: 2113416570400925522
+    second: btns_DARK_0
   - first:
-      213: 8694969998539890928
-    second: BUTTONS_DARK_1
+      213: 2432469275752621278
+    second: btns_DARK_1
   - first:
-      213: -350766556554626769
-    second: BUTTONS_DARK_2
+      213: 4791262046881701411
+    second: btns_DARK_2
   - first:
-      213: -1162231098723265380
-    second: BUTTONS_DARK_3
+      213: -8888036667746379494
+    second: btns_DARK_3
+  - first:
+      213: -6328113749240147886
+    second: btns_DARK_4
+  - first:
+      213: -5162301094231654201
+    second: btns_DARK_5
+  - first:
+      213: -7709580045799199164
+    second: btns_DARK_6
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -106,19 +115,6 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
-    buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
     buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -135,13 +131,35 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BUTTONS_DARK_0
+      name: btns_DARK_0
       rect:
         serializedVersion: 2
-        x: 13
+        x: 48
+        y: 48
+        width: 98
+        height: 89
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 257eb256c2d545d10800000000000000
+      internalID: 2113416570400925522
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: btns_DARK_1
+      rect:
+        serializedVersion: 2
+        x: 150
         y: 38
-        width: 56
-        height: 58
+        width: 108
+        height: 108
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -150,20 +168,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 066f9d0b49ed94290800000000000000
-      internalID: -7905542940668594592
+      spriteID: ed469442bedd1c120800000000000000
+      internalID: 2432469275752621278
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BUTTONS_DARK_1
+      name: btns_DARK_2
       rect:
         serializedVersion: 2
-        x: 101
-        y: 18
-        width: 103
-        height: 88
+        x: 264
+        y: 37
+        width: 154
+        height: 118
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -172,20 +190,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0f026af452dbaa870800000000000000
-      internalID: 8694969998539890928
+      spriteID: 32ed13a427bfd7240800000000000000
+      internalID: 4791262046881701411
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BUTTONS_DARK_2
+      name: btns_DARK_3
       rect:
         serializedVersion: 2
-        x: 207
-        y: 20
-        width: 149
-        height: 96
+        x: 423
+        y: 38
+        width: 105
+        height: 106
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -194,20 +212,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f29797ddca3d12bf0800000000000000
-      internalID: -350766556554626769
+      spriteID: a199454ddb957a480800000000000000
+      internalID: -8888036667746379494
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BUTTONS_DARK_3
+      name: btns_DARK_4
       rect:
         serializedVersion: 2
-        x: 369
-        y: 17
-        width: 102
-        height: 91
+        x: 554
+        y: 31
+        width: 281
+        height: 129
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -216,8 +234,52 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c9410b539fceedfe0800000000000000
-      internalID: -1162231098723265380
+      spriteID: 2509646a2160e28a0800000000000000
+      internalID: -6328113749240147886
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: btns_DARK_5
+      rect:
+        serializedVersion: 2
+        x: 876
+        y: 34
+        width: 166
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c046be7182db58b0800000000000000
+      internalID: -5162301094231654201
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: btns_DARK_6
+      rect:
+        serializedVersion: 2
+        x: 1055
+        y: 32
+        width: 281
+        height: 130
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 44ee2b2abc1120590800000000000000
+      internalID: -7709580045799199164
       vertices: []
       indices: 
       edges: []
@@ -236,10 +298,13 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      BUTTONS_DARK_0: -7905542940668594592
-      BUTTONS_DARK_1: 8694969998539890928
-      BUTTONS_DARK_2: -350766556554626769
-      BUTTONS_DARK_3: -1162231098723265380
+      btns_DARK_0: 2113416570400925522
+      btns_DARK_1: 2432469275752621278
+      btns_DARK_2: 4791262046881701411
+      btns_DARK_3: -8888036667746379494
+      btns_DARK_4: -6328113749240147886
+      btns_DARK_5: -5162301094231654201
+      btns_DARK_6: -7709580045799199164
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

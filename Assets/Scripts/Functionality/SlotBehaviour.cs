@@ -285,6 +285,7 @@ public class SlotBehaviour : MonoBehaviour
   internal void SetInitialUI()
   {
     BetCounter = 0;
+    if (audioManager) audioManager.PlayGameStarted();
     uiManager.InitialiseUI(SocketManager.InitialData.bets, SocketManager.UIData.paylines.symbols);
     uiManager.InitialiseBalanceAndWin(SocketManager.PlayerData.balance, SocketManager.InitialData.bets[BetCounter]);
     currentBalance = SocketManager.PlayerData.balance;
@@ -533,6 +534,7 @@ public class SlotBehaviour : MonoBehaviour
     yield return StartCoroutine(uiManager.RevealJackpot(goalJackpot));
 
     _isInFreeSpin = true;
+    if (audioManager) audioManager.PlayFreeGameStarted();
     yield return StartCoroutine(FreeSpinLoop());
     _isInFreeSpin = false;
 
@@ -593,6 +595,7 @@ public class SlotBehaviour : MonoBehaviour
     yield return StartCoroutine(linkBonusController.StartLinkBonus(targetZones));
 
     _isInFreeSpin = true;
+    if (audioManager) audioManager.PlayFreeGameStarted();
     yield return StartCoroutine(LinkBonusFreeSpinLoop());
     _isInFreeSpin = false;
 
@@ -688,6 +691,7 @@ public class SlotBehaviour : MonoBehaviour
           Animimages[col].slotImages[row].gameObject.SetActive(true);
           animScript.StartAnimation();
           TempList.Add(animScript);
+          if (isJackpotOrPinata && audioManager) audioManager.PlayJackpotIcon();
         }
       }
     }
@@ -772,7 +776,7 @@ public class SlotBehaviour : MonoBehaviour
       if (row < Tempimages[col].coinValueTexts.Count)
       {
         TMP_Text txt = Tempimages[col].coinValueTexts[row];
-        if (txt) { txt.text = coin.value.ToString("F2"); txt.gameObject.SetActive(true); }
+        if (txt) { txt.text = coin.value.ToString("F2"); txt.gameObject.SetActive(true); if (audioManager) audioManager.PlayCoinValueAppear(); }
       }
     }
   }
@@ -829,6 +833,7 @@ public class SlotBehaviour : MonoBehaviour
                          : colorId == 9 ? RedPinataTarget
                          : BluePinataTarget;
     if (target == null) yield break;
+    if (audioManager) audioManager.PlayBubblePop();
 
     ImageAnimation animScript = animImg.GetComponent<ImageAnimation>();
     animImg.gameObject.SetActive(true);

@@ -1,25 +1,31 @@
 fileFormatVersion: 2
-guid: 54f60754a195875458083e18f7cf5ec9
+guid: 3fe10e5abf7426340b71115030dc0148
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2632047860370921291
-    second: BUTTONS GLOW_0
+      213: -3106033539001900869
+    second: PRESSED_btns_GLOW_0
   - first:
-      213: -649571987008088639
-    second: BUTTONS GLOW_1
+      213: -6508598721862058044
+    second: PRESSED_btns_GLOW_1
   - first:
-      213: -3865147962330228273
-    second: BUTTONS GLOW_2
+      213: -7899269437633552861
+    second: PRESSED_btns_GLOW_2
   - first:
-      213: 1124845013776004250
-    second: BUTTONS GLOW_3
+      213: -1903483801884727788
+    second: PRESSED_btns_GLOW_3
   - first:
-      213: -1498913613881811222
-    second: BUTTONS GLOW_4
+      213: 47888883218877337
+    second: PRESSED_btns_GLOW_4
   - first:
-      213: 3001100795974763818
-    second: BUTTONS GLOW_5
+      213: -1693664698324600153
+    second: PRESSED_btns_GLOW_5
+  - first:
+      213: 8416363877207195326
+    second: PRESSED_btns_GLOW_6
+  - first:
+      213: -6704543299295988486
+    second: PRESSED_btns_GLOW_7
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -112,19 +118,6 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
-    buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
     buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -141,13 +134,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BUTTONS GLOW_0
+      name: PRESSED_btns_GLOW_0
       rect:
         serializedVersion: 2
-        x: 13
-        y: 40
-        width: 55
-        height: 55
+        x: 150
+        y: 38
+        width: 108
+        height: 103
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -156,20 +149,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5b8a3ca8a66197bd0800000000000000
-      internalID: -2632047860370921291
+      spriteID: bb0a757e3f625e4d0800000000000000
+      internalID: -3106033539001900869
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BUTTONS GLOW_1
+      name: PRESSED_btns_GLOW_1
       rect:
         serializedVersion: 2
-        x: 101
-        y: 18
-        width: 102
-        height: 87
+        x: 264
+        y: 37
+        width: 154
+        height: 111
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -178,20 +171,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1c5965a28b14cf6f0800000000000000
-      internalID: -649571987008088639
+      spriteID: 4cfb9dd42ffcca5a0800000000000000
+      internalID: -6508598721862058044
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BUTTONS GLOW_2
+      name: PRESSED_btns_GLOW_2
       rect:
         serializedVersion: 2
-        x: 208
-        y: 21
-        width: 147
-        height: 95
+        x: 423
+        y: 38
+        width: 105
+        height: 99
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -200,20 +193,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: fc95bfc186c3c5ac0800000000000000
-      internalID: -3865147962330228273
+      spriteID: 32e90c07c48206290800000000000000
+      internalID: -7899269437633552861
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BUTTONS GLOW_3
+      name: PRESSED_btns_GLOW_3
       rect:
         serializedVersion: 2
-        x: 368
-        y: 18
-        width: 102
-        height: 90
+        x: 432
+        y: 131
+        width: 7
+        height: 7
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -222,20 +215,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a94fc7194904c9f00800000000000000
-      internalID: 1124845013776004250
+      spriteID: 41663f831977595e0800000000000000
+      internalID: -1903483801884727788
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BUTTONS GLOW_4
+      name: PRESSED_btns_GLOW_4
       rect:
         serializedVersion: 2
-        x: 836
-        y: 8
-        width: 161
-        height: 107
+        x: 554
+        y: 31
+        width: 281
+        height: 122
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -244,19 +237,41 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: aeed39f720ac23be0800000000000000
-      internalID: -1498913613881811222
+      spriteID: 99b83f08fa22aa000800000000000000
+      internalID: 47888883218877337
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BUTTONS GLOW_5
+      name: PRESSED_btns_GLOW_5
       rect:
         serializedVersion: 2
-        x: 1023
-        y: 12
-        width: 268
+        x: 876
+        y: 34
+        width: 166
+        height: 111
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7aa3eb72ee4ee78e0800000000000000
+      internalID: -1693664698324600153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PRESSED_btns_GLOW_6
+      rect:
+        serializedVersion: 2
+        x: 1055
+        y: 32
+        width: 281
         height: 123
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -266,8 +281,30 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a25c73ff54d06a920800000000000000
-      internalID: 3001100795974763818
+      spriteID: ebe3d51ca5eecc470800000000000000
+      internalID: 8416363877207195326
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PRESSED_btns_GLOW_7
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 48
+        width: 98
+        height: 82
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af4bc38346da4f2a0800000000000000
+      internalID: -6704543299295988486
       vertices: []
       indices: 
       edges: []
@@ -286,12 +323,14 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      BUTTONS GLOW_0: -2632047860370921291
-      BUTTONS GLOW_1: -649571987008088639
-      BUTTONS GLOW_2: -3865147962330228273
-      BUTTONS GLOW_3: 1124845013776004250
-      BUTTONS GLOW_4: -1498913613881811222
-      BUTTONS GLOW_5: 3001100795974763818
+      PRESSED_btns_GLOW_0: -3106033539001900869
+      PRESSED_btns_GLOW_1: -6508598721862058044
+      PRESSED_btns_GLOW_2: -7899269437633552861
+      PRESSED_btns_GLOW_3: -1903483801884727788
+      PRESSED_btns_GLOW_4: 47888883218877337
+      PRESSED_btns_GLOW_5: -1693664698324600153
+      PRESSED_btns_GLOW_6: 8416363877207195326
+      PRESSED_btns_GLOW_7: -6704543299295988486
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
