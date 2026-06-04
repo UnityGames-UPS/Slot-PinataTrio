@@ -1729,9 +1729,9 @@ MonoBehaviour:
   JackpotWinSequencePanel: {fileID: 238673877}
   JackpotAmountPanel: {fileID: 1112380069}
   JackpotWinAmountText: {fileID: 1574012192}
-  jackpotGraphicDropDuration: 0.6
-  jackpotPanelExpandDuration: 0.4
-  jackpotCountDuration: 1.5
+  jackpotGraphicDropDuration: 1
+  jackpotPanelExpandDuration: 1.7
+  jackpotCountDuration: 2
   jackpotHoldDuration: 2
   coinsLingerDuration: 1
   TickerContainer: {fileID: 205349657}
@@ -2620,11 +2620,11 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 7a78d0b2a81d8314a886174b3147529e, type: 3}
   rendererDelegate: {fileID: 173773592}
   useSharedMaterial: 1
-  doLoopAnimation: 1
+  doLoopAnimation: 0
   StartOnAwake: 1
   currentAnimationState: 0
   idealFrameRate: 0.041666668
-  AnimationSpeed: 15
+  AnimationSpeed: 12
   delayBetweenLoop: 0
 --- !u!114 &173773592
 MonoBehaviour:
@@ -3228,26 +3228,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ImageAnimation
   textureArray:
-  - {fileID: -365059437647937477, guid: 7358f61a269d3684a8c0586512ca1a52, type: 3}
-  - {fileID: 330681908389599713, guid: a0851a1e69a3cd341aa4a3affca8a610, type: 3}
-  - {fileID: -3163418899137706561, guid: 0cadc4cc267e2694ea1e2fade89817d7, type: 3}
-  - {fileID: 9066292254177635820, guid: b77577e87b2f9f4499dcb7f74d3d84d7, type: 3}
-  - {fileID: 9205636963526832924, guid: 222d6cdfcd2d6cd4fac47d88fc3b8884, type: 3}
-  - {fileID: 4392127856184598412, guid: 5a8527272887e8c49b16626c08c79faf, type: 3}
-  - {fileID: 415054061275663959, guid: 4f44d5337e1e2cb4686e099c83a425f9, type: 3}
-  - {fileID: 2390702993979413825, guid: 7da10506a8b31fd4ba3b6f75312ef471, type: 3}
-  - {fileID: 8320474497502140388, guid: 2dfd140f1ecdf90448055b43b5034473, type: 3}
-  - {fileID: 4286069216454882708, guid: a6525f907963a6b49ad915b2788a7a3f, type: 3}
-  - {fileID: 6726494631381213327, guid: 08f6537bb4a86484e846725aaacf764f, type: 3}
-  - {fileID: 7748821640593661680, guid: 4cce396e3a500084b976a39a89188072, type: 3}
-  - {fileID: 2643907328306549381, guid: 65ab9673c6044c94db4e74979eb5e7db, type: 3}
-  - {fileID: 7938438602260118433, guid: f5d96285b3a9c394daa29b90c8efcc88, type: 3}
-  - {fileID: -5099125770125206531, guid: 2e5ba02eed6f8c14391d12f2dfe0259b, type: 3}
-  - {fileID: 8022048781357085805, guid: 4419d55c8c1d6074ebf6b1b4c1f0e23c, type: 3}
-  - {fileID: -2018426616388001139, guid: efe9b48235fcceb46b2380baefd0c371, type: 3}
-  - {fileID: -3012368854293449377, guid: b1386d35072a20a4f801573d63eb5375, type: 3}
-  - {fileID: 3721189679474328363, guid: a175ad64d939bca41a9f0eeeebc526ca, type: 3}
-  - {fileID: -8505074726237115192, guid: fb3393ef18c225a40b9d82b5af88b5dc, type: 3}
+  - {fileID: 21300000, guid: 7358f61a269d3684a8c0586512ca1a52, type: 3}
+  - {fileID: 21300000, guid: a0851a1e69a3cd341aa4a3affca8a610, type: 3}
+  - {fileID: 21300000, guid: 0cadc4cc267e2694ea1e2fade89817d7, type: 3}
+  - {fileID: 21300000, guid: b77577e87b2f9f4499dcb7f74d3d84d7, type: 3}
+  - {fileID: 21300000, guid: 222d6cdfcd2d6cd4fac47d88fc3b8884, type: 3}
+  - {fileID: 21300000, guid: 5a8527272887e8c49b16626c08c79faf, type: 3}
+  - {fileID: 21300000, guid: 4f44d5337e1e2cb4686e099c83a425f9, type: 3}
+  - {fileID: 21300000, guid: 7da10506a8b31fd4ba3b6f75312ef471, type: 3}
+  - {fileID: 21300000, guid: 2dfd140f1ecdf90448055b43b5034473, type: 3}
+  - {fileID: 21300000, guid: a6525f907963a6b49ad915b2788a7a3f, type: 3}
+  - {fileID: 21300000, guid: 08f6537bb4a86484e846725aaacf764f, type: 3}
+  - {fileID: 21300000, guid: 4cce396e3a500084b976a39a89188072, type: 3}
+  - {fileID: 21300000, guid: 65ab9673c6044c94db4e74979eb5e7db, type: 3}
+  - {fileID: 21300000, guid: f5d96285b3a9c394daa29b90c8efcc88, type: 3}
+  - {fileID: 21300000, guid: 2e5ba02eed6f8c14391d12f2dfe0259b, type: 3}
+  - {fileID: 21300000, guid: 4419d55c8c1d6074ebf6b1b4c1f0e23c, type: 3}
+  - {fileID: 21300000, guid: efe9b48235fcceb46b2380baefd0c371, type: 3}
+  - {fileID: 21300000, guid: b1386d35072a20a4f801573d63eb5375, type: 3}
+  - {fileID: 21300000, guid: a175ad64d939bca41a9f0eeeebc526ca, type: 3}
+  - {fileID: 21300000, guid: fb3393ef18c225a40b9d82b5af88b5dc, type: 3}
   rendererDelegate: {fileID: 228852818}
   useSharedMaterial: 1
   doLoopAnimation: 0
@@ -12234,7 +12234,7 @@ PrefabInstance:
       objectReference: {fileID: 1728521618}
     - target: {fileID: 7610637853776029503, guid: fbbc9264dc50de44589243147c5ea3dc, type: 3}
       propertyPath: testToken
-      value: 1f5447369fa04c4a96698d3bb18fe68c
+      value: b1995bc25673417b8c2c5e7237b55ef0
       objectReference: {fileID: 0}
     - target: {fileID: 7610637853776029503, guid: fbbc9264dc50de44589243147c5ea3dc, type: 3}
       propertyPath: uiManager
@@ -16457,7 +16457,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1112380070
 RectTransform:
   m_ObjectHideFlags: 0

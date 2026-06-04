@@ -810,6 +810,8 @@ public class SlotBehaviour : MonoBehaviour
       if (coin.position[1] != col) continue;
       int row = coin.position[0];
       Image animImg = Animimages[col].slotImages[row];
+      RectTransform animRT = animImg.GetComponent<RectTransform>();
+      if (animRT) animRT.sizeDelta = new Vector2(300f, 300f);
       animImg.gameObject.SetActive(true);
       ImageAnimation animScript = animImg.GetComponent<ImageAnimation>();
       if (animScript != null && animScript.textureArray?.Count > 0)

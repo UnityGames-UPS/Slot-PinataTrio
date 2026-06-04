@@ -1402,8 +1402,8 @@ public class UIManager : MonoBehaviour
 
     if (JackpotAmountPanel)
     {
+      JackpotAmountPanel.transform.localScale = Vector3.one * 0.05f;
       JackpotAmountPanel.SetActive(true);
-      JackpotAmountPanel.transform.localScale = Vector3.zero;
       JackpotAmountPanel.transform.DOScale(Vector3.one, jackpotPanelExpandDuration).SetEase(Ease.OutBack);
     }
 
@@ -1418,9 +1418,6 @@ public class UIManager : MonoBehaviour
 
     if (JackpotWinGraphic) JackpotWinGraphic.gameObject.SetActive(false);
     if (JackpotAmountPanel) JackpotAmountPanel.SetActive(false);
-
-    yield return new WaitForSeconds(coinsLingerDuration);
-
     if (CashFallingAnim) CashFallingAnim.StopAnimation();
     if (CoinFallingAnim) CoinFallingAnim.StopAnimation();
     if (JackpotWinSequencePanel) JackpotWinSequencePanel.SetActive(false);
