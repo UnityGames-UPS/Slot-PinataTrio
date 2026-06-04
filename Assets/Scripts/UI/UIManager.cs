@@ -165,7 +165,8 @@ public class UIManager : MonoBehaviour
   [SerializeField] private Vector2 jackpotCenterTarget = new Vector2(0f, -90f);
 
   [Header("Jackpot Win Sequence")]
-  [SerializeField] private GameObject CoinsAnimation;
+  [SerializeField] private ImageAnimation CashFallingAnim;
+  [SerializeField] private ImageAnimation CoinFallingAnim;
   [SerializeField] private RectTransform JackpotWinGraphic;
   [SerializeField] private Image JackpotWinGraphicImage;
   [SerializeField] private Sprite MiniWinSprite;
@@ -173,10 +174,9 @@ public class UIManager : MonoBehaviour
   [SerializeField] private Sprite MajorWinSprite;
   [SerializeField] private Sprite MegaWinSprite;
   [SerializeField] private Sprite GrandWinSprite;
-  [SerializeField] private GameObject JackpotWinPanel;
+  [SerializeField] private GameObject JackpotWinSequencePanel;
+  [SerializeField] private GameObject JackpotAmountPanel;
   [SerializeField] private TMP_Text JackpotWinAmountText;
-  [SerializeField] private GameObject TotalSpinWinPanel;
-  [SerializeField] private TMP_Text TotalSpinWinAmountText;
   [SerializeField] private float jackpotGraphicDropDuration = 0.6f;
   [SerializeField] private float jackpotPanelExpandDuration = 0.4f;
   [SerializeField] private float jackpotCountDuration = 1.5f;
@@ -222,7 +222,7 @@ public class UIManager : MonoBehaviour
 
   [Header("Popus UI")]
   [SerializeField]
-  private GameObject MainPopup_Object;
+  private GameObject PopupsPanel;
 
   [Header("About Popup")]
   [SerializeField]
@@ -349,15 +349,11 @@ public class UIManager : MonoBehaviour
   [SerializeField]
   private Button CrossQuit_Button;
 
-  [SerializeField]
-  private AudioManager audioManager;
-  [SerializeField]
-  private Button m_AwakeGameButton;
-
-  [SerializeField]
-  private Button GameExit_Button;
-  [SerializeField]
-  private Button Home_Button;
+  [Header("References")]
+  [SerializeField] private AudioManager audioManager;
+  [SerializeField] private Button m_AwakeGameButton;
+  [SerializeField] private Button GameExit_Button;
+  [SerializeField] private Button Home_Button;
 
   [SerializeField]
   private SlotBehaviour slotManager;
@@ -623,7 +619,7 @@ public class UIManager : MonoBehaviour
 
   private void StartFreeSpins(int spins)
   {
-    // if (MainPopup_Object) MainPopup_Object.SetActive(false);
+    // if (PopupsPanel) PopupsPanel.SetActive(false);
     if (FreeSpinPopup_Object) FreeSpinPopup_Object.SetActive(false);
     
     // slotManager.FreeSpin(spins); // TODO: wire up Pinata free spin
@@ -637,7 +633,7 @@ public class UIManager : MonoBehaviour
     // Debug.Log("Total Spins: " + spins);
     if (FreeSpinPopup_Object) FreeSpinPopup_Object.SetActive(true);
     if (Free_Text) Free_Text.text = ExtraSpins.ToString() + " Free spins awarded.";
-    // if (MainPopup_Object) MainPopup_Object.SetActive(true);
+    // if (PopupsPanel) PopupsPanel.SetActive(true);
     DOVirtual.DelayedCall(1.5f, () =>
     {
       StartFreeSpins(spins);
@@ -665,7 +661,7 @@ public class UIManager : MonoBehaviour
   {
     double initAmount = 0;
     if (WinPopup_Object) WinPopup_Object.SetActive(true);
-    // if (MainPopup_Object) MainPopup_Object.SetActive(true);
+    // if (PopupsPanel) PopupsPanel.SetActive(true);
     WinPopupTextTween = DOTween.To(() => initAmount, (val) => initAmount = val, amount, 1f).OnUpdate(() =>
     {
       if (Win_Text) Win_Text.text = initAmount.ToString("F3");
@@ -802,7 +798,7 @@ public class UIManager : MonoBehaviour
   {
     if (audioManager) audioManager.PlayButton();
     if (Popup) Popup.SetActive(true);
-    if (MainPopup_Object) MainPopup_Object.SetActive(true);
+    if (PopupsPanel) PopupsPanel.SetActive(true);
   }
 
   internal void ClosePopup(GameObject Popup)
@@ -811,7 +807,7 @@ public class UIManager : MonoBehaviour
     if (Popup) Popup.SetActive(false);
     if (!DisconnectPopup_Object.activeSelf)
     {
-      if (MainPopup_Object) MainPopup_Object.SetActive(false);
+      if (PopupsPanel) PopupsPanel.SetActive(false);
     }
   }
 
@@ -1389,62 +1385,47 @@ public class UIManager : MonoBehaviour
     }
   }
 
-  // TODO: uncomment ShowJackpotWinSequence body once win sequence UI is set up in editor
   internal IEnumerator ShowJackpotWinSequence(string tier, double jackpotAmount, double totalWin)
   {
-    // if (CoinsAnimation) CoinsAnimation.SetActive(true);
+    if (JackpotWinSequencePanel) JackpotWinSequencePanel.SetActive(true);
+    if (CashFallingAnim) CashFallingAnim.StartAnimation();
+    if (CoinFallingAnim) CoinFallingAnim.StartAnimation();
 
-    // if (JackpotWinGraphicImage) JackpotWinGraphicImage.sprite = GetJackpotWinSprite(tier);
-    // if (JackpotWinGraphic)
-    // {
-    //   JackpotWinGraphic.gameObject.SetActive(true);
-    //   float targetY = JackpotWinGraphic.anchoredPosition.y;
-    //   JackpotWinGraphic.anchoredPosition = new Vector2(JackpotWinGraphic.anchoredPosition.x, targetY + offscreenOffset);
-    //   yield return JackpotWinGraphic.DOAnchorPosY(targetY, jackpotGraphicDropDuration).SetEase(Ease.OutCubic).WaitForCompletion();
-    // }
+    if (JackpotWinGraphicImage) JackpotWinGraphicImage.sprite = GetJackpotWinSprite(tier);
+    if (JackpotWinGraphic)
+    {
+      JackpotWinGraphic.gameObject.SetActive(true);
+      float targetY = JackpotWinGraphic.anchoredPosition.y;
+      JackpotWinGraphic.anchoredPosition = new Vector2(JackpotWinGraphic.anchoredPosition.x, targetY + offscreenOffset);
+      yield return JackpotWinGraphic.DOAnchorPosY(targetY, jackpotGraphicDropDuration).SetEase(Ease.OutCubic).WaitForCompletion();
+    }
 
-    // if (JackpotWinPanel)
-    // {
-    //   JackpotWinPanel.SetActive(true);
-    //   JackpotWinPanel.transform.localScale = Vector3.zero;
-    //   JackpotWinPanel.transform.DOScale(Vector3.one, jackpotPanelExpandDuration).SetEase(Ease.OutBack);
-    // }
+    if (JackpotAmountPanel)
+    {
+      JackpotAmountPanel.SetActive(true);
+      JackpotAmountPanel.transform.localScale = Vector3.zero;
+      JackpotAmountPanel.transform.DOScale(Vector3.one, jackpotPanelExpandDuration).SetEase(Ease.OutBack);
+    }
 
-    // float jackpotDisplay = 0f;
-    // if (JackpotWinAmountText)
-    //   yield return DOTween.To(() => jackpotDisplay, v => { jackpotDisplay = v; JackpotWinAmountText.text = v.ToString("F3"); },
-    //     (float)jackpotAmount, jackpotCountDuration).WaitForCompletion();
-    // else
-    //   yield return new WaitForSeconds(jackpotCountDuration);
+    float jackpotDisplay = 0f;
+    if (JackpotWinAmountText)
+      yield return DOTween.To(() => jackpotDisplay, v => { jackpotDisplay = v; JackpotWinAmountText.text = v.ToString("F3"); },
+        (float)jackpotAmount, jackpotCountDuration).WaitForCompletion();
+    else
+      yield return new WaitForSeconds(jackpotCountDuration);
 
-    // yield return new WaitForSeconds(jackpotHoldDuration);
+    yield return new WaitForSeconds(jackpotHoldDuration);
 
-    // if (JackpotWinGraphic) JackpotWinGraphic.gameObject.SetActive(false);
-    // if (JackpotWinPanel) JackpotWinPanel.SetActive(false);
+    if (JackpotWinGraphic) JackpotWinGraphic.gameObject.SetActive(false);
+    if (JackpotAmountPanel) JackpotAmountPanel.SetActive(false);
 
-    // yield return new WaitForSeconds(coinsLingerDuration);
+    yield return new WaitForSeconds(coinsLingerDuration);
 
-    // if (TotalSpinWinPanel)
-    // {
-    //   TotalSpinWinPanel.SetActive(true);
-    //   TotalSpinWinPanel.transform.localScale = Vector3.zero;
-    //   TotalSpinWinPanel.transform.DOScale(Vector3.one, jackpotPanelExpandDuration).SetEase(Ease.OutBack);
-    // }
-
-    // float totalDisplay = 0f;
-    // if (TotalSpinWinAmountText)
-    //   yield return DOTween.To(() => totalDisplay, v => { totalDisplay = v; TotalSpinWinAmountText.text = v.ToString("F3"); },
-    //     (float)totalWin, jackpotCountDuration).WaitForCompletion();
-    // else
-    //   yield return new WaitForSeconds(jackpotCountDuration);
-
-    // yield return new WaitForSeconds(jackpotHoldDuration);
-
-    // if (CoinsAnimation) CoinsAnimation.SetActive(false);
-    // if (TotalSpinWinPanel) TotalSpinWinPanel.SetActive(false);
+    if (CashFallingAnim) CashFallingAnim.StopAnimation();
+    if (CoinFallingAnim) CoinFallingAnim.StopAnimation();
+    if (JackpotWinSequencePanel) JackpotWinSequencePanel.SetActive(false);
     if (FallingJackpotRT) FallingJackpotRT.gameObject.SetActive(false);
     if (JackpotPickedObject) JackpotPickedObject.SetActive(false);
-    yield return null;
   }
 
   private void UpdateBetDisplay(double bet)
