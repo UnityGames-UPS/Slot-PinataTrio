@@ -690,6 +690,8 @@ public class SlotBehaviour : MonoBehaviour
           .GetComponent<ImageAnimation>();
         if (animScript != null && animScript.textureArray.Count > 0)
         {
+          RectTransform animRT = Animimages[col].slotImages[row].GetComponent<RectTransform>();
+          if (animRT) animRT.sizeDelta = isJackpotOrPinata ? new Vector2(200f, 200f) : new Vector2(300f, 300f);
           Animimages[col].slotImages[row].gameObject.SetActive(true);
           animScript.StartAnimation();
           TempList.Add(animScript);
