@@ -1566,7 +1566,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &117472469
 Transform:
@@ -2309,7 +2309,6 @@ GameObject:
   m_Component:
   - component: {fileID: 163614924}
   - component: {fileID: 163614926}
-  - component: {fileID: 163614925}
   m_Layer: 5
   m_Name: MoveUpAfterIntro
   m_TagString: Untagged
@@ -2334,6 +2333,7 @@ RectTransform:
   - {fileID: 1446319510}
   - {fileID: 65837300}
   - {fileID: 345282943}
+  - {fileID: 1645509750}
   m_Father: {fileID: 1298497625}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -2341,36 +2341,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -275}
   m_SizeDelta: {x: 1200, y: 1200}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &163614925
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 163614923}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 0
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 6840771114177757136, guid: 5b201ecf97810fa49a9e87699b67f683, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!222 &163614926
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3175,7 +3145,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &228852818
 MonoBehaviour:
@@ -3197,9 +3167,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 8995154407686431259, guid: 9c6b8b4c7daa5ee408ad6753d9aebea5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 222d6cdfcd2d6cd4fac47d88fc3b8884, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -3254,7 +3224,7 @@ MonoBehaviour:
   StartOnAwake: 1
   currentAnimationState: 0
   idealFrameRate: 0.041666668
-  AnimationSpeed: 20
+  AnimationSpeed: 7
   delayBetweenLoop: 0
 --- !u!1 &232207247
 GameObject:
@@ -5079,16 +5049,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 307157742}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1967169627}
+  m_Father: {fileID: 2040380323}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -974.99994}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &307157744
@@ -5104,7 +5074,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.14618193, g: 0.5674684, b: 0.6886792, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5113,7 +5083,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 5817504368429520092, guid: 2b0d4aca0cd1eb0438b75437e75e25a7, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -10482,7 +10452,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &707953700
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10569,7 +10539,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 8995154407686431259, guid: 9c6b8b4c7daa5ee408ad6753d9aebea5, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -10699,6 +10669,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3520251630222885433, guid: 5e75cc6ecfcea8b47893d43cd558824f, type: 3}
   m_PrefabInstance: {fileID: 713501073}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &713501075 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6521602466046524270, guid: 5e75cc6ecfcea8b47893d43cd558824f, type: 3}
+  m_PrefabInstance: {fileID: 713501073}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25b5831d1126f6244b5ce6d0732ca7d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LinkBonusCell
 --- !u!1 &714667104
 GameObject:
   m_ObjectHideFlags: 0
@@ -12234,7 +12215,7 @@ PrefabInstance:
       objectReference: {fileID: 1728521618}
     - target: {fileID: 7610637853776029503, guid: fbbc9264dc50de44589243147c5ea3dc, type: 3}
       propertyPath: testToken
-      value: b1995bc25673417b8c2c5e7237b55ef0
+      value: a9751909d66d4e90a7aafc02a1904796
       objectReference: {fileID: 0}
     - target: {fileID: 7610637853776029503, guid: fbbc9264dc50de44589243147c5ea3dc, type: 3}
       propertyPath: uiManager
@@ -16451,6 +16432,7 @@ GameObject:
   - component: {fileID: 1112380070}
   - component: {fileID: 1112380072}
   - component: {fileID: 1112380071}
+  - component: {fileID: 1112380073}
   m_Layer: 5
   m_Name: JackpotAmountPanel
   m_TagString: Untagged
@@ -16516,6 +16498,40 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1112380069}
   m_CullTransparentMesh: 1
+--- !u!114 &1112380073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1112380069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d9ae1bf2ec654621a0c3eaff2a909fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ImageAnimation
+  textureArray:
+  - {fileID: 21300000, guid: e210a693df1dc4d4cb60d9b035266fe9, type: 3}
+  - {fileID: 21300000, guid: 91328656acb69074286005dc48341a86, type: 3}
+  - {fileID: 21300000, guid: 27fe6afb33a9a5e4cae783b2ccaf8fce, type: 3}
+  - {fileID: 21300000, guid: 261cbbb97273d8c4e95889359ae717de, type: 3}
+  - {fileID: 21300000, guid: 30826c9f04580284babcbea2d0225d87, type: 3}
+  - {fileID: 21300000, guid: e541db0e71faed44786c3637bdc095e9, type: 3}
+  - {fileID: 21300000, guid: a4f19d195315a164abcd2fda755406bd, type: 3}
+  - {fileID: 21300000, guid: d8e92b1f6370c9d45a6007871c0f9cc4, type: 3}
+  - {fileID: 21300000, guid: be2391733d764094c859de611978302e, type: 3}
+  - {fileID: 21300000, guid: 3026c30d438b02b42bafe3d3aebf8734, type: 3}
+  - {fileID: 21300000, guid: 9de890b97452c7c4ab7e5d55c081e33f, type: 3}
+  - {fileID: 21300000, guid: 445d13d3e238afa4e9d179bc3f49ca9a, type: 3}
+  - {fileID: 21300000, guid: 0f35366d92b68e54cac64c0d541730d9, type: 3}
+  rendererDelegate: {fileID: 1112380071}
+  useSharedMaterial: 1
+  doLoopAnimation: 1
+  StartOnAwake: 0
+  currentAnimationState: 0
+  idealFrameRate: 0.041666668
+  AnimationSpeed: 5
+  delayBetweenLoop: 0
 --- !u!1 &1113060644
 GameObject:
   m_ObjectHideFlags: 0
@@ -16867,7 +16883,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1145725166
 RectTransform:
   m_ObjectHideFlags: 0
@@ -17971,6 +17987,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3520251630222885433, guid: 5e75cc6ecfcea8b47893d43cd558824f, type: 3}
   m_PrefabInstance: {fileID: 1203323624}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1203323626 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6521602466046524270, guid: 5e75cc6ecfcea8b47893d43cd558824f, type: 3}
+  m_PrefabInstance: {fileID: 1203323624}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25b5831d1126f6244b5ce6d0732ca7d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LinkBonusCell
 --- !u!1 &1210701592
 GameObject:
   m_ObjectHideFlags: 0
@@ -19082,6 +19109,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3520251630222885433, guid: 5e75cc6ecfcea8b47893d43cd558824f, type: 3}
   m_PrefabInstance: {fileID: 1258915904}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1258915906 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6521602466046524270, guid: 5e75cc6ecfcea8b47893d43cd558824f, type: 3}
+  m_PrefabInstance: {fileID: 1258915904}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25b5831d1126f6244b5ce6d0732ca7d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LinkBonusCell
 --- !u!1 &1264569113
 GameObject:
   m_ObjectHideFlags: 0
@@ -21582,6 +21620,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f3cdb2432f1242ab9ba58e3264daa2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ButtonAnimator
+--- !u!114 &1438780720 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6521602466046524270, guid: 5e75cc6ecfcea8b47893d43cd558824f, type: 3}
+  m_PrefabInstance: {fileID: 1266609816}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25b5831d1126f6244b5ce6d0732ca7d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LinkBonusCell
 --- !u!1 &1446319509
 GameObject:
   m_ObjectHideFlags: 0
@@ -22110,6 +22159,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1485038772}
   m_CullTransparentMesh: 1
+--- !u!114 &1487618819 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6521602466046524270, guid: 5e75cc6ecfcea8b47893d43cd558824f, type: 3}
+  m_PrefabInstance: {fileID: 683276370}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25b5831d1126f6244b5ce6d0732ca7d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LinkBonusCell
 --- !u!1 &1489929834
 GameObject:
   m_ObjectHideFlags: 0
@@ -22156,20 +22216,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LinkBonusController
   cells:
   - {fileID: 1755481433}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 1662109314}
+  - {fileID: 1438780720}
+  - {fileID: 1547349773}
+  - {fileID: 1605506987}
+  - {fileID: 1963590323}
+  - {fileID: 1978658484}
+  - {fileID: 2049406083}
+  - {fileID: 1487618819}
+  - {fileID: 1203323626}
+  - {fileID: 1258915906}
+  - {fileID: 1582213807}
+  - {fileID: 2136280712}
+  - {fileID: 1490211369}
+  - {fileID: 713501075}
   LinkBonusGrid: {fileID: 1967169626}
   symbolSprites:
   - {fileID: 21300000, guid: f8329a2318504c747bcd829e064f0c3f, type: 3}
@@ -22185,7 +22245,7 @@ MonoBehaviour:
   - {fileID: -7183211506193134899, guid: ff4f981514c98254390456951339fd2a, type: 3}
   BlueCircle: {fileID: 307157743}
   LinkBonusGridCenter: {fileID: 966924136}
-  blueCircleBigScale: 3
+  blueCircleBigScale: 30
   blueCircleRevealDuration: 0.6
   zoneRevealDelay: 0.3
   flickerDuration: 4
@@ -22431,6 +22491,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3520251630222885433, guid: 5e75cc6ecfcea8b47893d43cd558824f, type: 3}
   m_PrefabInstance: {fileID: 1490211367}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1490211369 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6521602466046524270, guid: 5e75cc6ecfcea8b47893d43cd558824f, type: 3}
+  m_PrefabInstance: {fileID: 1490211367}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25b5831d1126f6244b5ce6d0732ca7d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LinkBonusCell
 --- !u!1 &1498183824
 GameObject:
   m_ObjectHideFlags: 0
@@ -23243,6 +23314,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3520251630222885433, guid: 5e75cc6ecfcea8b47893d43cd558824f, type: 3}
   m_PrefabInstance: {fileID: 1547349771}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1547349773 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6521602466046524270, guid: 5e75cc6ecfcea8b47893d43cd558824f, type: 3}
+  m_PrefabInstance: {fileID: 1547349771}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25b5831d1126f6244b5ce6d0732ca7d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LinkBonusCell
 --- !u!1 &1574012190
 GameObject:
   m_ObjectHideFlags: 0
@@ -23418,6 +23500,17 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 800, y: 800}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1582213807 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6521602466046524270, guid: 5e75cc6ecfcea8b47893d43cd558824f, type: 3}
+  m_PrefabInstance: {fileID: 1490151786}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25b5831d1126f6244b5ce6d0732ca7d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LinkBonusCell
 --- !u!1 &1589256197
 GameObject:
   m_ObjectHideFlags: 0
@@ -23795,6 +23888,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3520251630222885433, guid: 5e75cc6ecfcea8b47893d43cd558824f, type: 3}
   m_PrefabInstance: {fileID: 1605506985}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1605506987 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6521602466046524270, guid: 5e75cc6ecfcea8b47893d43cd558824f, type: 3}
+  m_PrefabInstance: {fileID: 1605506985}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25b5831d1126f6244b5ce6d0732ca7d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LinkBonusCell
 --- !u!1 &1611228472
 GameObject:
   m_ObjectHideFlags: 0
@@ -24910,7 +25014,7 @@ RectTransform:
   - {fileID: 966924136}
   - {fileID: 1589256198}
   - {fileID: 1967169627}
-  m_Father: {fileID: 2040380323}
+  m_Father: {fileID: 163614924}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -25030,6 +25134,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1650034004}
   m_CullTransparentMesh: 1
+--- !u!114 &1662109314 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6521602466046524270, guid: 5e75cc6ecfcea8b47893d43cd558824f, type: 3}
+  m_PrefabInstance: {fileID: 1255610944}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25b5831d1126f6244b5ce6d0732ca7d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LinkBonusCell
 --- !u!1 &1666554222
 GameObject:
   m_ObjectHideFlags: 0
@@ -29663,6 +29778,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1963590323 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6521602466046524270, guid: 5e75cc6ecfcea8b47893d43cd558824f, type: 3}
+  m_PrefabInstance: {fileID: 644197223}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25b5831d1126f6244b5ce6d0732ca7d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LinkBonusCell
 --- !u!1 &1967169626
 GameObject:
   m_ObjectHideFlags: 0
@@ -29706,7 +29832,6 @@ RectTransform:
   - {fileID: 2136280711}
   - {fileID: 1490211368}
   - {fileID: 713501074}
-  - {fileID: 307157743}
   m_Father: {fileID: 1645509750}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -30016,6 +30141,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1977817171}
   m_CullTransparentMesh: 1
+--- !u!114 &1978658484 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6521602466046524270, guid: 5e75cc6ecfcea8b47893d43cd558824f, type: 3}
+  m_PrefabInstance: {fileID: 1613208420}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25b5831d1126f6244b5ce6d0732ca7d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LinkBonusCell
 --- !u!1 &1991465922
 GameObject:
   m_ObjectHideFlags: 0
@@ -30837,9 +30973,9 @@ RectTransform:
   - {fileID: 2049933751}
   - {fileID: 1276072533}
   - {fileID: 1803399850}
-  - {fileID: 1645509750}
   - {fileID: 1410256928}
   - {fileID: 238673878}
+  - {fileID: 307157743}
   m_Father: {fileID: 525240732}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -30847,6 +30983,17 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2049406083 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6521602466046524270, guid: 5e75cc6ecfcea8b47893d43cd558824f, type: 3}
+  m_PrefabInstance: {fileID: 1809507098}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25b5831d1126f6244b5ce6d0732ca7d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LinkBonusCell
 --- !u!1 &2049933750
 GameObject:
   m_ObjectHideFlags: 0
@@ -32414,6 +32561,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3520251630222885433, guid: 5e75cc6ecfcea8b47893d43cd558824f, type: 3}
   m_PrefabInstance: {fileID: 2136280710}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2136280712 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6521602466046524270, guid: 5e75cc6ecfcea8b47893d43cd558824f, type: 3}
+  m_PrefabInstance: {fileID: 2136280710}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25b5831d1126f6244b5ce6d0732ca7d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LinkBonusCell
 --- !u!1 &2137916604
 GameObject:
   m_ObjectHideFlags: 0

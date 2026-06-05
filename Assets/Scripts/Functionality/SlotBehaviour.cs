@@ -183,7 +183,7 @@ public class SlotBehaviour : MonoBehaviour
     while (IsAutoSpin)
     {
       Debug.Log($"[AutoSpin] Loop start — IsAutoSpin:{IsAutoSpin} CheckPopups:{CheckPopups} IsSpinning:{IsSpinning}");
-      yield return new WaitUntil(() => !CheckPopups);
+      yield return new WaitUntil(() => !CheckPopups && !IsSpinning);
       Debug.Log("[AutoSpin] CheckPopups cleared, calling StartSlots");
       StartSlots();
       yield return new WaitUntil(() => !IsSpinning);
@@ -498,7 +498,6 @@ public class SlotBehaviour : MonoBehaviour
 
     if (audioManager) audioManager.StopBonusBgMusic();
     uiManager.CleanupFeaturePinata("wheelBonus");
-    CheckPopups = false;
     _isFeatureActive = false;
     uiManager.LockFeatureUI(false);
   }
@@ -581,7 +580,9 @@ public class SlotBehaviour : MonoBehaviour
 
   private IEnumerator HandleLinkBonus(PendingFeature feature)
   {
+    StartCoroutine(uiManager.SlideContentDown());
     yield return StartCoroutine(uiManager.PlayFeatureIntro("linkBonus"));
+    StartCoroutine(uiManager.SlideContentUp());
     if (audioManager) audioManager.PlayBonusBgMusic();
     _isFeatureActive = true;
     uiManager.LockFeatureUI(true);
@@ -614,7 +615,6 @@ public class SlotBehaviour : MonoBehaviour
     uiManager.UpdateBalance(SocketManager.ResultData.player.balance);
     currentBalance = SocketManager.PlayerData.balance;
 
-    CheckPopups = false;
     _isFeatureActive = false;
     uiManager.LockFeatureUI(false);
   }

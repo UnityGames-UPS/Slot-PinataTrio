@@ -873,6 +873,8 @@ public class UIManager : MonoBehaviour
     }
     if (SpinWinCoinSplash) SpinWinCoinSplash.SetActive(true);
     float display = 0f;
+    if (TotalWin_text) TotalWin_text.text = "0.000";
+    if (TotalWin_text) DOTween.To(() => display, v => { TotalWin_text.text = v.ToString("F3"); }, (float)winAmount, spinWinCountDuration);
     if (SpinWinText)
       yield return DOTween.To(() => display, v => { display = v; SpinWinText.text = v.ToString("F3"); },
         (float)winAmount, spinWinCountDuration).WaitForCompletion();
@@ -965,6 +967,7 @@ public class UIManager : MonoBehaviour
 
   internal IEnumerator PlayFeatureIntro(string feature)
   {
+    Debug.Log($"[PlayFeatureIntro] Starting for feature: {feature}");
     GameObject introObj = null;
     ImageAnimation introAnim = null;
     Image nameGraphic = null;
@@ -992,16 +995,19 @@ public class UIManager : MonoBehaviour
         break;
     }
 
+    Debug.Log($"[PlayFeatureIntro] introObj={introObj?.name ?? "NULL"}, introAnim={introAnim?.name ?? "NULL"}, nameGraphic={nameGraphic?.name ?? "NULL"}");
+
     if (introObj) introObj.SetActive(true);
     if (introAnim)
     {
+      introAnim.gameObject.SetActive(true);
       introAnim.doLoopAnimation = false;
       float shakeDelay = Mathf.Max(0f, introAnim.GetTotalDuration() - introShakeStartOffset);
       StartCoroutine(PunchGameContent(shakeDelay));
       introAnim.StartAnimation();
       yield return new WaitUntil(() => introAnim.IsComplete);
+      introAnim.gameObject.SetActive(false);
     }
-    if (introObj) introObj.SetActive(false);
 
     if (nameGraphic)
     {
