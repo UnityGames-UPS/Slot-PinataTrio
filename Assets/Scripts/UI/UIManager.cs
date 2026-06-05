@@ -66,6 +66,7 @@ public class UIManager : MonoBehaviour
 
   [Header("Intro")]
   [SerializeField] private RectTransform PinataTrio;
+  [SerializeField] private ImageAnimation PinataTrioAnim;
   [SerializeField] private RectTransform GameContent;
   [SerializeField] private RectTransform MoveUpAfterIntro;
   [SerializeField] private float introHoldDuration = 3f;
@@ -542,11 +543,12 @@ public class UIManager : MonoBehaviour
 
   private IEnumerator PlayIntro()
   {
-    if (PinataTrio)
-      PinataTrio.anchoredPosition = new Vector2(PinataTrio.anchoredPosition.x, PinataTrio.anchoredPosition.y + offscreenOffset);
-
-    if (PinataTrio)
-      yield return PinataTrio.DOAnchorPosY(PinataTrio.anchoredPosition.y - offscreenOffset, 0.8f).SetEase(Ease.OutBounce).WaitForCompletion();
+    if (PinataTrioAnim)
+    {
+      PinataTrioAnim.doLoopAnimation = false;
+      PinataTrioAnim.StartAnimation();
+      yield return new WaitUntil(() => PinataTrioAnim.IsComplete);
+    }
 
     yield return new WaitForSeconds(introHoldDuration);
 
