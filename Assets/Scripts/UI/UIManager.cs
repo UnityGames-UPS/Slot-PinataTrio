@@ -1215,6 +1215,8 @@ public class UIManager : MonoBehaviour
       PinataButtons[i].interactable = true;
     }
 
+    if (audioManager) audioManager.PlayInsideJackpot();
+
     if (_pickJackpotTimerRoutine != null) StopCoroutine(_pickJackpotTimerRoutine);
     _pickJackpotTimerRoutine = StartCoroutine(PickJackpotTimer());
 
@@ -1241,6 +1243,7 @@ public class UIManager : MonoBehaviour
       if (anim != null) anim.StopAnimation();
     if (TimerClockAnimation && TimerClockAnimation.rendererDelegate)
       TimerClockAnimation.rendererDelegate.DOFade(0f, 0.3f);
+    if (audioManager) audioManager.PlayChoosedJackpot();
     PickJackpotSelected = true;
   }
 
@@ -1398,6 +1401,12 @@ public class UIManager : MonoBehaviour
     if (JackpotWinSequencePanel) JackpotWinSequencePanel.SetActive(true);
     if (CashFallingAnim) CashFallingAnim.StartAnimation();
     if (CoinFallingAnim) CoinFallingAnim.StartAnimation();
+
+    if (audioManager)
+    {
+      if (tier == "mini") audioManager.PlayMiniJackpot();
+      else if (tier == "minor") audioManager.PlayMinorJackpot();
+    }
 
     if (JackpotWinGraphicImage) JackpotWinGraphicImage.sprite = GetJackpotWinSprite(tier);
     if (JackpotWinGraphic)

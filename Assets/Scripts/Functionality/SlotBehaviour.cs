@@ -684,7 +684,11 @@ public class SlotBehaviour : MonoBehaviour
         bool hasCoinValue = coinPositions != null &&
           coinPositions.Exists(c => c.position[0] == row && c.position[1] == col);
 
-        if (!isJackpotOrPinata && !hasCoinValue) continue;
+        if (!isJackpotOrPinata && !hasCoinValue)
+        {
+          if (val <= 2 && audioManager) audioManager.PlayNormalIcon();
+          continue;
+        }
 
         ImageAnimation animScript = Animimages[col].slotImages[row]
           .GetComponent<ImageAnimation>();
