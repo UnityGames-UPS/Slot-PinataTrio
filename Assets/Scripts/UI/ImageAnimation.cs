@@ -83,15 +83,13 @@ public class ImageAnimation : MonoBehaviour
 
 	public void StartAnimation()
 	{
+		CancelInvoke("AnimationProcess");
 		indexOfTexture = 0;
 		IsComplete = false;
-		if (currentAnimationState == ImageState.NONE)
-		{
-			RevertToInitialState();
-			delayBetweenAnimation = idealFrameRate * (float)textureArray.Count / AnimationSpeed;
-			currentAnimationState = ImageState.PLAYING;
-			Invoke("AnimationProcess", delayBetweenAnimation);
-		}
+		RevertToInitialState();
+		delayBetweenAnimation = idealFrameRate * (float)textureArray.Count / AnimationSpeed;
+		currentAnimationState = ImageState.PLAYING;
+		Invoke("AnimationProcess", delayBetweenAnimation);
 	}
 
 	public void PauseAnimation()
