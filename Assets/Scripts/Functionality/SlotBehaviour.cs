@@ -244,17 +244,6 @@ public class SlotBehaviour : MonoBehaviour
   }
 
   #region InitialFunctions
-  // internal void shuffleInitialMatrix()
-  // {
-  //   for (int i = 0; i < Tempimages.Count; i++)
-  //   {
-  //     for (int j = 0; j < 3; j++)
-  //     {
-  //       int randomIndex = UnityEngine.Random.Range(0, 14);
-  //       Tempimages[i].slotImages[j].sprite = myImages[randomIndex];
-  //     }
-  //   }
-  // }
 
 
   internal void InitializeMatrix()
@@ -361,13 +350,13 @@ public class SlotBehaviour : MonoBehaviour
 
   private IEnumerator TweenRoutine()
   {
-    // if (currentBalance < currentTotalBet)
-    // {
-    //   uiManager.LowBalPopup();
-    //   yield return new WaitForSeconds(1);
-    //   ToggleButtonGrp(true);
-    //   yield break;
-    // }
+    if (currentBalance < currentTotalBet)
+    {
+      uiManager.LowBalPopup();
+      yield return new WaitForSeconds(1);
+      ToggleButtonGrp(true);
+      yield break;
+    }
     ClearCoinOverlays();
     _activePinataAnims = 0;
     IsSpinning = true;

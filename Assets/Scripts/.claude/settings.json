@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -n \"^\\\\s*//\" \"d:/UnityProjects/Underpin/Pinata/UnderpinPinata/Assets/Scripts/APIs/SocketIOManager.cs\")"
+    ]
+  }
+}
