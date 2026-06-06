@@ -358,6 +358,7 @@ MonoBehaviour:
   SpinStrip: {fileID: 6479705209407443222}
   StripSymbols:
   - {fileID: 9095613853893980009}
+  CellAnim: {fileID: 8555588453814008256}
   BoxBackground: {fileID: 0}
   PinkGlow: {fileID: 4302137214951482160}
   ZoneBackground: {fileID: 6181510590826415839}
@@ -589,6 +590,7 @@ GameObject:
   - component: {fileID: 1834442707582611445}
   - component: {fileID: 2999238510214435055}
   - component: {fileID: 9095613853893980009}
+  - component: {fileID: 8555588453814008256}
   m_Layer: 5
   m_Name: Symbol_0
   m_TagString: Untagged
@@ -653,3 +655,24 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8555588453814008256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8624555009732272646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d9ae1bf2ec654621a0c3eaff2a909fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ImageAnimation
+  textureArray: []
+  rendererDelegate: {fileID: 9095613853893980009}
+  useSharedMaterial: 1
+  doLoopAnimation: 1
+  StartOnAwake: 0
+  currentAnimationState: 0
+  idealFrameRate: 0.041666668
+  AnimationSpeed: 19
+  delayBetweenLoop: 0

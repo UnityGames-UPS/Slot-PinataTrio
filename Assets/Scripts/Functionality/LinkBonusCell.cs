@@ -8,6 +8,7 @@ public class LinkBonusCell : MonoBehaviour
 {
   [SerializeField] private RectTransform SpinStrip;
   [SerializeField] private Image[] StripSymbols;
+  [SerializeField] public ImageAnimation CellAnim;
   [SerializeField] private Image BoxBackground;
   [SerializeField] private GameObject PinkGlow;
   [SerializeField] private GameObject ZoneBackground;
@@ -54,7 +55,7 @@ public class LinkBonusCell : MonoBehaviour
       .SetLoops(-1, LoopType.Restart);
   }
 
-  public void StopAt(Sprite resultSprite, double? prizeValue)
+  public void StopAt(Sprite resultSprite, double? prizeValue, bool playAnimation = false)
   {
     if (_isLocked) return;
     _spinTween?.Kill();
@@ -66,6 +67,7 @@ public class LinkBonusCell : MonoBehaviour
       PrizeValueText.text = prizeValue.Value.ToString("F2");
       PrizeValueText.gameObject.SetActive(true);
     }
+    if (playAnimation && CellAnim) CellAnim.StartAnimation();
   }
 
   public void Freeze()
@@ -134,5 +136,6 @@ public class LinkBonusCell : MonoBehaviour
       foreach (var s in StripSymbols)
         if (s) s.color = Color.white;
     if (BoxBackground) { var c = BoxBackground.color; c.a = 1f; BoxBackground.color = c; }
+    if (CellAnim) CellAnim.StopAnimation();
   }
 }

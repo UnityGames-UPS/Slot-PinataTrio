@@ -298,7 +298,7 @@ public class SlotBehaviour : MonoBehaviour
   }
 
   #region AnimationSprites
-  private void PopulateAnimationSprites(ImageAnimation animScript, int val)
+  internal void PopulateAnimationSprites(ImageAnimation animScript, int val)
   {
     animScript.textureArray.Clear();
     animScript.textureArray.TrimExcess();

@@ -18974,18 +18974,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cell_0_1
       objectReference: {fileID: 0}
-    - target: {fileID: 4622991272681916358, guid: 5e75cc6ecfcea8b47893d43cd558824f, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 8995154407686431259, guid: 9c6b8b4c7daa5ee408ad6753d9aebea5, type: 3}
-    - target: {fileID: 8068604260073612045, guid: 5e75cc6ecfcea8b47893d43cd558824f, type: 3}
-      propertyPath: m_CullTransparentMesh
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9021096757799888157, guid: 5e75cc6ecfcea8b47893d43cd558824f, type: 3}
-      propertyPath: m_ShowMaskGraphic
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -22232,6 +22220,7 @@ MonoBehaviour:
   - {fileID: 1490211369}
   - {fileID: 713501075}
   LinkBonusGrid: {fileID: 1967169626}
+  slotBehaviour: {fileID: 2073624787}
   symbolSprites:
   - {fileID: 21300000, guid: f8329a2318504c747bcd829e064f0c3f, type: 3}
   - {fileID: 21300000, guid: b9118c67fcb41aa4c84a880162f8bece, type: 3}
