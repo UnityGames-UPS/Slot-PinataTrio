@@ -1622,6 +1622,7 @@ MonoBehaviour:
   DefaultReelFrameSprite: {fileID: 7501387830980884940, guid: fe81156bb7e6f814286a0d441ab8ca13, type: 3}
   RedReelFrameSprite: {fileID: -6278091362992825281, guid: e17f87218954fe24e9e371b8745e414c, type: 3}
   PinataTrio: {fileID: 2069039263}
+  PinataTrioAnim: {fileID: 0}
   GameContent: {fileID: 1298497625}
   MoveUpAfterIntro: {fileID: 163614924}
   introHoldDuration: 3
