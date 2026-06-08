@@ -265,13 +265,13 @@ public class UIManager : MonoBehaviour
   private Button Music_Button;
 
   [SerializeField]
-  private GameObject MusicOn_Object;
+  private Sprite MusicOnSprite;
   [SerializeField]
-  private GameObject MusicOff_Object;
+  private Sprite MusicOffSprite;
   [SerializeField]
-  private GameObject SoundOn_Object;
+  private Sprite SoundOnSprite;
   [SerializeField]
-  private GameObject SoundOff_Object;
+  private Sprite SoundOffSprite;
 
   [Header("Spin Win Display")]
   [SerializeField] private GameObject SpinWinPanel;
@@ -472,11 +472,8 @@ public class UIManager : MonoBehaviour
     if (SettingsExit_Button) SettingsExit_Button.onClick.RemoveAllListeners();
     if (SettingsExit_Button) SettingsExit_Button.onClick.AddListener(delegate { ClosePopup(SettingsPopup_Object); });
 
-    if (MusicOn_Object) MusicOn_Object.SetActive(true);
-    if (MusicOff_Object) MusicOff_Object.SetActive(false);
-
-    if (SoundOn_Object) SoundOn_Object.SetActive(true);
-    if (SoundOff_Object) SoundOff_Object.SetActive(false);
+    SetButtonSprite(Music_Button, MusicOnSprite);
+    SetButtonSprite(Sound_Button, SoundOnSprite);
 
     if (GameExit_Button) GameExit_Button.onClick.RemoveAllListeners();
     if (GameExit_Button) GameExit_Button.onClick.AddListener(delegate
@@ -816,18 +813,8 @@ public class UIManager : MonoBehaviour
   private void ToggleMusic()
   {
     isMusic = !isMusic;
-    if (isMusic)
-    {
-      if (MusicOn_Object) MusicOn_Object.SetActive(true);
-      if (MusicOff_Object) MusicOff_Object.SetActive(false);
-      if (audioManager) audioManager.SetMusicEnabled(true);
-    }
-    else
-    {
-      if (MusicOn_Object) MusicOn_Object.SetActive(false);
-      if (MusicOff_Object) MusicOff_Object.SetActive(true);
-      if (audioManager) audioManager.SetMusicEnabled(false);
-    }
+    SetButtonSprite(Music_Button, isMusic ? MusicOnSprite : MusicOffSprite);
+    if (audioManager) audioManager.SetMusicEnabled(isMusic);
   }
 
   private void UrlButtons(string url)
@@ -838,18 +825,15 @@ public class UIManager : MonoBehaviour
   private void ToggleSound()
   {
     isSound = !isSound;
-    if (isSound)
-    {
-      if (SoundOn_Object) SoundOn_Object.SetActive(true);
-      if (SoundOff_Object) SoundOff_Object.SetActive(false);
-      if (audioManager) audioManager.SetSfxEnabled(true);
-    }
-    else
-    {
-      if (SoundOn_Object) SoundOn_Object.SetActive(false);
-      if (SoundOff_Object) SoundOff_Object.SetActive(true);
-      if (audioManager) audioManager.SetSfxEnabled(false);
-    }
+    SetButtonSprite(Sound_Button, isSound ? SoundOnSprite : SoundOffSprite);
+    if (audioManager) audioManager.SetSfxEnabled(isSound);
+  }
+
+  private void SetButtonSprite(Button button, Sprite sprite)
+  {
+    if (button == null || sprite == null) return;
+    var img = button.GetComponent<Image>();
+    if (img) img.sprite = sprite;
   }
 
   internal void UpdateLinkBonusSpinsRemaining(int count)
