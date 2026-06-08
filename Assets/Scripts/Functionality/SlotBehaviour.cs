@@ -41,6 +41,10 @@ public class SlotBehaviour : MonoBehaviour
   private Sprite SpinSprite;
   [SerializeField]
   private Sprite StopSprite;
+  [SerializeField]
+  private Sprite AutoSpinIdleSprite;
+  [SerializeField]
+  private Sprite AutoSpinActiveSprite;
 
   [Header("Animated Sprites")]
   [SerializeField]
@@ -104,6 +108,7 @@ public class SlotBehaviour : MonoBehaviour
   internal bool IsAutoSpin = false;
   private bool _isFeatureActive = false;
   private bool IsSpinning = false;
+  private bool _restoreAutoSpin = false;
   private bool StopSpinToggle = false;
   private bool CheckSpinAudio = false;
   internal bool CheckPopups = false;
@@ -156,7 +161,13 @@ public class SlotBehaviour : MonoBehaviour
   {
     if (!IsAutoSpin)
     {
+      if (currentBalance < currentTotalBet)
+      {
+        uiManager.LowBalPopup();
+        return;
+      }
       IsAutoSpin = true;
+      SetAutoSpinButtonSprite(true);
       if (AutoSpinRoutine != null)
       {
         StopCoroutine(AutoSpinRoutine);
@@ -175,22 +186,33 @@ public class SlotBehaviour : MonoBehaviour
     if (IsAutoSpin)
     {
       IsAutoSpin = false;
+      SetAutoSpinButtonSprite(false);
     }
+  }
+
+  private void SetAutoSpinButtonSprite(bool active)
+  {
+    if (AutoSpin_Button == null) return;
+    var img = AutoSpin_Button.GetComponent<Image>();
+    if (img == null) return;
+    img.sprite = active ? AutoSpinActiveSprite : AutoSpinIdleSprite;
   }
 
   private IEnumerator AutoSpinCoroutine()
   {
     while (IsAutoSpin)
     {
-      Debug.Log($"[AutoSpin] Loop start — IsAutoSpin:{IsAutoSpin} CheckPopups:{CheckPopups} IsSpinning:{IsSpinning}");
       yield return new WaitUntil(() => !CheckPopups && !IsSpinning);
-      Debug.Log("[AutoSpin] CheckPopups cleared, calling StartSlots");
+      if (currentBalance < currentTotalBet)
+      {
+        StopAutoSpin();
+        uiManager.LowBalPopup();
+        break;
+      }
       StartSlots();
       yield return new WaitUntil(() => !IsSpinning);
-      Debug.Log($"[AutoSpin] Spin complete — SpinDelay:{SpinDelay} IsAutoSpin:{IsAutoSpin}");
       yield return new WaitForSeconds(SpinDelay);
     }
-    Debug.Log("[AutoSpin] Exited while loop");
     yield return new WaitUntil(() => !IsSpinning);
     ToggleButtonGrp(true);
     if (AutoSpin_Button) AutoSpin_Button.gameObject.SetActive(true);
@@ -263,6 +285,7 @@ public class SlotBehaviour : MonoBehaviour
           if (animScript.textureArray.Count > 0 && val >= 3)
           {
             Animimages[col].slotImages[row].gameObject.SetActive(true);
+            Tempimages[col].slotImages[row].gameObject.SetActive(false);
             animScript.StartAnimation();
             TempList.Add(animScript);
           }
@@ -352,6 +375,7 @@ public class SlotBehaviour : MonoBehaviour
   {
     if (currentBalance < currentTotalBet)
     {
+      StopAutoSpin();
       uiManager.LowBalPopup();
       yield return new WaitForSeconds(1);
       ToggleButtonGrp(true);
@@ -427,6 +451,7 @@ public class SlotBehaviour : MonoBehaviour
 
     CheckPopups = false;
     IsSpinning = false;
+    if (_restoreAutoSpin) { _restoreAutoSpin = false; AutoSpin(); }
     ToggleButtonGrp(true);
   }
   #endregion
@@ -454,7 +479,7 @@ public class SlotBehaviour : MonoBehaviour
       }
       uiManager.SetReelFrame("default");
     }
-    if (wasAutoSpinning) AutoSpin();
+    _restoreAutoSpin = wasAutoSpinning;
   }
 
   private IEnumerator HandleWheelBonus(PendingFeature feature)
@@ -663,6 +688,9 @@ public class SlotBehaviour : MonoBehaviour
   {
     var coinPositions = SocketManager.ResultData.payload?.coinWins;
 
+    bool hasJackpot = false;
+    bool hasCoinValueAnywhere = false;
+
     for (int row = 0; row < 3; row++)
     {
       for (int col = 0; col < 5; col++)
@@ -673,11 +701,10 @@ public class SlotBehaviour : MonoBehaviour
         bool hasCoinValue = coinPositions != null &&
           coinPositions.Exists(c => c.position[0] == row && c.position[1] == col);
 
-        if (!isJackpotOrPinata && !hasCoinValue)
-        {
-          if (val <= 2 && audioManager) audioManager.PlayNormalIcon();
-          continue;
-        }
+        if (isJackpotOrPinata) hasJackpot = true;
+        if (hasCoinValue) hasCoinValueAnywhere = true;
+
+        if (!isJackpotOrPinata && !hasCoinValue) continue;
 
         ImageAnimation animScript = Animimages[col].slotImages[row]
           .GetComponent<ImageAnimation>();
@@ -686,12 +713,15 @@ public class SlotBehaviour : MonoBehaviour
           RectTransform animRT = Animimages[col].slotImages[row].GetComponent<RectTransform>();
           if (animRT) animRT.sizeDelta = isJackpotOrPinata ? new Vector2(200f, 200f) : new Vector2(300f, 300f);
           Animimages[col].slotImages[row].gameObject.SetActive(true);
+          Tempimages[col].slotImages[row].gameObject.SetActive(false);
           animScript.StartAnimation();
           TempList.Add(animScript);
           if (isJackpotOrPinata && audioManager) audioManager.PlayJackpotIcon();
         }
       }
     }
+
+    if (hasCoinValueAnywhere && !hasJackpot && audioManager) audioManager.PlayNormalIcon();
   }
 
   private void StopGameAnimation()
@@ -703,6 +733,9 @@ public class SlotBehaviour : MonoBehaviour
     }
     TempList.Clear();
     TempList.TrimExcess();
+    for (int col = 0; col < Tempimages.Count; col++)
+      for (int row = 0; row < Tempimages[col].slotImages.Count; row++)
+        if (Tempimages[col].slotImages[row]) Tempimages[col].slotImages[row].gameObject.SetActive(true);
   }
 
   private void ClearCoinOverlays()

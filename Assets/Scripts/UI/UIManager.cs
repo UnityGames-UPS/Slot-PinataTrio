@@ -807,7 +807,7 @@ public class UIManager : MonoBehaviour
   {
     if (audioManager) audioManager.PlayButton();
     if (Popup) Popup.SetActive(false);
-    if (!DisconnectPopup_Object.activeSelf)
+    if (DisconnectPopup_Object == null || !DisconnectPopup_Object.activeSelf)
     {
       if (PopupsPanel) PopupsPanel.SetActive(false);
     }
