@@ -13,8 +13,6 @@ public class UIManager : MonoBehaviour
   private Button Menu_Button;
   [SerializeField]
   private GameObject Menu_Object;
-  [SerializeField]
-  private RectTransform Menu_RT;
 
   [Header("Settings UI")]
   [SerializeField]
@@ -23,17 +21,11 @@ public class UIManager : MonoBehaviour
   private GameObject Settings_Object;
   [SerializeField]
   private RectTransform Settings_RT;
-  [SerializeField]
-  private Button Terms_Button;
-  [SerializeField]
-  private Button Privacy_Button;
 
   [SerializeField]
   private Button Exit_Button;
   [SerializeField]
   private GameObject Exit_Object;
-  [SerializeField]
-  private RectTransform Exit_RT;
 
   [Header("Betting UI")]
   [SerializeField] private TMP_Text TotalBetAmountText;
@@ -222,10 +214,6 @@ public class UIManager : MonoBehaviour
   private GameObject AboutPopup_Object;
   [SerializeField]
   private Button AboutExit_Button;
-  [SerializeField]
-  private Image AboutLogo_Image;
-  [SerializeField]
-  private Button Support_Button;
 
   [Header("Settings Popup")]
   [SerializeField]
@@ -325,7 +313,6 @@ public class UIManager : MonoBehaviour
 
   [Header("References")]
   [SerializeField] private AudioManager audioManager;
-  [SerializeField] private Button m_AwakeGameButton;
   [SerializeField] private Button GameExit_Button;
   [SerializeField] private Button Home_Button;
 
@@ -696,11 +683,6 @@ public class UIManager : MonoBehaviour
     SetButtonSprite(Music_Button, isMusic ? MusicOnSprite : MusicOffSprite);
     if (audioManager) audioManager.PlayUIClick();
     if (audioManager) audioManager.SetMusicEnabled(isMusic);
-  }
-
-  private void UrlButtons(string url)
-  {
-    Application.OpenURL(url);
   }
 
   private void ToggleSound()
