@@ -18,6 +18,7 @@ public class AudioManager : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] private AudioClip clipButton;
+    [SerializeField] private AudioClip clipUIClick;
     [SerializeField] private AudioClip clipGameStarted;
 
     [Header("Spin")]
@@ -151,6 +152,7 @@ public class AudioManager : MonoBehaviour
     // ── UI ────────────────────────────────────────────────────────────────────
 
     internal void PlayButton() => PlayOneShot(sfxSource, clipButton);
+    internal void PlayUIClick() => PlayOneShot(sfxSource, clipUIClick);
     internal void PlayGameStarted() => PlayOneShot(sfxSource, clipGameStarted);
 
     // ── Spin ──────────────────────────────────────────────────────────────────

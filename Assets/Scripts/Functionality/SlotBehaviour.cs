@@ -877,6 +877,7 @@ public class SlotBehaviour : MonoBehaviour
     flySeq.Insert(pinataFlyDuration * 0.6f, animRT.DOScale(Vector3.zero, pinataFlyDuration * 0.4f).SetEase(Ease.InQuad));
     yield return flySeq.WaitForCompletion();
 
+    uiManager.PopPinata(colorId);
     if (animScript != null && animScript.textureArray?.Count > 0) animScript.StopAnimation();
     animImg.gameObject.SetActive(false);
     animRT.anchoredPosition = startAnchoredPos;

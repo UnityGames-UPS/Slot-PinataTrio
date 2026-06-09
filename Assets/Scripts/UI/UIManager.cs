@@ -444,6 +444,7 @@ public class UIManager : MonoBehaviour
     if (Info_Button) Info_Button.onClick.RemoveAllListeners();
     if (Info_Button) Info_Button.onClick.AddListener(() =>
     {
+      if (audioManager) audioManager.PlayUIClick();
       currentSlideIndex = 0;
       InfoSlidesPanel.SetActive(true);
       ShowSlide(currentSlideIndex);
@@ -472,8 +473,8 @@ public class UIManager : MonoBehaviour
     if (SettingsExit_Button) SettingsExit_Button.onClick.RemoveAllListeners();
     if (SettingsExit_Button) SettingsExit_Button.onClick.AddListener(delegate { ClosePopup(SettingsPopup_Object); });
 
-    SetButtonSprite(Music_Button, MusicOnSprite);
-    SetButtonSprite(Sound_Button, SoundOnSprite);
+    SetButtonSprite(Music_Button, isMusic ? MusicOnSprite : MusicOffSprite);
+    SetButtonSprite(Sound_Button, isSound ? SoundOnSprite : SoundOffSprite);
 
     if (GameExit_Button) GameExit_Button.onClick.RemoveAllListeners();
     if (GameExit_Button) GameExit_Button.onClick.AddListener(delegate
@@ -522,10 +523,8 @@ public class UIManager : MonoBehaviour
     if (QuitSplash_button) QuitSplash_button.onClick.RemoveAllListeners();
     if (QuitSplash_button) QuitSplash_button.onClick.AddListener(delegate { OpenPopup(QuitPopup_Object); });
 
-    if (audioManager) audioManager.SetSfxEnabled(true);
-
-    isMusic = true;
-    isSound = true;
+    isMusic = audioManager == null || audioManager.MusicEnabled;
+    isSound = audioManager == null || audioManager.SfxEnabled;
 
     if (Sound_Button) Sound_Button.onClick.RemoveAllListeners();
     if (Sound_Button) Sound_Button.onClick.AddListener(ToggleSound);
@@ -814,6 +813,7 @@ public class UIManager : MonoBehaviour
   {
     isMusic = !isMusic;
     SetButtonSprite(Music_Button, isMusic ? MusicOnSprite : MusicOffSprite);
+    if (audioManager) audioManager.PlayUIClick();
     if (audioManager) audioManager.SetMusicEnabled(isMusic);
   }
 
@@ -826,6 +826,7 @@ public class UIManager : MonoBehaviour
   {
     isSound = !isSound;
     SetButtonSprite(Sound_Button, isSound ? SoundOnSprite : SoundOffSprite);
+    if (audioManager) audioManager.PlayUIClick();
     if (audioManager) audioManager.SetSfxEnabled(isSound);
   }
 
@@ -904,21 +905,38 @@ public class UIManager : MonoBehaviour
     if (RedMeterText) RedMeterText.text = red.ToString();
     if (BlueMeterText) BlueMeterText.text = blue.ToString();
 
-    if (green > _prevGreenMeter) AdvancePinataStage(ref _greenPinataStage, _greenPinataAnim, GreenPinataStage1Sprites, GreenPinataStage2Sprites, _greenPinataBaseSprites);
-    if (red > _prevRedMeter) AdvancePinataStage(ref _redPinataStage, _redPinataAnim, RedPinataStage1Sprites, RedPinataStage2Sprites, _redPinataBaseSprites);
-    if (blue > _prevBlueMeter) AdvancePinataStage(ref _bluePinataStage, _bluePinataAnim, BluePinataStage1Sprites, BluePinataStage2Sprites, _bluePinataBaseSprites);
+    if (green > _prevGreenMeter) AdvancePinataStage(ref _greenPinataStage, _greenPinataAnim, GreenPinataStage1Sprites, GreenPinataStage2Sprites, _greenPinataBaseSprites, GreenPinata);
+    if (red > _prevRedMeter) AdvancePinataStage(ref _redPinataStage, _redPinataAnim, RedPinataStage1Sprites, RedPinataStage2Sprites, _redPinataBaseSprites, RedPinata);
+    if (blue > _prevBlueMeter) AdvancePinataStage(ref _bluePinataStage, _bluePinataAnim, BluePinataStage1Sprites, BluePinataStage2Sprites, _bluePinataBaseSprites, BluePinata);
 
     _prevGreenMeter = green;
     _prevRedMeter = red;
     _prevBlueMeter = blue;
   }
 
-  private void AdvancePinataStage(ref int stage, ImageAnimation anim, Sprite[] stage1, Sprite[] stage2, List<Sprite> baseSprites)
+  internal void PopPinata(int colorId)
+  {
+    RectTransform pinata = colorId == 8 ? GreenPinata : colorId == 9 ? RedPinata : BluePinata;
+    if (pinata == null) return;
+    pinata.DOKill();
+    pinata.localScale = Vector3.one;
+    pinata.DOScale(1.2f, 0.12f).SetEase(Ease.OutBack).OnComplete(() =>
+      pinata.DOScale(1f, 0.1f).SetEase(Ease.InBack));
+  }
+
+  private void AdvancePinataStage(ref int stage, ImageAnimation anim, Sprite[] stage1, Sprite[] stage2, List<Sprite> baseSprites, RectTransform pinata)
   {
     if (stage >= 2) return;
     stage++;
     Sprite[] newSprites = stage == 1 ? stage1 : stage2;
     SwapPinataAnimation(anim, newSprites);
+    if (pinata)
+    {
+      pinata.DOKill();
+      pinata.localScale = Vector3.one;
+      pinata.DOScale(1.2f, 0.12f).SetEase(Ease.OutBack).OnComplete(() =>
+        pinata.DOScale(1f, 0.1f).SetEase(Ease.InBack));
+    }
   }
 
   private void SwapPinataAnimation(ImageAnimation anim, Sprite[] sprites)
@@ -991,6 +1009,7 @@ public class UIManager : MonoBehaviour
       float shakeDelay = Mathf.Max(0f, introAnim.GetTotalDuration() - introShakeStartOffset);
       StartCoroutine(PunchGameContent(shakeDelay));
       introAnim.StartAnimation();
+      if (feature == "pickJackpot") StartCoroutine(PlayBatHitSounds());
       yield return new WaitUntil(() => introAnim.IsComplete);
       introAnim.gameObject.SetActive(false);
     }
@@ -1011,6 +1030,22 @@ public class UIManager : MonoBehaviour
       yield return new WaitForSeconds(featureNameExpandDuration - featureNameFadeDuration);
       if (glowGraphic) glowGraphic.DOFade(0f, featureNameFadeDuration).OnComplete(() => glowGraphic.gameObject.SetActive(false));
       nameGraphic.DOFade(0f, featureNameFadeDuration).OnComplete(() => nameGraphic.gameObject.SetActive(false));
+    }
+  }
+
+  private static readonly float[] _batHitFrames = { 43, 56, 66, 70, 72, 77, 82, 85, 89, 90, 93, 95 };
+
+  private IEnumerator PlayBatHitSounds()
+  {
+    if (RedPinataIntroAnim == null || RedPinataIntroAnim.textureArray.Count == 0) yield break;
+    float frameDelay = RedPinataIntroAnim.GetTotalDuration() / RedPinataIntroAnim.textureArray.Count;
+    float elapsed = 0f;
+    foreach (float frame in _batHitFrames)
+    {
+      float targetTime = frame * frameDelay;
+      yield return new WaitForSeconds(targetTime - elapsed);
+      elapsed = targetTime;
+      if (audioManager) audioManager.PlayBatHit();
     }
   }
 
