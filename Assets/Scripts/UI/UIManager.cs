@@ -1420,10 +1420,7 @@ public class UIManager : MonoBehaviour
     if (JackpotWinSequencePanel) JackpotWinSequencePanel.SetActive(true);
     yield return null;
     if (CashFallingAnim) { CashFallingAnim.doLoopAnimation = true; CashFallingAnim.StopAnimation(); CashFallingAnim.StartAnimation(); }
-    //if (CoinFallingAnim) 
-        { CoinFallingAnim.doLoopAnimation = true; CoinFallingAnim.StopAnimation(); CoinFallingAnim.StartAnimation();
-            Debug.Log("Coin falling set");
-        }
+    if (CoinFallingAnim) { CoinFallingAnim.doLoopAnimation = true; CoinFallingAnim.StopAnimation(); CoinFallingAnim.StartAnimation(); }
     
     if (audioManager)
     {

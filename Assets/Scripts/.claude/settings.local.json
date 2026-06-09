@@ -7,7 +7,8 @@
       "Bash(Select-Object -ExpandProperty FullName)",
       "Bash(Sort-Object)",
       "Bash(grep -n \"//\\\\|/\\\\*\" \"d:/UnityProjects/Underpin/Pinata/UnderpinPinata/Assets/Scripts/Functionality/SlotBehaviour.cs\")",
-      "Bash(grep -v \"^\\\\s*//\")"
+      "Bash(grep -v \"^\\\\s*//\")",
+      "Bash(Get-ChildItem -Path \"d:\\\\UnityProjects\\\\Underpin\\\\Pinata\\\\UnderpinPinata\\\\Assets\\\\Scripts\" -Filter \"*.cs\" -Recurse)"
     ]
   }
 }
