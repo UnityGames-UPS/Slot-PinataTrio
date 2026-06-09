@@ -7,9 +7,6 @@ using TMPro;
 
 public class BonusController : MonoBehaviour
 {
-  // VIKING GAME - MANUAL SPIN BUTTON - NOT USED IN THIS GAME
-  // [SerializeField] private Button Spin_Button;
-
   [SerializeField] private RectTransform Wheel_Transform;
   [SerializeField] private RectTransform Wheel;
 
@@ -18,10 +15,6 @@ public class BonusController : MonoBehaviour
   [Tooltip("Offset in degrees to align segment[0] with the pointer at 0° rotation — tune after wheel art arrives")]
   [SerializeField] private float startOffsetAngle = 0f;
 
-  // VIKING GAME - COLLIDER-BASED STOPPING SYSTEM - NOT USED IN THIS GAME
-  // [SerializeField] private BoxCollider2D[] point_colliders;
-  // [SerializeField] private TMP_Text[] Bonus_Text;
-
   [SerializeField] private TMP_Text WinAmountText;
   [SerializeField] private GameObject Bonus_Object;
   [SerializeField] private SlotBehaviour slotManager;
@@ -29,9 +22,6 @@ public class BonusController : MonoBehaviour
   [SerializeField] private GameObject PopupPanel;
   [SerializeField] private Transform Win_Transform;
   [SerializeField] private Transform Boost_Transform;
-
-  // VIKING GAME - SOCKET MANAGER USED FOR bonusdata AND ResultData.bonus — NOT USED IN THIS GAME
-  // [SerializeField] private SocketIOManager m_SocketManager;
 
   [SerializeField] private UIManager uIManager;
 
@@ -52,20 +42,10 @@ public class BonusController : MonoBehaviour
   [SerializeField] private GameObject GreenPinataOnWheel;
   [SerializeField] private GameObject WheelBonusPanel;
 
-  // VIKING GAME - COLLISION FLAG FOR COLLIDER-BASED WHEEL STOP - NOT USED IN THIS GAME
-  // internal bool isCollision = false;
-
   internal bool isBonusDone = false;
 
   private Tween wheelRoutine;
   private Coroutine _spinCoroutine;
-
-  // VIKING GAME - SPIN BUTTON LISTENER SETUP - NOT USED IN THIS GAME (WHEEL AUTO-TRIGGERS FROM SlotBehaviour)
-  // private void Start()
-  // {
-  //   if (Spin_Button) Spin_Button.onClick.RemoveAllListeners();
-  //   if (Spin_Button) Spin_Button.onClick.AddListener(Spinbutton);
-  // }
 
   internal void StartWheelBonus(List<string> spinHistory, double winAmount)
   {
@@ -175,7 +155,6 @@ public class BonusController : MonoBehaviour
       decel = spinSpeed * spinSpeed / (2f * totalToRotate);
     }
 
-    Debug.LogWarning($"[Wheel] seg[{segIndex}]='{(segIndex < segments.Count ? segments[segIndex] : "OOB")}' | finalTarget={finalTarget:F1} | currentZ={currentZ:F1} | additionalRotation={additionalRotation:F1} | totalToRotate={totalToRotate:F1}");
 
     // Phase 1: constant speed
     float rotated = 0f;
@@ -202,7 +181,6 @@ public class BonusController : MonoBehaviour
     // Snap to exact position
     float finalZ = Wheel_Transform.localEulerAngles.z;
     float snapDelta = Mathf.DeltaAngle(finalZ, finalTarget);
-    Debug.LogWarning($"[Wheel] After stop: finalZ={finalZ:F1} | desiredZ={finalTarget:F1} | error={snapDelta:F1}°");
     if (Mathf.Abs(snapDelta) > 0.01f)
       Wheel_Transform.Rotate(0, 0, snapDelta);
   }
@@ -221,18 +199,6 @@ public class BonusController : MonoBehaviour
     }
     return matches[Random.Range(0, matches.Count)];
   }
-
-  // VIKING GAME - MANUAL SPIN BUTTON HANDLER - NOT USED IN THIS GAME
-  // private void Spinbutton()
-  // {
-  //   isCollision = false;
-  //   if (Spin_Button) Spin_Button.interactable = false;
-  //   RotateWheel();
-  //   DOVirtual.DelayedCall(1.5f, () => TurnCollider(stopIndex));
-  // }
-
-  // VIKING GAME - WHEEL SEGMENT POPULATION FROM SOCKET bonusdata - NOT USED IN THIS GAME
-  // internal void PopulateWheel(List<string> bonusdata) { ... }
 
   private void RotateWheel()
   {
@@ -260,10 +226,6 @@ public class BonusController : MonoBehaviour
       yield return null;
     }
   }
-
-  // VIKING GAME - COLLIDER RESET AND ENABLE - NOT USED IN THIS GAME
-  // private void ResetColliders() { ... }
-  // private void TurnCollider(int point) { ... }
 
   internal void PlayWinLooseSound(bool isWin)
   {

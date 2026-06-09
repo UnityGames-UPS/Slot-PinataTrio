@@ -13,8 +13,6 @@ public class SocketIOManager : MonoBehaviour
   [SerializeField] private UIManager uiManager;
   [SerializeField] internal JSFunctCalls JSManager;
   [SerializeField] private string testToken;
-  // TODO: create a full-screen raycast blocker panel in the scene and assign it here
-  // [SerializeField] private GameObject RaycastBlocker;
   internal GameData InitialData = null;
   internal UiData UIData = null;
   internal Features GameFeatures = null;
@@ -28,20 +26,16 @@ public class SocketIOManager : MonoBehaviour
 
   private SocketManager manager;
   protected string SocketURI = null;
-  // protected string TestSocketURI = "https://game-crm-rtp-backend.onrender.com/";
   protected string TestSocketURI = "https://devrealtime.dingdinghouse.com";
   protected string nameSpace = "playground";
   private Socket gameSocket;
   protected string gameID = "SL-PT";
-  //protected string gameID = "";
   private const int maxReconnectionAttempts = 6;
   private readonly TimeSpan reconnectionDelay = TimeSpan.FromSeconds(10);
   string myAuth = null;
 
-  private bool isConnected = false; //Back2 Start
+  private bool isConnected = false;
   private bool hasEverConnected = false;
-  private const int MaxReconnectAttempts = 5;
-  private const float ReconnectDelaySeconds = 2f;
 
   private float lastPongTime = 0f;
   private float pingInterval = 2f;
@@ -317,7 +311,6 @@ private void OnError(Error err)
 
   internal IEnumerator CloseSocket() //Back2 Start
   {
-    // TODO: RaycastBlocker.SetActive(true);
     ResetPingRoutine();
 
     Debug.Log("Closing Socket");
@@ -401,29 +394,7 @@ private void OnError(Error err)
 #if UNITY_WEBGL && !UNITY_EDITOR
     JSManager.SendCustomMessage("OnEnter");
 #endif
-    // TODO: RaycastBlocker.SetActive(false);
   }
-
-  // VIKING GAME - LINES-BASED SOCKET POPULATION - NOT USED IN THIS GAME
-  // private void PopulateSlotSocket(List<string> LineIds)
-  // {
-  //   slotManager.InitializeMatrix();
-  //   for (int i = 0; i < LineIds.Count; i++)
-  //   {
-  //     slotManager.FetchLines(LineIds[i], i);
-  //   }
-  //   slotManager.SetInitialUI();
-  //   RaycastBlocker.SetActive(false);
-  // }
-
-  // VIKING GAME - BONUS DATA PARSING - NOT USED IN THIS GAME
-  // List<string> GetBonusData(List<int> bonusData) { ... }
-
-  // PAYTABLE DATA CALL FROM VIKING GAME - NOT USED IN THIS GAME
-  // private void RefreshUI()
-  // {
-  //   uiManager.InitialiseUIData(UIData.paylines);
-  // }
 
   internal void AccumulateResult(int currBet)
   {
@@ -455,8 +426,6 @@ private void OnError(Error err)
     SendDataWithNamespace("request", json);
   }
 
-  // VIKING GAME - LINES STRING CONVERSION - NOT USED IN THIS GAME
-  // private List<string> ConvertListListIntToListString(List<List<int>> listOfLists) { ... }
 }
 
 // ─── Emit Models ────────────────────────────────────────────────────────────
