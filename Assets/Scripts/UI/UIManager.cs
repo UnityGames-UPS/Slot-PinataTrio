@@ -1418,9 +1418,13 @@ public class UIManager : MonoBehaviour
   internal IEnumerator ShowJackpotWinSequence(string tier, double jackpotAmount, double totalWin)
   {
     if (JackpotWinSequencePanel) JackpotWinSequencePanel.SetActive(true);
-    if (CashFallingAnim) CashFallingAnim.StartAnimation();
-    if (CoinFallingAnim) CoinFallingAnim.StartAnimation();
-
+    yield return null;
+    if (CashFallingAnim) { CashFallingAnim.doLoopAnimation = true; CashFallingAnim.StopAnimation(); CashFallingAnim.StartAnimation(); }
+    //if (CoinFallingAnim) 
+        { CoinFallingAnim.doLoopAnimation = true; CoinFallingAnim.StopAnimation(); CoinFallingAnim.StartAnimation();
+            Debug.Log("Coin falling set");
+        }
+    
     if (audioManager)
     {
       if (tier == "mini") audioManager.PlayMiniJackpot();
@@ -1454,8 +1458,8 @@ public class UIManager : MonoBehaviour
 
     if (JackpotWinGraphic) JackpotWinGraphic.gameObject.SetActive(false);
     if (JackpotAmountPanel) JackpotAmountPanel.SetActive(false);
-    if (CashFallingAnim) CashFallingAnim.StopAnimation();
-    if (CoinFallingAnim) CoinFallingAnim.StopAnimation();
+    if (CashFallingAnim) { CashFallingAnim.StopAnimation(); CashFallingAnim.doLoopAnimation = false; }
+    if (CoinFallingAnim) { CoinFallingAnim.StopAnimation(); CoinFallingAnim.doLoopAnimation = false; }
     if (JackpotWinSequencePanel) JackpotWinSequencePanel.SetActive(false);
     if (FallingJackpotRT) FallingJackpotRT.gameObject.SetActive(false);
     if (JackpotPickedObject) JackpotPickedObject.SetActive(false);

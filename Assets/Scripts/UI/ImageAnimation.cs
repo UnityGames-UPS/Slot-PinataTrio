@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -36,88 +37,100 @@ public class ImageAnimation : MonoBehaviour
 
 	public float delayBetweenLoop;
 
+	private Coroutine _animRoutine;
+
 	private void Awake()
 	{
 		if (Instance == null)
 		{
 			Instance = this;
 		}
-		if(StartOnAwake){
+		if (StartOnAwake)
+		{
 			StartAnimation();
 		}
 	}
 
-	private void OnEnable()
-	{
-
-	}
-
 	private void OnDisable()
 	{
-		//rendererDelegate.sprite = textureArray[0];
 		StopAnimation();
-	}
-
-	private void AnimationProcess()
-	{
-		SetTextureOfIndex();
-		indexOfTexture++;
-		if (indexOfTexture == textureArray.Count)
-		{
-			indexOfTexture = 0;
-			if (doLoopAnimation)
-			{
-				Invoke("AnimationProcess", delayBetweenAnimation + delayBetweenLoop);
-			}
-			else
-			{
-				IsComplete = true;
-				currentAnimationState = ImageState.NONE;
-			}
-		}
-		else
-		{
-			Invoke("AnimationProcess", delayBetweenAnimation);
-		}
 	}
 
 	public void StartAnimation()
 	{
-		CancelInvoke("AnimationProcess");
+		if (_animRoutine != null)
+		{
+			StopCoroutine(_animRoutine);
+			_animRoutine = null;
+		}
 		indexOfTexture = 0;
 		IsComplete = false;
 		RevertToInitialState();
 		delayBetweenAnimation = idealFrameRate * (float)textureArray.Count / AnimationSpeed;
 		currentAnimationState = ImageState.PLAYING;
-		Invoke("AnimationProcess", delayBetweenAnimation);
+		_animRoutine = StartCoroutine(AnimationRoutine());
+	}
+
+	private IEnumerator AnimationRoutine()
+	{
+		while (true)
+		{
+			yield return new WaitForSeconds(delayBetweenAnimation);
+			SetTextureOfIndex();
+			indexOfTexture++;
+			if (indexOfTexture == textureArray.Count)
+			{
+				indexOfTexture = 0;
+				if (doLoopAnimation)
+				{
+					if (delayBetweenLoop > 0f)
+						yield return new WaitForSeconds(delayBetweenLoop);
+				}
+				else
+				{
+					IsComplete = true;
+					currentAnimationState = ImageState.NONE;
+					_animRoutine = null;
+					yield break;
+				}
+			}
+		}
 	}
 
 	public void PauseAnimation()
 	{
 		if (currentAnimationState == ImageState.PLAYING)
 		{
-			CancelInvoke("AnimationProcess");
+			if (_animRoutine != null)
+			{
+				StopCoroutine(_animRoutine);
+				_animRoutine = null;
+			}
 			currentAnimationState = ImageState.PAUSED;
 		}
 	}
 
 	public void ResumeAnimation()
 	{
-		if (currentAnimationState == ImageState.PAUSED && !IsInvoking("AnimationProcess"))
+		if (currentAnimationState == ImageState.PAUSED && _animRoutine == null)
 		{
-			Invoke("AnimationProcess", delayBetweenAnimation);
+			_animRoutine = StartCoroutine(AnimationRoutine());
 			currentAnimationState = ImageState.PLAYING;
 		}
 	}
 
 	public void StopAnimation()
 	{
-		if (currentAnimationState != 0)
+		if (_animRoutine != null)
 		{
-			rendererDelegate.sprite = textureArray[0];
-			CancelInvoke("AnimationProcess");
-			currentAnimationState = ImageState.NONE;
+			StopCoroutine(_animRoutine);
+			_animRoutine = null;
 		}
+		currentAnimationState = ImageState.NONE;
+		IsComplete = false;
+		indexOfTexture = 0;
+		if (rendererDelegate && textureArray != null && textureArray.Count > 0)
+			rendererDelegate.sprite = textureArray[0];
 	}
 
 	public void RevertToInitialState()
@@ -134,13 +147,6 @@ public class ImageAnimation : MonoBehaviour
 
 	private void SetTextureOfIndex()
 	{
-		if (useSharedMaterial)
-		{
-			rendererDelegate.sprite = textureArray[indexOfTexture];
-		}
-		else
-		{
-			rendererDelegate.sprite = textureArray[indexOfTexture];
-		}
+		rendererDelegate.sprite = textureArray[indexOfTexture];
 	}
 }
