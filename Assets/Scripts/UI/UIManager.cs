@@ -173,6 +173,23 @@ public class UIManager : MonoBehaviour
   private Coroutine _pickJackpotTimerRoutine;
   private readonly string[] _jackpotOrder = { "mini", "minor", "major", "mega", "grand" };
 
+  [Header("Bonus Win Sequence")]
+  [SerializeField] private GameObject BonusWinSequencePanel;
+  [SerializeField] private RectTransform BonusWinnerGraphic;
+  [SerializeField] private TMP_Text BonusWinAmountText;
+  [SerializeField] private RectTransform BonusWinTierGraphic;
+  [SerializeField] private Image BonusWinTierImage;
+  [SerializeField] private Sprite BigWinTierSprite;
+  [SerializeField] private Sprite MegaWinTierSprite;
+  [SerializeField] private Sprite SuperWinTierSprite;
+  [SerializeField] private float bonusWinScaleDuration = 0.4f;
+  [SerializeField] private float bonusWinCountDuration = 1.5f;
+  [SerializeField] private float bonusWinHoldDuration = 2f;
+
+  private const double BigWinThreshold = 10;
+  private const double MegaWinThreshold = 25;
+  private const double SuperWinThreshold = 50;
+
   [Header("Ticker UI")]
   [SerializeField] private RectTransform TickerContainer;
   [SerializeField] private TMP_Text TickerText;
@@ -240,41 +257,6 @@ public class UIManager : MonoBehaviour
   [SerializeField] private GameObject SpinWinCoinSplash;
   [SerializeField] private float spinWinCountDuration = 1f;
 
-  [Header("Win Popup")]
-  [SerializeField]
-  private Sprite BigWin_Sprite;
-  [SerializeField]
-  private Sprite HugeWin_Sprite;
-  [SerializeField]
-  private Sprite MegaWin_Sprite;
-  [SerializeField]
-  private Sprite Jackpot_Sprite;
-  [SerializeField]
-  private Image Win_Image;
-  [SerializeField]
-  private GameObject WinPopup_Object;
-  [SerializeField]
-  private TMP_Text Win_Text;
-  [SerializeField] private Button SkipWinAnimation;
-
-  [Header("FreeSpins Popup")]
-  [SerializeField]
-  private GameObject FreeSpinPopup_Object;
-  [SerializeField]
-  private TMP_Text Free_Text;
-
-  [Header("Splash Screen")]
-  [SerializeField]
-  private GameObject Loading_Object;
-  [SerializeField]
-  private Image Loading_Image;
-  [SerializeField]
-  private TMP_Text Loading_Text;
-  [SerializeField]
-  private TMP_Text LoadPercent_Text;
-  [SerializeField]
-  private Button QuitSplash_button;
-
   [Header("Disconnection Popup")]
   [SerializeField]
   private Button CloseDisconnect_Button;
@@ -323,10 +305,7 @@ public class UIManager : MonoBehaviour
   private Tween _balanceTween;
   private bool isMusic = true;
   private bool isSound = true;
-  private Tween WinPopupTextTween;
-  private Tween ClosePopupTween;
   internal bool isExit = false;
-  internal int FreeSpins;
   private Vector2 _pickJackpotPanelOrigin;
   private Vector2[] _jackpotRevealImageOrigins;
   private Vector2 _greenPinataOrigin;
@@ -344,9 +323,9 @@ public class UIManager : MonoBehaviour
   private int _greenPinataStage = 0;
   private int _redPinataStage = 0;
   private int _bluePinataStage = 0;
-  private int _prevGreenMeter = 0;
-  private int _prevRedMeter = 0;
-  private int _prevBlueMeter = 0;
+  private int _greenMeterThreshold = 0;
+  private int _redMeterThreshold = 0;
+  private int _blueMeterThreshold = 0;
 
   private void Start()
   {
@@ -471,9 +450,6 @@ public class UIManager : MonoBehaviour
     if (CloseAD_Button) CloseAD_Button.onClick.RemoveAllListeners();
     if (CloseAD_Button) CloseAD_Button.onClick.AddListener(CallOnExitFunction);
 
-    if (QuitSplash_button) QuitSplash_button.onClick.RemoveAllListeners();
-    if (QuitSplash_button) QuitSplash_button.onClick.AddListener(delegate { OpenPopup(QuitPopup_Object); });
-
     isMusic = audioManager == null || audioManager.MusicEnabled;
     isSound = audioManager == null || audioManager.SfxEnabled;
 
@@ -482,10 +458,6 @@ public class UIManager : MonoBehaviour
 
     if (Music_Button) Music_Button.onClick.RemoveAllListeners();
     if (Music_Button) Music_Button.onClick.AddListener(ToggleMusic);
-
-    if (SkipWinAnimation) SkipWinAnimation.onClick.RemoveAllListeners();
-    if (SkipWinAnimation) SkipWinAnimation.onClick.AddListener(SkipWin);
-
   }
 
   private IEnumerator PlayIntro()
@@ -543,76 +515,6 @@ public class UIManager : MonoBehaviour
     {
       ClosePopup(DisconnectPopup_Object);
     }
-  }
-
-  internal void PopulateWin(int value, double amount)
-  {
-    switch (value)
-    {
-      case 1:
-        if (Win_Image) Win_Image.sprite = BigWin_Sprite;
-        break;
-      case 2:
-        if (Win_Image) Win_Image.sprite = HugeWin_Sprite;
-        break;
-      case 3:
-        if (Win_Image) Win_Image.sprite = MegaWin_Sprite;
-        break;
-      case 4:
-        if (Win_Image) Win_Image.sprite = Jackpot_Sprite;
-        break;
-    }
-
-    StartPopupAnim(amount);
-  }
-
-  private void StartFreeSpins(int spins)
-  {
-    if (FreeSpinPopup_Object) FreeSpinPopup_Object.SetActive(false);
-  }
-
-  internal void FreeSpinProcess(int spins)
-  {
-    int ExtraSpins = spins - FreeSpins;
-    FreeSpins = spins;
-    if (FreeSpinPopup_Object) FreeSpinPopup_Object.SetActive(true);
-    if (Free_Text) Free_Text.text = ExtraSpins.ToString() + " Free spins awarded.";
-    DOVirtual.DelayedCall(1.5f, () =>
-    {
-      StartFreeSpins(spins);
-    });
-  }
-
-  void SkipWin()
-  {
-    if (ClosePopupTween != null)
-    {
-      ClosePopupTween.Kill();
-      ClosePopupTween = null;
-    }
-    if (WinPopupTextTween != null)
-    {
-      WinPopupTextTween.Kill();
-      WinPopupTextTween = null;
-    }
-    ClosePopup(WinPopup_Object);
-    slotManager.CheckPopups = false;
-  }
-
-  private void StartPopupAnim(double amount)
-  {
-    double initAmount = 0;
-    if (WinPopup_Object) WinPopup_Object.SetActive(true);
-    WinPopupTextTween = DOTween.To(() => initAmount, (val) => initAmount = val, amount, 1f).OnUpdate(() =>
-    {
-      if (Win_Text) Win_Text.text = initAmount.ToString("F3");
-    });
-
-    ClosePopupTween = DOVirtual.DelayedCall(2f, () =>
-    {
-      if (WinPopup_Object) WinPopup_Object.SetActive(false);
-      slotManager.CheckPopups = false;
-    });
   }
 
   internal void ADfunction()
@@ -762,19 +664,30 @@ public class UIManager : MonoBehaviour
     _balanceTween = DOTween.To(() => current, v => { current = v; if (Balance_text) Balance_text.text = current.ToString("F3"); }, to, 0.8f);
   }
 
+  internal void SetMeterThresholds(int greenThreshold, int redThreshold, int blueThreshold)
+  {
+    _greenMeterThreshold = greenThreshold;
+    _redMeterThreshold = redThreshold;
+    _blueMeterThreshold = blueThreshold;
+  }
+
   internal void UpdateMeters(int green, int red, int blue)
   {
     if (GreenMeterText) GreenMeterText.text = green.ToString();
     if (RedMeterText) RedMeterText.text = red.ToString();
     if (BlueMeterText) BlueMeterText.text = blue.ToString();
 
-    if (green > _prevGreenMeter) AdvancePinataStage(ref _greenPinataStage, _greenPinataAnim, GreenPinataStage1Sprites, GreenPinataStage2Sprites, _greenPinataBaseSprites, GreenPinata);
-    if (red > _prevRedMeter) AdvancePinataStage(ref _redPinataStage, _redPinataAnim, RedPinataStage1Sprites, RedPinataStage2Sprites, _redPinataBaseSprites, RedPinata);
-    if (blue > _prevBlueMeter) AdvancePinataStage(ref _bluePinataStage, _bluePinataAnim, BluePinataStage1Sprites, BluePinataStage2Sprites, _bluePinataBaseSprites, BluePinata);
+    SetPinataStage(GetMeterStage(green, _greenMeterThreshold), ref _greenPinataStage, _greenPinataAnim, GreenPinataStage1Sprites, GreenPinataStage2Sprites, GreenPinata);
+    SetPinataStage(GetMeterStage(red, _redMeterThreshold), ref _redPinataStage, _redPinataAnim, RedPinataStage1Sprites, RedPinataStage2Sprites, RedPinata);
+    SetPinataStage(GetMeterStage(blue, _blueMeterThreshold), ref _bluePinataStage, _bluePinataAnim, BluePinataStage1Sprites, BluePinataStage2Sprites, BluePinata);
+  }
 
-    _prevGreenMeter = green;
-    _prevRedMeter = red;
-    _prevBlueMeter = blue;
+  private static int GetMeterStage(int meter, int threshold)
+  {
+    if (threshold <= 0) return 0;
+    if (meter >= threshold * 66 / 100) return 2;
+    if (meter >= threshold * 33 / 100) return 1;
+    return 0;
   }
 
   internal void PopPinata(int colorId)
@@ -787,10 +700,10 @@ public class UIManager : MonoBehaviour
       pinata.DOScale(1f, 0.1f).SetEase(Ease.InBack));
   }
 
-  private void AdvancePinataStage(ref int stage, ImageAnimation anim, Sprite[] stage1, Sprite[] stage2, List<Sprite> baseSprites, RectTransform pinata)
+  private void SetPinataStage(int targetStage, ref int stage, ImageAnimation anim, Sprite[] stage1, Sprite[] stage2, RectTransform pinata)
   {
-    if (stage >= 2) return;
-    stage++;
+    if (targetStage <= stage) return;
+    stage = targetStage;
     Sprite[] newSprites = stage == 1 ? stage1 : stage2;
     SwapPinataAnimation(anim, newSprites);
     if (pinata)
@@ -872,7 +785,7 @@ public class UIManager : MonoBehaviour
       float shakeDelay = Mathf.Max(0f, introAnim.GetTotalDuration() - introShakeStartOffset);
       StartCoroutine(PunchGameContent(shakeDelay));
       introAnim.StartAnimation();
-      if (feature == "pickJackpot") StartCoroutine(PlayBatHitSounds());
+      StartCoroutine(PlayBatHitSounds(introAnim));
       yield return new WaitUntil(() => introAnim.IsComplete);
       introAnim.gameObject.SetActive(false);
     }
@@ -898,10 +811,10 @@ public class UIManager : MonoBehaviour
 
   private static readonly float[] _batHitFrames = { 43, 56, 66, 70, 72, 77, 82, 85, 89, 90, 93, 95 };
 
-  private IEnumerator PlayBatHitSounds()
+  private IEnumerator PlayBatHitSounds(ImageAnimation introAnim)
   {
-    if (RedPinataIntroAnim == null || RedPinataIntroAnim.textureArray.Count == 0) yield break;
-    float frameDelay = RedPinataIntroAnim.GetTotalDuration() / RedPinataIntroAnim.textureArray.Count;
+    if (introAnim == null || introAnim.textureArray.Count == 0) yield break;
+    float frameDelay = introAnim.GetTotalDuration() / introAnim.textureArray.Count;
     float elapsed = 0f;
     foreach (float frame in _batHitFrames)
     {
@@ -1001,7 +914,6 @@ public class UIManager : MonoBehaviour
     if (feature == "wheelBonus")
     {
       ResetPinataStage(_greenPinataAnim, _greenPinataBaseSprites, ref _greenPinataStage);
-      _prevGreenMeter = 0;
     }
     else if (feature == "pickJackpot" && RedPinata)
     {
@@ -1010,7 +922,6 @@ public class UIManager : MonoBehaviour
       if (img) img.enabled = true;
       RedPinata.anchoredPosition = new Vector2(_redPinataOrigin.x, RedPinata.anchoredPosition.y);
       ResetPinataStage(_redPinataAnim, _redPinataBaseSprites, ref _redPinataStage);
-      _prevRedMeter = 0;
     }
     else if (feature == "linkBonus" && BluePinata)
     {
@@ -1018,7 +929,6 @@ public class UIManager : MonoBehaviour
       if (img && _bluePinataOriginalSprite) img.sprite = _bluePinataOriginalSprite;
       BluePinata.anchoredPosition = new Vector2(_bluePinataOrigin.x, BluePinata.anchoredPosition.y);
       ResetPinataStage(_bluePinataAnim, _bluePinataBaseSprites, ref _bluePinataStage);
-      _prevBlueMeter = 0;
       if (GreenPinata) GreenPinata.gameObject.SetActive(true);
       if (RedPinata) RedPinata.gameObject.SetActive(true);
       if (SlotMain) SlotMain.SetActive(true);
@@ -1325,6 +1235,56 @@ public class UIManager : MonoBehaviour
     if (JackpotPickedObject) JackpotPickedObject.SetActive(false);
   }
 
+  private Sprite GetBonusWinTierSprite(string tier)
+  {
+    switch (tier)
+    {
+      case "big": return BigWinTierSprite;
+      case "mega": return MegaWinTierSprite;
+      case "super": return SuperWinTierSprite;
+      default: return null;
+    }
+  }
+
+  private static string GetBonusWinTier(double totalWin, double bet)
+  {
+    if (bet <= 0) return null;
+    double ratio = totalWin / bet;
+    if (ratio >= SuperWinThreshold) return "super";
+    if (ratio >= MegaWinThreshold) return "mega";
+    if (ratio >= BigWinThreshold) return "big";
+    return null;
+  }
+
+  internal IEnumerator ShowBonusWinSequence(double totalWin, double bet)
+  {
+    string tier = GetBonusWinTier(totalWin, bet);
+    if (tier == null) yield break;
+
+    if (BonusWinTierImage) BonusWinTierImage.sprite = GetBonusWinTierSprite(tier);
+    if (BonusWinTierGraphic) BonusWinTierGraphic.localScale = Vector3.zero;
+    if (BonusWinnerGraphic) BonusWinnerGraphic.localScale = Vector3.zero;
+    if (BonusWinAmountText) BonusWinAmountText.text = "0.000";
+    if (BonusWinSequencePanel) BonusWinSequencePanel.SetActive(true);
+
+    if (audioManager) audioManager.PlayBigWin();
+
+    if (BonusWinTierGraphic) BonusWinTierGraphic.DOScale(Vector3.one, bonusWinScaleDuration).SetEase(Ease.OutBack);
+    if (BonusWinnerGraphic) BonusWinnerGraphic.DOScale(Vector3.one, bonusWinScaleDuration).SetEase(Ease.OutBack);
+    yield return new WaitForSeconds(bonusWinScaleDuration);
+
+    float bonusWinDisplay = 0f;
+    if (BonusWinAmountText)
+      yield return DOTween.To(() => bonusWinDisplay, v => { bonusWinDisplay = v; BonusWinAmountText.text = v.ToString("F3"); },
+        (float)totalWin, bonusWinCountDuration).WaitForCompletion();
+    else
+      yield return new WaitForSeconds(bonusWinCountDuration);
+
+    yield return new WaitForSeconds(bonusWinHoldDuration);
+
+    if (BonusWinSequencePanel) BonusWinSequencePanel.SetActive(false);
+  }
+
   private void UpdateBetDisplay(double bet)
   {
     if (TotalBetAmountText) TotalBetAmountText.text = bet.ToString("F2");
@@ -1346,11 +1306,4 @@ public class UIManager : MonoBehaviour
       SlideContainer.sprite = InfoSlides[index];
   }
 
-  // TODO: replace with full jackpot win screen (win graphic, amount display, etc.)
-  internal IEnumerator ShowJackpotWin(string jackpotTier, double winAmount)
-  {
-    if (FallingJackpotRT) FallingJackpotRT.gameObject.SetActive(false);
-    PopulateWin(4, winAmount);
-    yield return new WaitUntil(() => WinPopup_Object == null || !WinPopup_Object.activeSelf);
-  }
 }

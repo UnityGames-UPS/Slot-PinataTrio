@@ -302,6 +302,9 @@ public class SlotBehaviour : MonoBehaviour
     uiManager.InitialiseBalanceAndWin(SocketManager.PlayerData.balance, SocketManager.InitialData.bets[BetCounter]);
     currentBalance = SocketManager.PlayerData.balance;
     currentTotalBet = SocketManager.InitialData.bets[BetCounter];
+
+    var meterState = SocketManager.CurrentMeterState;
+    if (meterState != null) uiManager.SetMeterThresholds(meterState.greenThreshold, meterState.redThreshold, meterState.blueThreshold);
   }
   #endregion
 
@@ -435,6 +438,10 @@ public class SlotBehaviour : MonoBehaviour
     yield return new WaitUntil(() => _activePinataAnims == 0);
     KillAllTweens();
     CheckForFeaturesAnimation();
+
+    var meterState = SocketManager.CurrentMeterState;
+    if (meterState != null) uiManager.UpdateMeters(meterState.greenMeter, meterState.redMeter, meterState.blueMeter);
+
     uiManager.UpdateTotalWin(SocketManager.ResultData.payload.winAmount);
     uiManager.UpdateBalance(SocketManager.ResultData.player.balance);
     currentBalance = SocketManager.PlayerData.balance;
@@ -447,7 +454,10 @@ public class SlotBehaviour : MonoBehaviour
 
     yield return StartCoroutine(uiManager.ShowSpinWin(SocketManager.ResultData.payload.winAmount));
     if (!_isInFreeSpin && !_isFeatureActive && !hadPendingFeature)
+    {
       yield return StartCoroutine(CheckAndShowJackpotWin());
+      yield return StartCoroutine(uiManager.ShowBonusWinSequence(SocketManager.ResultData.payload.winAmount, currentTotalBet));
+    }
 
     CheckPopups = false;
     IsSpinning = false;
@@ -509,6 +519,7 @@ public class SlotBehaviour : MonoBehaviour
 
     string wheelTier = wbFeature?.jackpotTier ?? "mini";
     yield return StartCoroutine(uiManager.ShowJackpotWinSequence(wheelTier, awardValue, awardValue));
+    yield return StartCoroutine(uiManager.ShowBonusWinSequence(awardValue, currentTotalBet));
 
     if (audioManager) audioManager.StopBonusBgMusic();
     uiManager.CleanupFeaturePinata("wheelBonus");
@@ -556,6 +567,7 @@ public class SlotBehaviour : MonoBehaviour
     uiManager.PlayBustedPinataOnce("red");
     double freeSpinTotalWin = SocketManager.ResultData.payload?.winAmount ?? 0;
     yield return StartCoroutine(uiManager.ShowJackpotWinSequence(goalJackpot, awardValue, freeSpinTotalWin));
+    yield return StartCoroutine(uiManager.ShowBonusWinSequence(freeSpinTotalWin, currentTotalBet));
     if (audioManager) audioManager.StopBonusBgMusic();
     uiManager.CleanupFeaturePinata("pickJackpot");
     _isFeatureActive = false;
@@ -621,6 +633,7 @@ public class SlotBehaviour : MonoBehaviour
     var allLockedCells = lbFeature?.lockedCells ?? SocketManager.ResultData.payload?.linkBonusLockedCells;
 
     yield return StartCoroutine(linkBonusController.PlayTotalWinSequence(allLockedCells, awardValue));
+    yield return StartCoroutine(uiManager.ShowBonusWinSequence(awardValue, currentTotalBet));
 
     if (audioManager) audioManager.StopBonusBgMusic();
     uiManager.CleanupFeaturePinata("linkBonus");
