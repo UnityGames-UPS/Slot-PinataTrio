@@ -175,10 +175,10 @@ public class UIManager : MonoBehaviour
 
   [Header("Bonus Win Sequence")]
   [SerializeField] private GameObject BonusWinSequencePanel;
-  [SerializeField] private RectTransform BonusWinnerGraphic;
+  [SerializeField] private ImageAnimation BonusWinCoinFallingAnim;
+  [SerializeField] private RectTransform BonusWinPanel;
+  [SerializeField] private Image BonusNameGraphicImage;
   [SerializeField] private TMP_Text BonusWinAmountText;
-  [SerializeField] private RectTransform BonusWinTierGraphic;
-  [SerializeField] private Image BonusWinTierImage;
   [SerializeField] private Sprite BigWinTierSprite;
   [SerializeField] private Sprite MegaWinTierSprite;
   [SerializeField] private Sprite SuperWinTierSprite;
@@ -186,7 +186,7 @@ public class UIManager : MonoBehaviour
   [SerializeField] private float bonusWinCountDuration = 1.5f;
   [SerializeField] private float bonusWinHoldDuration = 2f;
 
-  private const double BigWinThreshold = 10;
+  private const double BigWinThreshold = 1;
   private const double MegaWinThreshold = 25;
   private const double SuperWinThreshold = 50;
 
@@ -1261,16 +1261,15 @@ public class UIManager : MonoBehaviour
     string tier = GetBonusWinTier(totalWin, bet);
     if (tier == null) yield break;
 
-    if (BonusWinTierImage) BonusWinTierImage.sprite = GetBonusWinTierSprite(tier);
-    if (BonusWinTierGraphic) BonusWinTierGraphic.localScale = Vector3.zero;
-    if (BonusWinnerGraphic) BonusWinnerGraphic.localScale = Vector3.zero;
+    if (BonusNameGraphicImage) BonusNameGraphicImage.sprite = GetBonusWinTierSprite(tier);
+    if (BonusWinPanel) BonusWinPanel.localScale = Vector3.zero;
     if (BonusWinAmountText) BonusWinAmountText.text = "0.000";
     if (BonusWinSequencePanel) BonusWinSequencePanel.SetActive(true);
 
     if (audioManager) audioManager.PlayBigWin();
+    if (BonusWinCoinFallingAnim) { BonusWinCoinFallingAnim.doLoopAnimation = true; BonusWinCoinFallingAnim.StopAnimation(); BonusWinCoinFallingAnim.StartAnimation(); }
 
-    if (BonusWinTierGraphic) BonusWinTierGraphic.DOScale(Vector3.one, bonusWinScaleDuration).SetEase(Ease.OutBack);
-    if (BonusWinnerGraphic) BonusWinnerGraphic.DOScale(Vector3.one, bonusWinScaleDuration).SetEase(Ease.OutBack);
+    if (BonusWinPanel) BonusWinPanel.DOScale(Vector3.one, bonusWinScaleDuration).SetEase(Ease.OutBack);
     yield return new WaitForSeconds(bonusWinScaleDuration);
 
     float bonusWinDisplay = 0f;
@@ -1282,6 +1281,7 @@ public class UIManager : MonoBehaviour
 
     yield return new WaitForSeconds(bonusWinHoldDuration);
 
+    if (BonusWinCoinFallingAnim) { BonusWinCoinFallingAnim.StopAnimation(); BonusWinCoinFallingAnim.doLoopAnimation = false; }
     if (BonusWinSequencePanel) BonusWinSequencePanel.SetActive(false);
   }
 
