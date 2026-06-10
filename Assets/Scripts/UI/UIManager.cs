@@ -186,9 +186,9 @@ public class UIManager : MonoBehaviour
   [SerializeField] private float bonusWinCountDuration = 1.5f;
   [SerializeField] private float bonusWinHoldDuration = 2f;
 
-  private const double BigWinThreshold = 1;
-  private const double MegaWinThreshold = 25;
-  private const double SuperWinThreshold = 50;
+  private const double BigWinThreshold = 5;
+  private const double MegaWinThreshold = 10;
+  private const double SuperWinThreshold = 20;
 
   [Header("Ticker UI")]
   [SerializeField] private RectTransform TickerContainer;
@@ -1199,6 +1199,9 @@ public class UIManager : MonoBehaviour
     {
       if (tier == "mini") audioManager.PlayMiniJackpot();
       else if (tier == "minor") audioManager.PlayMinorJackpot();
+      else if (tier == "major") audioManager.PlayMajorJackpot();
+      else if (tier == "mega") audioManager.PlayMegaJackpot();
+      else if (tier == "grand") audioManager.PlayGrandJackpot();
     }
 
     if (JackpotWinGraphicImage) JackpotWinGraphicImage.sprite = GetJackpotWinSprite(tier);

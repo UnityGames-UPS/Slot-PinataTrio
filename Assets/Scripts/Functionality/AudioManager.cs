@@ -43,6 +43,9 @@ public class AudioManager : MonoBehaviour
     [Header("Jackpots")]
     [SerializeField] private AudioClip clipMiniJackpot;
     [SerializeField] private AudioClip clipMinorJackpot;
+    [SerializeField] private AudioClip clipMajorJackpot;
+    [SerializeField] private AudioClip clipMegaJackpot;
+    [SerializeField] private AudioClip clipGrandJackpot;
 
     [Header("Win")]
     [SerializeField] private AudioClip clipBigWin;
@@ -201,6 +204,9 @@ public class AudioManager : MonoBehaviour
 
     internal void PlayMiniJackpot() => PlayOneShot(sfxSource, clipMiniJackpot);
     internal void PlayMinorJackpot() => PlayOneShot(sfxSource, clipMinorJackpot);
+    internal void PlayMajorJackpot() => PlayOneShot(sfxSource, clipMajorJackpot);
+    internal void PlayMegaJackpot() => PlayOneShot(sfxSource, clipMegaJackpot);
+    internal void PlayGrandJackpot() => PlayOneShot(sfxSource, clipGrandJackpot);
 
     // ── Win ───────────────────────────────────────────────────────────────────
 

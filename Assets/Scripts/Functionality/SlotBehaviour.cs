@@ -435,6 +435,7 @@ public class SlotBehaviour : MonoBehaviour
     if (audioManager) audioManager.StopSpinLoop();
     yield return alltweens[^1].WaitForCompletion();
     Spin_Button.GetComponent<Image>().sprite = SpinSprite;
+    if (Spin_Button) Spin_Button.interactable = false;
     yield return new WaitUntil(() => _activePinataAnims == 0);
     KillAllTweens();
     CheckForFeaturesAnimation();
