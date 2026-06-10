@@ -186,9 +186,9 @@ public class UIManager : MonoBehaviour
   [SerializeField] private float bonusWinCountDuration = 1.5f;
   [SerializeField] private float bonusWinHoldDuration = 2f;
 
-  private const double BigWinThreshold = 5;
-  private const double MegaWinThreshold = 10;
-  private const double SuperWinThreshold = 20;
+  private const double BigWinThreshold = 3;
+  private const double MegaWinThreshold = 6;
+  private const double SuperWinThreshold = 10;
 
   [Header("Ticker UI")]
   [SerializeField] private RectTransform TickerContainer;
