@@ -161,11 +161,17 @@ public class SlotBehaviour : MonoBehaviour
   {
     if (!IsAutoSpin)
     {
+      if (_isFeatureActive || IsSpinning)
+      {
+        Debug.Log($"[AutoSpin] Start blocked (featureActive={_isFeatureActive}, isSpinning={IsSpinning})");
+        return;
+      }
       if (currentBalance < currentTotalBet)
       {
         uiManager.LowBalPopup();
         return;
       }
+      Debug.Log("[AutoSpin] Starting AutoSpinCoroutine");
       IsAutoSpin = true;
       SetAutoSpinButtonSprite(true);
       if (AutoSpinRoutine != null)
@@ -185,6 +191,7 @@ public class SlotBehaviour : MonoBehaviour
   {
     if (IsAutoSpin)
     {
+      Debug.Log("[AutoSpin] Stopping autospin");
       IsAutoSpin = false;
       SetAutoSpinButtonSprite(false);
     }
@@ -209,11 +216,13 @@ public class SlotBehaviour : MonoBehaviour
         uiManager.LowBalPopup();
         break;
       }
+      Debug.Log("[AutoSpin] AutoSpinCoroutine -> StartSlots()");
       StartSlots();
       yield return new WaitUntil(() => !IsSpinning);
       yield return new WaitForSeconds(SpinDelay);
     }
     yield return new WaitUntil(() => !IsSpinning);
+    Debug.Log("[AutoSpin] AutoSpinCoroutine exiting");
     ToggleButtonGrp(true);
     if (AutoSpin_Button) AutoSpin_Button.gameObject.SetActive(true);
   }
@@ -376,8 +385,10 @@ public class SlotBehaviour : MonoBehaviour
 
   private IEnumerator TweenRoutine()
   {
-    if (currentBalance < currentTotalBet)
+    Debug.Log($"[Spin] TweenRoutine start (isInFreeSpin={_isInFreeSpin}, isFeatureActive={_isFeatureActive}, isAutoSpin={IsAutoSpin})");
+    if (!_isInFreeSpin && currentBalance < currentTotalBet)
     {
+      Debug.Log("[Spin] Low balance, aborting TweenRoutine");
       StopAutoSpin();
       uiManager.LowBalPopup();
       yield return new WaitForSeconds(1);
@@ -451,7 +462,10 @@ public class SlotBehaviour : MonoBehaviour
     var pendingFeatures = SocketManager.ResultData.payload?.pendingFeatures;
     bool hadPendingFeature = pendingFeatures != null && pendingFeatures.Exists(f => f.triggered);
     if (hadPendingFeature)
+    {
+      Debug.Log("[Spin] Pending feature triggered -> HandlePendingFeatures");
       yield return StartCoroutine(HandlePendingFeatures(pendingFeatures));
+    }
 
     yield return StartCoroutine(uiManager.ShowSpinWin(SocketManager.ResultData.payload.winAmount));
     if (!_isInFreeSpin && !_isFeatureActive && !hadPendingFeature)
@@ -462,6 +476,7 @@ public class SlotBehaviour : MonoBehaviour
 
     CheckPopups = false;
     IsSpinning = false;
+    Debug.Log($"[Spin] TweenRoutine end (restoreAutoSpin={_restoreAutoSpin}, isAutoSpin={IsAutoSpin}, isFeatureActive={_isFeatureActive})");
     if (_restoreAutoSpin) { _restoreAutoSpin = false; AutoSpin(); }
     ToggleButtonGrp(true);
   }
@@ -471,6 +486,7 @@ public class SlotBehaviour : MonoBehaviour
   private IEnumerator HandlePendingFeatures(List<PendingFeature> features)
   {
     bool wasAutoSpinning = IsAutoSpin;
+    Debug.Log($"[Feature] HandlePendingFeatures start (wasAutoSpinning={wasAutoSpinning})");
     StopAutoSpin();
     foreach (var feature in features)
     {
@@ -491,6 +507,7 @@ public class SlotBehaviour : MonoBehaviour
       uiManager.SetReelFrame("default");
     }
     _restoreAutoSpin = wasAutoSpinning;
+    Debug.Log($"[Feature] HandlePendingFeatures done, _restoreAutoSpin={_restoreAutoSpin}");
   }
 
   private IEnumerator HandleWheelBonus(PendingFeature feature)
@@ -580,9 +597,11 @@ public class SlotBehaviour : MonoBehaviour
     while (true)
     {
       yield return new WaitForSeconds(SpinDelay);
+      Debug.Log("[Feature] FreeSpinLoop -> StartSlots()");
       StartSlots();
       yield return new WaitUntil(() => !IsSpinning);
 
+      Debug.Log($"[Feature] FreeSpinLoop round done, isFreeSpinActive={SocketManager.ResultData.payload.isFreeSpinActive}");
       if (!SocketManager.ResultData.payload.isFreeSpinActive)
         break;
     }
