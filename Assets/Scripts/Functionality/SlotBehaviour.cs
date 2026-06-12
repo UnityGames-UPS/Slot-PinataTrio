@@ -541,6 +541,10 @@ public class SlotBehaviour : MonoBehaviour
 
     if (audioManager) audioManager.StopBonusBgMusic();
     uiManager.CleanupFeaturePinata("wheelBonus");
+
+    uiManager.UpdateBalance(SocketManager.ResultData.player.balance);
+    currentBalance = SocketManager.PlayerData.balance;
+
     _isFeatureActive = false;
     uiManager.LockFeatureUI(false);
   }
