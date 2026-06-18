@@ -7,6 +7,8 @@ public class OrientationChange : MonoBehaviour
 {
   [SerializeField] private RectTransform UIWrapper;
   [SerializeField] private CanvasScaler CanvasScaler;
+  [SerializeField] private RectTransform BGUIWrapper;
+  [SerializeField] private CanvasScaler BGCanvasScaler;
   [SerializeField] private float MatchWidth = 0f;
   [SerializeField] private float MatchHeight = 1f;
   [SerializeField] private float PortraitMatchWandH = 0.5f;
@@ -16,6 +18,8 @@ public class OrientationChange : MonoBehaviour
   private Vector2 ReferenceAspect;
   private Tween matchTween;
   private Tween rotationTween;
+  private Tween bgMatchTween;
+  private Tween bgRotationTween;
   private Coroutine rotationRoutine;
   private bool isLandscape;
   private void Awake()
@@ -42,6 +46,12 @@ public class OrientationChange : MonoBehaviour
       Quaternion targetRotation = isLandscape ? Quaternion.identity : Quaternion.Euler(0, 0, -90);
       if (rotationTween != null && rotationTween.IsActive()) rotationTween.Kill();
       rotationTween = UIWrapper.DOLocalRotateQuaternion(targetRotation, transitionDuration).SetEase(Ease.OutCubic);
+
+      if (BGUIWrapper != null)
+      {
+        if (bgRotationTween != null && bgRotationTween.IsActive()) bgRotationTween.Kill();
+        bgRotationTween = BGUIWrapper.DOLocalRotateQuaternion(targetRotation, transitionDuration).SetEase(Ease.OutCubic);
+      }
 
       float currentAspectRatio = isLandscape ? (float)width / height : (float)height / width;
       float referenceAspectRatio = ReferenceAspect.x / ReferenceAspect.y;
@@ -73,8 +83,17 @@ public class OrientationChange : MonoBehaviour
       else if (Mathf.Abs(ratio - (float)1440/2304) < e) targetMatch = 0.45f;
       else if (Mathf.Abs(ratio - (float)2560/1600) < e) targetMatch = 0.45f;
       else if (Mathf.Abs(ratio - (float)1600/2560) < e) targetMatch = 0.45f;
+      else if (Mathf.Abs(ratio - (float)412/914) < e) targetMatch = 0.419f;
+      else if (Mathf.Abs(ratio - (float)914/412) < e) targetMatch = 1.0f;
+      
       if (matchTween != null && matchTween.IsActive()) matchTween.Kill();
       matchTween = DOTween.To(() => CanvasScaler.matchWidthOrHeight, x => CanvasScaler.matchWidthOrHeight = x, targetMatch, transitionDuration).SetEase(Ease.InOutQuad);
+
+      if (BGCanvasScaler != null)
+      {
+        if (bgMatchTween != null && bgMatchTween.IsActive()) bgMatchTween.Kill();
+        bgMatchTween = DOTween.To(() => BGCanvasScaler.matchWidthOrHeight, x => BGCanvasScaler.matchWidthOrHeight = x, targetMatch, transitionDuration).SetEase(Ease.InOutQuad);
+      }
 
       Debug.Log($"matchWidthOrHeight set to: {targetMatch}");
     }
