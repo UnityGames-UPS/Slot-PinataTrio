@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,7 @@ using TMPro;
 
 public class UIManager : MonoBehaviour
 {
+  internal event Action<bool> OnInfoScreenToggled;
 
   [Header("Menu UI")]
   [SerializeField]
@@ -378,9 +380,14 @@ public class UIManager : MonoBehaviour
       currentSlideIndex = 0;
       InfoSlidesPanel.SetActive(true);
       ShowSlide(currentSlideIndex);
+      OnInfoScreenToggled?.Invoke(true);
 
       if (BackToGame_Button) BackToGame_Button.onClick.RemoveAllListeners();
-      if (BackToGame_Button) BackToGame_Button.onClick.AddListener(() => InfoSlidesPanel.SetActive(false));
+      if (BackToGame_Button) BackToGame_Button.onClick.AddListener(() =>
+      {
+        InfoSlidesPanel.SetActive(false);
+        OnInfoScreenToggled?.Invoke(false);
+      });
 
       if (NextButton) NextButton.onClick.RemoveAllListeners();
       if (NextButton) NextButton.onClick.AddListener(() =>
@@ -1048,7 +1055,7 @@ public class UIManager : MonoBehaviour
       if (PickJackpotTimerText) PickJackpotTimerText.text = Mathf.CeilToInt(timeRemaining).ToString();
       yield return null;
     }
-    OnPinataSelected(Random.Range(0, PinataButtons.Length));
+    OnPinataSelected(UnityEngine.Random.Range(0, PinataButtons.Length));
   }
 
   internal IEnumerator RevealJackpot(string goalJackpot)
@@ -1058,7 +1065,7 @@ public class UIManager : MonoBehaviour
 
     for (int i = remaining.Count - 1; i > 0; i--)
     {
-      int j = Random.Range(0, i + 1);
+      int j = UnityEngine.Random.Range(0, i + 1);
       string temp = remaining[i];
       remaining[i] = remaining[j];
       remaining[j] = temp;

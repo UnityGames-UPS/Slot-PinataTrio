@@ -113,6 +113,7 @@ public class SlotBehaviour : MonoBehaviour
   private bool CheckSpinAudio = false;
   internal bool CheckPopups = false;
   private bool _isInFreeSpin = false;
+  private bool _inputLocked = false;
   internal int BetCounter = 0;
   private double currentBalance = 0;
   private double currentTotalBet = 0;
@@ -153,7 +154,27 @@ public class SlotBehaviour : MonoBehaviour
   if (AutoSpin_Button) AutoSpin_Button.onClick.RemoveAllListeners();
   if (AutoSpin_Button) AutoSpin_Button.onClick.AddListener(AutoSpin);
 
+  if (uiManager) uiManager.OnInfoScreenToggled += SetGameInputLocked;
+
   tweenHeight = (15 * IconSizeFactor) - 280;
+  }
+
+  private void SetGameInputLocked(bool locked)
+  {
+    _inputLocked = locked;
+    if (locked)
+    {
+      if (Spin_Button) Spin_Button.interactable = false;
+      if (MaxBet_Button) MaxBet_Button.interactable = false;
+      if (BetMinus_Button) BetMinus_Button.interactable = false;
+      if (BetPlus_Button) BetPlus_Button.interactable = false;
+      if (AutoSpin_Button) AutoSpin_Button.interactable = false;
+    }
+    else
+    {
+      if (!IsSpinning) ToggleButtonGrp(true);
+      if (AutoSpin_Button) AutoSpin_Button.interactable = !_isFeatureActive;
+    }
   }
 
   #region Autospin
@@ -209,7 +230,7 @@ public class SlotBehaviour : MonoBehaviour
   {
     while (IsAutoSpin)
     {
-      yield return new WaitUntil(() => !CheckPopups && !IsSpinning);
+      yield return new WaitUntil(() => !CheckPopups && !IsSpinning && !_inputLocked);
       if (currentBalance < currentTotalBet)
       {
         StopAutoSpin();
@@ -392,7 +413,7 @@ public class SlotBehaviour : MonoBehaviour
       StopAutoSpin();
       uiManager.LowBalPopup();
       yield return new WaitForSeconds(1);
-      ToggleButtonGrp(true);
+      if (!_inputLocked) ToggleButtonGrp(true);
       yield break;
     }
     ClearCoinOverlays();
@@ -417,7 +438,7 @@ public class SlotBehaviour : MonoBehaviour
       Spin_Button.GetComponent<Image>().sprite = SpinSprite;
       CheckPopups = false;
       IsSpinning = false;
-      ToggleButtonGrp(true);
+      if (!_inputLocked) ToggleButtonGrp(true);
       yield break;
     }
 
@@ -476,9 +497,9 @@ public class SlotBehaviour : MonoBehaviour
 
     CheckPopups = false;
     IsSpinning = false;
-    Debug.Log($"[Spin] TweenRoutine end (restoreAutoSpin={_restoreAutoSpin}, isAutoSpin={IsAutoSpin}, isFeatureActive={_isFeatureActive})");
+    Debug.Log($"[Spin] TweenRoutine end (restoreAutoSpin={_restoreAutoSpin}, isAutoSpin={IsAutoSpin}, isFeatureActive={_isFeatureActive}, inputLocked={_inputLocked})");
     if (_restoreAutoSpin) { _restoreAutoSpin = false; AutoSpin(); }
-    ToggleButtonGrp(true);
+    if (!_inputLocked) ToggleButtonGrp(true);
   }
   #endregion
 
