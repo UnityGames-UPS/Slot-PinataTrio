@@ -152,20 +152,23 @@ public class UIManager : MonoBehaviour
   [SerializeField] private Vector2 jackpotCenterTarget = new Vector2(0f, -90f);
 
   [Header("Jackpot Win Sequence")]
+  [SerializeField] private GameObject JackpotWinGraphic; // renamed from JackpotAmountPanel - now hosts the new common full-screen graphic
+  [SerializeField] private ImageAnimation JackpotWinGraphicAnim; // new common full-screen graphic (replaces CashFallingAnim, CoinFallingAnim, JackpotWinTierGraphic drop, and the old panel scale-in)
+  // Old per-tier falling/dropping graphics - kept for reference in case we need to revert. See ShowJackpotWinSequence.
   [SerializeField] private ImageAnimation CashFallingAnim;
   [SerializeField] private ImageAnimation CoinFallingAnim;
-  [SerializeField] private RectTransform JackpotWinGraphic;
-  [SerializeField] private Image JackpotWinGraphicImage;
+  [SerializeField] private RectTransform JackpotWinTierGraphic; // renamed from JackpotWinGraphic - old per-tier dropping graphic, now dead
+  [SerializeField] private Image JackpotWinTierGraphicImage; // renamed from JackpotWinGraphicImage
   [SerializeField] private Sprite MiniWinSprite;
   [SerializeField] private Sprite MinorWinSprite;
   [SerializeField] private Sprite MajorWinSprite;
   [SerializeField] private Sprite MegaWinSprite;
   [SerializeField] private Sprite GrandWinSprite;
   [SerializeField] private GameObject JackpotWinSequencePanel;
-  [SerializeField] private GameObject JackpotAmountPanel;
   [SerializeField] private TMP_Text JackpotWinAmountText;
   [SerializeField] private float jackpotGraphicDropDuration = 0.6f;
-  [SerializeField] private float jackpotPanelExpandDuration = 0.4f;
+  [SerializeField] private float jackpotTextScaleStartDelay = 1.1967f; // time of frame 21 in JackpotWinGraphicAnim, at its tuned AnimationSpeed
+  [SerializeField] private float jackpotPanelExpandDuration = 0.4f; // ~time from frame 21 to frame 28
   [SerializeField] private float jackpotCountDuration = 1.5f;
   [SerializeField] private float jackpotHoldDuration = 2f;
   [SerializeField] private float coinsLingerDuration = 1f;
@@ -177,18 +180,19 @@ public class UIManager : MonoBehaviour
 
   [Header("Bonus Win Sequence")]
   [SerializeField] private GameObject BonusWinSequencePanel;
-  [SerializeField] private ImageAnimation BonusWinCoinFallingAnim;
+  [SerializeField] private ImageAnimation BonusWinGraphicAnim;
   [SerializeField] private RectTransform BonusWinPanel;
   [SerializeField] private Image BonusNameGraphicImage;
   [SerializeField] private TMP_Text BonusWinAmountText;
   [SerializeField] private Sprite BigWinTierSprite;
   [SerializeField] private Sprite MegaWinTierSprite;
   [SerializeField] private Sprite SuperWinTierSprite;
-  [SerializeField] private float bonusWinScaleDuration = 0.4f;
+  [SerializeField] private float bonusWinScaleStartDelay = 0.5114f; // time of frame 6 in BonusWinGraphicAnim, at its tuned AnimationSpeed
+  [SerializeField] private float bonusWinScaleDuration = 0.5114f; // ~time from frame 6 to frame 12
   [SerializeField] private float bonusWinCountDuration = 1.5f;
   [SerializeField] private float bonusWinHoldDuration = 2f;
 
-  private const double BigWinThreshold = 3;
+  private const double BigWinThreshold = 2;
   private const double MegaWinThreshold = 6;
   private const double SuperWinThreshold = 10;
 
@@ -1199,9 +1203,26 @@ public class UIManager : MonoBehaviour
   {
     if (JackpotWinSequencePanel) JackpotWinSequencePanel.SetActive(true);
     yield return null;
-    if (CashFallingAnim) { CashFallingAnim.doLoopAnimation = true; CashFallingAnim.StopAnimation(); CashFallingAnim.StartAnimation(); }
-    if (CoinFallingAnim) { CoinFallingAnim.doLoopAnimation = true; CoinFallingAnim.StopAnimation(); CoinFallingAnim.StartAnimation(); }
-    
+
+    // Old per-tier falling/dropping/scaling sequence - replaced by the new common JackpotWinGraphicAnim (single full-screen
+    // animation, no tier sprite swap, scale-up baked into the frames). Kept here in case we need to revert.
+    // if (CashFallingAnim) { CashFallingAnim.doLoopAnimation = true; CashFallingAnim.StopAnimation(); CashFallingAnim.StartAnimation(); }
+    // if (CoinFallingAnim) { CoinFallingAnim.doLoopAnimation = true; CoinFallingAnim.StopAnimation(); CoinFallingAnim.StartAnimation(); }
+    // if (JackpotWinTierGraphicImage) JackpotWinTierGraphicImage.sprite = GetJackpotWinSprite(tier);
+    // if (JackpotWinTierGraphic)
+    // {
+    //   JackpotWinTierGraphic.gameObject.SetActive(true);
+    //   float targetY = JackpotWinTierGraphic.anchoredPosition.y;
+    //   JackpotWinTierGraphic.anchoredPosition = new Vector2(JackpotWinTierGraphic.anchoredPosition.x, targetY + offscreenOffset);
+    //   yield return JackpotWinTierGraphic.DOAnchorPosY(targetY, jackpotGraphicDropDuration).SetEase(Ease.OutCubic).WaitForCompletion();
+    // }
+    // if (JackpotWinGraphic)
+    // {
+    //   JackpotWinGraphic.transform.localScale = Vector3.one * 0.05f;
+    //   JackpotWinGraphic.SetActive(true);
+    //   JackpotWinGraphic.transform.DOScale(Vector3.one, jackpotPanelExpandDuration).SetEase(Ease.OutBack);
+    // }
+
     if (audioManager)
     {
       if (tier == "mini") audioManager.PlayMiniJackpot();
@@ -1211,21 +1232,13 @@ public class UIManager : MonoBehaviour
       else if (tier == "grand") audioManager.PlayGrandJackpot();
     }
 
-    if (JackpotWinGraphicImage) JackpotWinGraphicImage.sprite = GetJackpotWinSprite(tier);
-    if (JackpotWinGraphic)
-    {
-      JackpotWinGraphic.gameObject.SetActive(true);
-      float targetY = JackpotWinGraphic.anchoredPosition.y;
-      JackpotWinGraphic.anchoredPosition = new Vector2(JackpotWinGraphic.anchoredPosition.x, targetY + offscreenOffset);
-      yield return JackpotWinGraphic.DOAnchorPosY(targetY, jackpotGraphicDropDuration).SetEase(Ease.OutCubic).WaitForCompletion();
-    }
+    if (JackpotWinGraphic) JackpotWinGraphic.SetActive(true);
+    if (JackpotWinGraphicAnim) { JackpotWinGraphicAnim.doLoopAnimation = false; JackpotWinGraphicAnim.StartAnimation(); }
+    if (JackpotWinAmountText) JackpotWinAmountText.rectTransform.localScale = Vector3.zero;
 
-    if (JackpotAmountPanel)
-    {
-      JackpotAmountPanel.transform.localScale = Vector3.one * 0.05f;
-      JackpotAmountPanel.SetActive(true);
-      JackpotAmountPanel.transform.DOScale(Vector3.one, jackpotPanelExpandDuration).SetEase(Ease.OutBack);
-    }
+    yield return new WaitForSeconds(jackpotTextScaleStartDelay);
+
+    if (JackpotWinAmountText) JackpotWinAmountText.rectTransform.DOScale(Vector3.one, jackpotPanelExpandDuration).SetEase(Ease.OutBack);
 
     float jackpotDisplay = 0f;
     if (JackpotWinAmountText)
@@ -1236,10 +1249,11 @@ public class UIManager : MonoBehaviour
 
     yield return new WaitForSeconds(jackpotHoldDuration);
 
-    if (JackpotWinGraphic) JackpotWinGraphic.gameObject.SetActive(false);
-    if (JackpotAmountPanel) JackpotAmountPanel.SetActive(false);
-    if (CashFallingAnim) { CashFallingAnim.StopAnimation(); CashFallingAnim.doLoopAnimation = false; }
-    if (CoinFallingAnim) { CoinFallingAnim.StopAnimation(); CoinFallingAnim.doLoopAnimation = false; }
+    // Old per-tier graphic/falling anim cleanup - kept here in case we need to revert.
+    // if (JackpotWinTierGraphic) JackpotWinTierGraphic.gameObject.SetActive(false);
+    // if (CashFallingAnim) { CashFallingAnim.StopAnimation(); CashFallingAnim.doLoopAnimation = false; }
+    // if (CoinFallingAnim) { CoinFallingAnim.StopAnimation(); CoinFallingAnim.doLoopAnimation = false; }
+    if (JackpotWinGraphic) JackpotWinGraphic.SetActive(false);
     if (JackpotWinSequencePanel) JackpotWinSequencePanel.SetActive(false);
     if (FallingJackpotRT) FallingJackpotRT.gameObject.SetActive(false);
     if (JackpotPickedObject) JackpotPickedObject.SetActive(false);
@@ -1272,14 +1286,15 @@ public class UIManager : MonoBehaviour
     if (tier == null) yield break;
 
     if (BonusNameGraphicImage) BonusNameGraphicImage.sprite = GetBonusWinTierSprite(tier);
-    if (BonusWinPanel) BonusWinPanel.localScale = Vector3.zero;
-    if (BonusWinAmountText) BonusWinAmountText.text = "0.000";
+    if (BonusWinAmountText) { BonusWinAmountText.text = "0.000"; BonusWinAmountText.rectTransform.localScale = Vector3.zero; }
     if (BonusWinSequencePanel) BonusWinSequencePanel.SetActive(true);
 
     if (audioManager) audioManager.PlayBigWin();
-    if (BonusWinCoinFallingAnim) { BonusWinCoinFallingAnim.doLoopAnimation = true; BonusWinCoinFallingAnim.StopAnimation(); BonusWinCoinFallingAnim.StartAnimation(); }
+    if (BonusWinGraphicAnim) { BonusWinGraphicAnim.doLoopAnimation = false; BonusWinGraphicAnim.StartAnimation(); }
 
-    if (BonusWinPanel) BonusWinPanel.DOScale(Vector3.one, bonusWinScaleDuration).SetEase(Ease.OutBack);
+    yield return new WaitForSeconds(bonusWinScaleStartDelay);
+
+    if (BonusWinAmountText) BonusWinAmountText.rectTransform.DOScale(Vector3.one, bonusWinScaleDuration).SetEase(Ease.OutBack);
     yield return new WaitForSeconds(bonusWinScaleDuration);
 
     float bonusWinDisplay = 0f;
@@ -1291,7 +1306,6 @@ public class UIManager : MonoBehaviour
 
     yield return new WaitForSeconds(bonusWinHoldDuration);
 
-    if (BonusWinCoinFallingAnim) { BonusWinCoinFallingAnim.StopAnimation(); BonusWinCoinFallingAnim.doLoopAnimation = false; }
     if (BonusWinSequencePanel) BonusWinSequencePanel.SetActive(false);
   }
 

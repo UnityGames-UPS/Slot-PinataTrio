@@ -2146,31 +2146,34 @@ MonoBehaviour:
   JackpotPickedGroup: {fileID: 268375797}
   jackpotTextFadeDuration: 0.4
   jackpotCenterTarget: {x: 0, y: -90}
-  CashFallingAnim: {fileID: 0}
+  JackpotWinGraphic: {fileID: 1112380069}
+  JackpotWinGraphicAnim: {fileID: 1112380073}
+  CashFallingAnim: {fileID: 1112380073}
   CoinFallingAnim: {fileID: 173773591}
-  JackpotWinGraphic: {fileID: 1834199743}
-  JackpotWinGraphicImage: {fileID: 1834199744}
+  JackpotWinTierGraphic: {fileID: 1834199743}
+  JackpotWinTierGraphicImage: {fileID: 1834199744}
   MiniWinSprite: {fileID: 21300000, guid: d7417f9e001a2e649be0ed77fae7481f, type: 3}
   MinorWinSprite: {fileID: 21300000, guid: cb0175d08e1565240ae4332a57c614b1, type: 3}
   MajorWinSprite: {fileID: 21300000, guid: c31ebe4249b91fd4596b450878b3bfc7, type: 3}
   MegaWinSprite: {fileID: 21300000, guid: c7d2b564aaf89984a808bceeb8a6636c, type: 3}
   GrandWinSprite: {fileID: 21300000, guid: d9400e20c603a284c9d17e88be08fce5, type: 3}
   JackpotWinSequencePanel: {fileID: 238673877}
-  JackpotAmountPanel: {fileID: 1112380069}
   JackpotWinAmountText: {fileID: 1574012192}
   jackpotGraphicDropDuration: 1
+  jackpotTextScaleStartDelay: 1.1967
   jackpotPanelExpandDuration: 1.7
   jackpotCountDuration: 2
   jackpotHoldDuration: 2
   coinsLingerDuration: 1
   BonusWinSequencePanel: {fileID: 184334899}
-  BonusWinCoinFallingAnim: {fileID: 1859460815}
+  BonusWinGraphicAnim: {fileID: 678090263}
   BonusWinPanel: {fileID: 678090259}
   BonusNameGraphicImage: {fileID: 1072395474}
   BonusWinAmountText: {fileID: 953563872}
   BigWinTierSprite: {fileID: 21300000, guid: 85bf319bfce6e4f43ad973a18c3e3a5e, type: 3}
   MegaWinTierSprite: {fileID: 21300000, guid: 146cc124eed31ed4597b41f0b5705a37, type: 3}
   SuperWinTierSprite: {fileID: 21300000, guid: 9808c0bf007ee8d4ab2fc2a5b46eb7a6, type: 3}
+  bonusWinScaleStartDelay: 0.5114
   bonusWinScaleDuration: 0.4
   bonusWinCountDuration: 1.5
   bonusWinHoldDuration: 2
@@ -3214,7 +3217,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &173773590
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3443,7 +3446,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &184334900
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11312,7 +11315,7 @@ GameObject:
   - component: {fileID: 678090261}
   - component: {fileID: 678090263}
   m_Layer: 5
-  m_Name: BonusWinPanel
+  m_Name: BonusWinGraphic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11336,8 +11339,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -100}
-  m_SizeDelta: {x: 1250, y: 700}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 2340, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &678090261
 MonoBehaviour:
@@ -11359,7 +11362,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: a6076094161bc2d40a18fe3e532369ab, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 706799bf3b8fe3d4b8b120b203b0df1f, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -11389,14 +11392,59 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d9ae1bf2ec654621a0c3eaff2a909fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ImageAnimation
-  textureArray: []
-  rendererDelegate: {fileID: 0}
+  textureArray:
+  - {fileID: 21300000, guid: ca6ee5c23c78d6e489877333c52764fe, type: 3}
+  - {fileID: 21300000, guid: b6ca35179d9866a4f8ddd50f4ffed383, type: 3}
+  - {fileID: 21300000, guid: 8a53cd946ea2f6c419753dd6d004b7df, type: 3}
+  - {fileID: 21300000, guid: 3a6ea8ee43872ef4fa2d3a3388d95b2a, type: 3}
+  - {fileID: 21300000, guid: d84a8e985dcbc2e4096c21ededa13326, type: 3}
+  - {fileID: 21300000, guid: 5977aea023c432646ae4543534301472, type: 3}
+  - {fileID: 21300000, guid: 76ae017a59d067b478b2b095a73fedc9, type: 3}
+  - {fileID: 21300000, guid: 9e18d47663447144f8565ed38e98dbf4, type: 3}
+  - {fileID: 21300000, guid: bf277c9b1532b064d9c81a779db4c7cc, type: 3}
+  - {fileID: 21300000, guid: 34d405339e0fba247b21f0310a778299, type: 3}
+  - {fileID: 21300000, guid: ccd48d03e4eaf5e4c8e1fbd95dc887f3, type: 3}
+  - {fileID: 21300000, guid: ccd48d03e4eaf5e4c8e1fbd95dc887f3, type: 3}
+  - {fileID: 21300000, guid: 5bcde7331a5e2514cb00c18d3f41e223, type: 3}
+  - {fileID: 21300000, guid: 87e5fb3342e064e489c72b25dd267377, type: 3}
+  - {fileID: 21300000, guid: 59a2e58a651cd9442a70338c857d1670, type: 3}
+  - {fileID: 21300000, guid: 07f0b2bdc3a37154a8e17d966945a9ec, type: 3}
+  - {fileID: 21300000, guid: a4864a3cd0356f748aea05ccbada3bcd, type: 3}
+  - {fileID: 21300000, guid: 49ff2a2c248e3e746bb4a0bc1c815bc1, type: 3}
+  - {fileID: 21300000, guid: d3f4b1a79724e30418fc71d910fc1918, type: 3}
+  - {fileID: 21300000, guid: c4ef76dbd73347c40b4902e55a5f1cbe, type: 3}
+  - {fileID: 21300000, guid: ce2bc842eac7aec44a7c4c7429849038, type: 3}
+  - {fileID: 21300000, guid: 5e0bcf68104eb6747941a30ad91f8270, type: 3}
+  - {fileID: 21300000, guid: b209d6a162f46a141bc4226f04abefcb, type: 3}
+  - {fileID: 21300000, guid: 62fc0479a7474e34c8a0a2cb87e12fc5, type: 3}
+  - {fileID: 21300000, guid: 40a6ecd7ff7197748b4fababd205dd04, type: 3}
+  - {fileID: 21300000, guid: 5455b801827d6e74fab0125071ab343d, type: 3}
+  - {fileID: 21300000, guid: 1f58004c850ec5444a675daa18d85c07, type: 3}
+  - {fileID: 21300000, guid: 7d4e59be9cf75a24d8a9dba16a2b2484, type: 3}
+  - {fileID: 21300000, guid: cd67102ea8a37634380bca336a683c29, type: 3}
+  - {fileID: 21300000, guid: 7ea65012b08c15f4b9eed0443cd81fc4, type: 3}
+  - {fileID: 21300000, guid: ade5ecda447a8e744af6883152eae93d, type: 3}
+  - {fileID: 21300000, guid: ac00ef1ca69de3043867fe4b296cf623, type: 3}
+  - {fileID: 21300000, guid: 24c99ae7d965bb54dad4f8638ab34d1a, type: 3}
+  - {fileID: 21300000, guid: 9187eb22dbe49c84d81f8de8434e52af, type: 3}
+  - {fileID: 21300000, guid: 5f6c43f6d68e7884ea4103321f4971ad, type: 3}
+  - {fileID: 21300000, guid: 26967057b1842a541871cf9bb7cd1cf3, type: 3}
+  - {fileID: 21300000, guid: 9487ac29fb839764794e779a5df01cbb, type: 3}
+  - {fileID: 21300000, guid: e0b94a732d9ceb744bd65d2152568595, type: 3}
+  - {fileID: 21300000, guid: 76e9f042767cf7947864f30f7b2690e5, type: 3}
+  - {fileID: 21300000, guid: db7c2f11e1e2aa547951e840fd2f8903, type: 3}
+  - {fileID: 21300000, guid: c050f3cd013adc34fa561d162951c87f, type: 3}
+  - {fileID: 21300000, guid: 1ad78ea3fc41a7d4ea99ad8ddf03efca, type: 3}
+  - {fileID: 21300000, guid: 714d16a6f9e2fb045bacc2ba35418fa3, type: 3}
+  - {fileID: 21300000, guid: 5e4ba5a726df3a940b32a561eb776db0, type: 3}
+  - {fileID: 21300000, guid: 7c946f894cbf05e4c99e69e701655398, type: 3}
+  rendererDelegate: {fileID: 678090261}
   useSharedMaterial: 1
-  doLoopAnimation: 1
+  doLoopAnimation: 0
   StartOnAwake: 0
   currentAnimationState: 0
   idealFrameRate: 0.041666668
-  AnimationSpeed: 5
+  AnimationSpeed: 22
   delayBetweenLoop: 0
 --- !u!1001 &683276370
 PrefabInstance:
@@ -14551,7 +14599,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -120}
+  m_AnchoredPosition: {x: 0, y: -160}
   m_SizeDelta: {x: 400, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &953563872
@@ -15714,7 +15762,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1033571760
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16726,7 +16774,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1072395473
 RectTransform:
   m_ObjectHideFlags: 0
@@ -17997,7 +18045,7 @@ GameObject:
   - component: {fileID: 1112380071}
   - component: {fileID: 1112380073}
   m_Layer: 5
-  m_Name: JackpotAmountPanel
+  m_Name: JackpotWinGraphic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18020,8 +18068,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -164.049}
-  m_SizeDelta: {x: 1250, y: 210}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1112380071
 MonoBehaviour:
@@ -18043,7 +18091,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -714859252198989353, guid: c478c1ac9dde0ac4d887843964a4e130, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 706799bf3b8fe3d4b8b120b203b0df1f, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -18074,26 +18122,74 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ImageAnimation
   textureArray:
-  - {fileID: 21300000, guid: e210a693df1dc4d4cb60d9b035266fe9, type: 3}
-  - {fileID: 21300000, guid: 91328656acb69074286005dc48341a86, type: 3}
-  - {fileID: 21300000, guid: 27fe6afb33a9a5e4cae783b2ccaf8fce, type: 3}
-  - {fileID: 21300000, guid: 261cbbb97273d8c4e95889359ae717de, type: 3}
-  - {fileID: 21300000, guid: 30826c9f04580284babcbea2d0225d87, type: 3}
-  - {fileID: 21300000, guid: e541db0e71faed44786c3637bdc095e9, type: 3}
-  - {fileID: 21300000, guid: a4f19d195315a164abcd2fda755406bd, type: 3}
-  - {fileID: 21300000, guid: d8e92b1f6370c9d45a6007871c0f9cc4, type: 3}
-  - {fileID: 21300000, guid: be2391733d764094c859de611978302e, type: 3}
-  - {fileID: 21300000, guid: 3026c30d438b02b42bafe3d3aebf8734, type: 3}
-  - {fileID: 21300000, guid: 9de890b97452c7c4ab7e5d55c081e33f, type: 3}
-  - {fileID: 21300000, guid: 445d13d3e238afa4e9d179bc3f49ca9a, type: 3}
-  - {fileID: 21300000, guid: 0f35366d92b68e54cac64c0d541730d9, type: 3}
+  - {fileID: 21300000, guid: 706799bf3b8fe3d4b8b120b203b0df1f, type: 3}
+  - {fileID: 21300000, guid: 7e6c94f8ea4f0dc44a78e0f8fddef3fe, type: 3}
+  - {fileID: 21300000, guid: aed850493a8b0df4fa52536a57b2145a, type: 3}
+  - {fileID: 21300000, guid: 2beabd069d56d444c8cd7756d7187ba3, type: 3}
+  - {fileID: 21300000, guid: 422aed05c50291d4cad021a8f58788c1, type: 3}
+  - {fileID: 21300000, guid: e26f16062e2129949bf60829bae90a59, type: 3}
+  - {fileID: 21300000, guid: 416cb32c9804a3d439fc49b07bd8277f, type: 3}
+  - {fileID: 21300000, guid: 7bfc53681b7d5304c880c85102a5de5d, type: 3}
+  - {fileID: 21300000, guid: 481e7c27c4891834295acce35ccb9557, type: 3}
+  - {fileID: 21300000, guid: 9228114cbfeab1f4d96038b655988e73, type: 3}
+  - {fileID: 21300000, guid: 0056b1e3cc33eeb48b8a2d28d79c7296, type: 3}
+  - {fileID: 21300000, guid: de372fc2303ab1240bae38cca6157fbe, type: 3}
+  - {fileID: 21300000, guid: 955f8f093f0f87e40a166f18193f5215, type: 3}
+  - {fileID: 21300000, guid: 5882eb721f002424f9745f7eb99d960e, type: 3}
+  - {fileID: 21300000, guid: 5b894f3d07e6fe1428e972c6ef747ab4, type: 3}
+  - {fileID: 21300000, guid: 4386c934994e51445869d9c8c42ed1bb, type: 3}
+  - {fileID: 21300000, guid: ea630887f8dc7d54a8abd5721e07a064, type: 3}
+  - {fileID: 21300000, guid: bc906c31c12bebf4086871e956c1f2e8, type: 3}
+  - {fileID: 21300000, guid: b63ca5718186dfd41ac3eb11b1c05b80, type: 3}
+  - {fileID: 21300000, guid: d06317256190d214b832e2807aeed609, type: 3}
+  - {fileID: 21300000, guid: 698bd9e6badccf24cbd9501d3a22cf1f, type: 3}
+  - {fileID: 21300000, guid: c300ebd4e32f42346a2e28b6fdc50477, type: 3}
+  - {fileID: 21300000, guid: 14f9d56afd54f054f98d091c4be3bf9b, type: 3}
+  - {fileID: 21300000, guid: 86bfcbb14c8fa484b81c927b620950e5, type: 3}
+  - {fileID: 21300000, guid: 3fe82f2e8acf862478cbe1b4bd3c2aca, type: 3}
+  - {fileID: 21300000, guid: c2bccbe888b1e9745a9919e057162a50, type: 3}
+  - {fileID: 21300000, guid: 4a9d69e9c78ef9f4d9df34e58fbd1350, type: 3}
+  - {fileID: 21300000, guid: 9cdf46b89eba6304d8b70e26ad996dd9, type: 3}
+  - {fileID: 21300000, guid: fce9df02182d9ab4cacecab1bbc2d593, type: 3}
+  - {fileID: 21300000, guid: 6d9baa40fc8ef8d42880b23cd599c24a, type: 3}
+  - {fileID: 21300000, guid: 34c02d8e96c14264ba9ba7e1c9813a29, type: 3}
+  - {fileID: 21300000, guid: 5534460b346ff05488eec951b7e6d14f, type: 3}
+  - {fileID: 21300000, guid: 3e99654b658fa5248b8465707b4c0915, type: 3}
+  - {fileID: 21300000, guid: d05966e5fc857e848b07aed6c7262888, type: 3}
+  - {fileID: 21300000, guid: a9433b552d7aceb48852d9f59c0261c1, type: 3}
+  - {fileID: 21300000, guid: 4362e07bdd757354fb3487f1b3c15697, type: 3}
+  - {fileID: 21300000, guid: 706fce1f123418449862e0f744796d24, type: 3}
+  - {fileID: 21300000, guid: a490fcb9341446549b69db93fa16e71f, type: 3}
+  - {fileID: 21300000, guid: c46a29e7980f7484ebe8c665211b0141, type: 3}
+  - {fileID: 21300000, guid: f1bbc144a1a706d4cb6145a3befc3d85, type: 3}
+  - {fileID: 21300000, guid: a4f97c6a7ed57ef4cb266ede860996a4, type: 3}
+  - {fileID: 21300000, guid: 4750e384aec9dd84ea22da47792b6893, type: 3}
+  - {fileID: 21300000, guid: 63460b7771418b94f80513ca07a3e4cd, type: 3}
+  - {fileID: 21300000, guid: 2ec42f56a319d514a9101e4d8dcd20f8, type: 3}
+  - {fileID: 21300000, guid: 52b38ce9185cd18489fda8d499d1dcbe, type: 3}
+  - {fileID: 21300000, guid: 8e42ab8d6a25ed041ad060b7014c37c9, type: 3}
+  - {fileID: 21300000, guid: f8deff5d29b062447a1ad1e3eb123e34, type: 3}
+  - {fileID: 21300000, guid: 02440008bf3e53f499161c6ef4dc23a4, type: 3}
+  - {fileID: 21300000, guid: 492e534aa9e9b73429e9409fbfeef4bb, type: 3}
+  - {fileID: 21300000, guid: e8a137e53dceec143835932a7dfce6e2, type: 3}
+  - {fileID: 21300000, guid: 6f35659973a991146b764981a6b83d13, type: 3}
+  - {fileID: 21300000, guid: c1d6c96efa6462147bab987691a11756, type: 3}
+  - {fileID: 21300000, guid: c7b75ef8d7507f446ba9b184ddb8428c, type: 3}
+  - {fileID: 21300000, guid: e89a67fcae9898441be0e0b226335b6a, type: 3}
+  - {fileID: 21300000, guid: b7cf9534c6f1e2a45910654e4066f003, type: 3}
+  - {fileID: 21300000, guid: 7703f6c46eec8c243935edf2b1363db4, type: 3}
+  - {fileID: 21300000, guid: ae375b59f56d9b54882b05ac1f3f6abb, type: 3}
+  - {fileID: 21300000, guid: 1057729f37cd2c0489cda16634ccfe11, type: 3}
+  - {fileID: 21300000, guid: 9f26e9137e52ba241be66abca1d30bbf, type: 3}
+  - {fileID: 21300000, guid: 516cdb480b14b6841b674438dea4ee35, type: 3}
+  - {fileID: 21300000, guid: 8ca28a691346b1c41896cdadaf3b31be, type: 3}
   rendererDelegate: {fileID: 1112380071}
   useSharedMaterial: 1
-  doLoopAnimation: 1
-  StartOnAwake: 0
+  doLoopAnimation: 0
+  StartOnAwake: 1
   currentAnimationState: 0
   idealFrameRate: 0.041666668
-  AnimationSpeed: 5
+  AnimationSpeed: 44.6
   delayBetweenLoop: 0
 --- !u!1 &1113060644
 GameObject:
@@ -25025,7 +25121,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -175}
   m_SizeDelta: {x: 400, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1574012192
@@ -29547,12 +29643,12 @@ GameObject:
   - component: {fileID: 1834199745}
   - component: {fileID: 1834199744}
   m_Layer: 5
-  m_Name: JackpotWinGraphic
+  m_Name: JackpotWinTierGraphic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1834199743
 RectTransform:
   m_ObjectHideFlags: 0
@@ -29970,48 +30066,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d9ae1bf2ec654621a0c3eaff2a909fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ImageAnimation
-  textureArray:
-  - {fileID: 21300000, guid: 7d055199c46f8114e8300c089fbbbf19, type: 3}
-  - {fileID: 21300000, guid: 51ecf67c25392474e9c118367567da00, type: 3}
-  - {fileID: 21300000, guid: 33f6d09f6f4e75b43bdfe20d03779ba8, type: 3}
-  - {fileID: 21300000, guid: 71ebe2ce012e62c46b4c7ea0754d3da1, type: 3}
-  - {fileID: 21300000, guid: c1b589a32b88ad044a76dea2f7f6002c, type: 3}
-  - {fileID: 21300000, guid: bbdf19e3c5b3bb644b2d21a6043a2300, type: 3}
-  - {fileID: 21300000, guid: 5b0fe6e079157e9419cd31942c849b0c, type: 3}
-  - {fileID: 21300000, guid: 2d11f8a35cea14844be46088e9aaa1ce, type: 3}
-  - {fileID: 21300000, guid: c575e6aad31608e4f81ff76f49362d16, type: 3}
-  - {fileID: 21300000, guid: 44ae599a5dcd2244cb47e48e298a43f6, type: 3}
-  - {fileID: 21300000, guid: bc5fa01e24366854da6509b04dc0e1b9, type: 3}
-  - {fileID: 21300000, guid: 1d96386b321603d449f455abd0624e6f, type: 3}
-  - {fileID: 21300000, guid: e5db6afc66fd43945bb470f41cd0279c, type: 3}
-  - {fileID: 21300000, guid: 28a6a5cee11c4e14f9752a5b2c5ef521, type: 3}
-  - {fileID: 21300000, guid: 6f9bc9d80c1c9bb4ca5e4631f8c6a65b, type: 3}
-  - {fileID: 21300000, guid: 1e6f7dd151aba7c4990e64b1eb293dbe, type: 3}
-  - {fileID: 21300000, guid: 3dd50ca25886f9e4eacc122f50a05914, type: 3}
-  - {fileID: 21300000, guid: 0e87e10a1c65172439f88d5d12220365, type: 3}
-  - {fileID: 21300000, guid: eb86bc6d09742bd468fc47530b319602, type: 3}
-  - {fileID: 21300000, guid: 5a3e021b088419f4595265572ee618a1, type: 3}
-  - {fileID: 21300000, guid: 393ca7c778a26fe4394e91d7fa0da483, type: 3}
-  - {fileID: 21300000, guid: 132ffc46c6f97b34c8bf1da8e344fa04, type: 3}
-  - {fileID: 21300000, guid: 916cc2d03ba92354b81c01b3eb5aca30, type: 3}
-  - {fileID: 21300000, guid: b6b6ba3307858d746b3d4c62e8dfc26e, type: 3}
-  - {fileID: 21300000, guid: 9fb7d1b3881dc314c85000fc19837d5d, type: 3}
-  - {fileID: 21300000, guid: 30118d4a755460a488e470b3745b95b9, type: 3}
-  - {fileID: 21300000, guid: 8efed1a1f657b39438aa861c3a29bdc0, type: 3}
-  - {fileID: 21300000, guid: 1382b149fd61fff4f9859ed0da8ef07a, type: 3}
-  - {fileID: 21300000, guid: 4bfd0e2e1ecd1fd4bac903049fbe9c9a, type: 3}
-  - {fileID: 21300000, guid: ee61bb8b9729c5a4a89440f0817f26a5, type: 3}
-  - {fileID: 21300000, guid: 5bf892e73c2a16f409259b043dc46e05, type: 3}
-  - {fileID: 21300000, guid: fd82848f09876e844954ca0daa947f98, type: 3}
-  - {fileID: 21300000, guid: b63178bbd67809645a0568569cc5700d, type: 3}
-  - {fileID: 21300000, guid: b5814f2ea036fb141b9d305591173b1c, type: 3}
-  - {fileID: 21300000, guid: 680de1d1b8e38a844912b7942eb1a44b, type: 3}
-  - {fileID: 21300000, guid: 6f99cee2f444f134b91e99e9cbbdfe44, type: 3}
-  - {fileID: 21300000, guid: 7a78d0b2a81d8314a886174b3147529e, type: 3}
+  textureArray: []
   rendererDelegate: {fileID: 1859460816}
   useSharedMaterial: 1
   doLoopAnimation: 0
-  StartOnAwake: 1
+  StartOnAwake: 0
   currentAnimationState: 0
   idealFrameRate: 0.041666668
   AnimationSpeed: 12
