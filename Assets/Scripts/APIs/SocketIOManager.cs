@@ -340,7 +340,7 @@ private void OnError(Error err)
     {
       case "initData":
         {
-          Debug.Log("Fourth Build Confirmation");
+          Debug.Log("OC Fix Build");
           InitialData = myData.gameData;
           UIData = myData.uiData;
           PlayerData = myData.player;
