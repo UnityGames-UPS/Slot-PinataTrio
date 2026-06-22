@@ -167,10 +167,10 @@ public class UIManager : MonoBehaviour
   [SerializeField] private GameObject JackpotWinSequencePanel;
   [SerializeField] private TMP_Text JackpotWinAmountText;
   [SerializeField] private float jackpotGraphicDropDuration = 0.6f;
-  [SerializeField] private float jackpotTextScaleStartDelay = 1.1967f; // time of frame 21 in JackpotWinGraphicAnim, at its tuned AnimationSpeed
-  [SerializeField] private float jackpotPanelExpandDuration = 0.4f; // ~time from frame 21 to frame 28
+  [SerializeField] private float jackpotTextScaleStartDelay = 1.8639f; // time of frame 22 in JackpotWinGraphicAnim, at its tuned AnimationSpeed
+  [SerializeField] private float jackpotPanelExpandDuration = 0.4236f; // ~time from frame 22 to frame 27
   [SerializeField] private float jackpotCountDuration = 1.5f;
-  [SerializeField] private float jackpotHoldDuration = 2f;
+  [SerializeField] private float jackpotHoldDuration = 0.1361f; // reduced to offset jackpotTextScaleStartDelay so total on-screen time stays unchanged
   [SerializeField] private float coinsLingerDuration = 1f;
 
   internal bool PickJackpotSelected = false;
@@ -187,10 +187,10 @@ public class UIManager : MonoBehaviour
   [SerializeField] private Sprite BigWinTierSprite;
   [SerializeField] private Sprite MegaWinTierSprite;
   [SerializeField] private Sprite SuperWinTierSprite;
-  [SerializeField] private float bonusWinScaleStartDelay = 0.5114f; // time of frame 6 in BonusWinGraphicAnim, at its tuned AnimationSpeed
-  [SerializeField] private float bonusWinScaleDuration = 0.5114f; // ~time from frame 6 to frame 12
+  [SerializeField] private float bonusWinScaleStartDelay = 0.5625f; // time of frame 6 in BonusWinGraphicAnim, at its tuned AnimationSpeed
+  [SerializeField] private float bonusWinScaleDuration = 0.5625f; // ~time from frame 6 to frame 12
   [SerializeField] private float bonusWinCountDuration = 1.5f;
-  [SerializeField] private float bonusWinHoldDuration = 2f;
+  [SerializeField] private float bonusWinHoldDuration = 1.275f; // reduced to offset bonusWinScaleStartDelay so total on-screen time stays unchanged
 
   private const double BigWinThreshold = 2;
   private const double MegaWinThreshold = 6;

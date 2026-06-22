@@ -4055,33 +4055,41 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ImageAnimation
   textureArray:
-  - {fileID: 21300000, guid: 7358f61a269d3684a8c0586512ca1a52, type: 3}
-  - {fileID: 21300000, guid: a0851a1e69a3cd341aa4a3affca8a610, type: 3}
-  - {fileID: 21300000, guid: 0cadc4cc267e2694ea1e2fade89817d7, type: 3}
-  - {fileID: 21300000, guid: b77577e87b2f9f4499dcb7f74d3d84d7, type: 3}
-  - {fileID: 21300000, guid: 222d6cdfcd2d6cd4fac47d88fc3b8884, type: 3}
-  - {fileID: 21300000, guid: 5a8527272887e8c49b16626c08c79faf, type: 3}
-  - {fileID: 21300000, guid: 4f44d5337e1e2cb4686e099c83a425f9, type: 3}
-  - {fileID: 21300000, guid: 7da10506a8b31fd4ba3b6f75312ef471, type: 3}
-  - {fileID: 21300000, guid: 2dfd140f1ecdf90448055b43b5034473, type: 3}
-  - {fileID: 21300000, guid: a6525f907963a6b49ad915b2788a7a3f, type: 3}
-  - {fileID: 21300000, guid: 08f6537bb4a86484e846725aaacf764f, type: 3}
-  - {fileID: 21300000, guid: 4cce396e3a500084b976a39a89188072, type: 3}
-  - {fileID: 21300000, guid: 65ab9673c6044c94db4e74979eb5e7db, type: 3}
-  - {fileID: 21300000, guid: f5d96285b3a9c394daa29b90c8efcc88, type: 3}
-  - {fileID: 21300000, guid: 2e5ba02eed6f8c14391d12f2dfe0259b, type: 3}
-  - {fileID: 21300000, guid: 4419d55c8c1d6074ebf6b1b4c1f0e23c, type: 3}
-  - {fileID: 21300000, guid: efe9b48235fcceb46b2380baefd0c371, type: 3}
-  - {fileID: 21300000, guid: b1386d35072a20a4f801573d63eb5375, type: 3}
-  - {fileID: 21300000, guid: a175ad64d939bca41a9f0eeeebc526ca, type: 3}
-  - {fileID: 21300000, guid: fb3393ef18c225a40b9d82b5af88b5dc, type: 3}
+  - {fileID: 21300000, guid: 4cf5c1c3c6c9f594c8f25dcbb2b35b39, type: 3}
+  - {fileID: 21300000, guid: 137ad61144ae4c943b957a78d8323172, type: 3}
+  - {fileID: 21300000, guid: ff6c28c57397116468d1dcef94e64d1f, type: 3}
+  - {fileID: 21300000, guid: 6e4b37266ef72154c904a2ab9ff42b09, type: 3}
+  - {fileID: 21300000, guid: 08fe756fd7062f74a8358bce15757607, type: 3}
+  - {fileID: 21300000, guid: 7b146db078d052b49b5afb29e2669414, type: 3}
+  - {fileID: 21300000, guid: 73a44f168ee5cd1479f999ad21d172c1, type: 3}
+  - {fileID: 21300000, guid: a081a8402946bae4f8177398530c63c0, type: 3}
+  - {fileID: 21300000, guid: fc4130193d9ff714aa50caa51885c342, type: 3}
+  - {fileID: 21300000, guid: 52cbf858e54e5654b81b0c77fc87d0ac, type: 3}
+  - {fileID: 21300000, guid: f07e897316d05f442a6beab9cdefc009, type: 3}
+  - {fileID: 21300000, guid: 01640c14131ebca4d83554e44a6fadb7, type: 3}
+  - {fileID: 21300000, guid: 1d842bd366652e84380b99ea01013b2a, type: 3}
+  - {fileID: 21300000, guid: 16ca9348257c571419e1c42987a52327, type: 3}
+  - {fileID: 21300000, guid: e232709d0ff888647b956dfdfc7dec02, type: 3}
+  - {fileID: 21300000, guid: 12f76930db04993429901a1557b25828, type: 3}
+  - {fileID: 21300000, guid: ede33bd9df6e6e64797ba81ba884f5f4, type: 3}
+  - {fileID: 21300000, guid: baf1192fb69b1234996d3d2b1ea0d2f4, type: 3}
+  - {fileID: 21300000, guid: 59def395bc6a95b4a9f97923abcf8a43, type: 3}
+  - {fileID: 21300000, guid: 43ad1da4a47aa6a44acc74afea0dcfb0, type: 3}
+  - {fileID: 21300000, guid: 1b054717ca1623a44b0325396ee5df00, type: 3}
+  - {fileID: 21300000, guid: 3c8edab83ee19b6489984ced9022d8cb, type: 3}
+  - {fileID: 21300000, guid: b6887ad8dced9364296e890e9ec7b813, type: 3}
+  - {fileID: 21300000, guid: 6f1b1f826ed459c4cbbd318ea3dc569b, type: 3}
+  - {fileID: 21300000, guid: 18a8e0b1f8f1cfd438721de95a1a0d88, type: 3}
+  - {fileID: 21300000, guid: 613574330eb716b4ea77daae2191f98b, type: 3}
+  - {fileID: 21300000, guid: 5538462af7e089d4d9aa7e0f84a6ec70, type: 3}
+  - {fileID: 21300000, guid: ff8c9e0d9361f3e429b51c3c4ffbeefc, type: 3}
   rendererDelegate: {fileID: 228852818}
   useSharedMaterial: 1
   doLoopAnimation: 0
   StartOnAwake: 1
   currentAnimationState: 0
   idealFrameRate: 0.041666668
-  AnimationSpeed: 7
+  AnimationSpeed: 14
   delayBetweenLoop: 0
 --- !u!1 &232207247
 GameObject:
@@ -11444,7 +11452,7 @@ MonoBehaviour:
   StartOnAwake: 0
   currentAnimationState: 0
   idealFrameRate: 0.041666668
-  AnimationSpeed: 22
+  AnimationSpeed: 20
   delayBetweenLoop: 0
 --- !u!1001 &683276370
 PrefabInstance:
@@ -13416,7 +13424,7 @@ PrefabInstance:
       objectReference: {fileID: 1728521618}
     - target: {fileID: 7610637853776029503, guid: fbbc9264dc50de44589243147c5ea3dc, type: 3}
       propertyPath: testToken
-      value: b39173a332544000ba711419e5fedf31
+      value: 536fc70e418b473bb8ac953999896757
       objectReference: {fileID: 0}
     - target: {fileID: 7610637853776029503, guid: fbbc9264dc50de44589243147c5ea3dc, type: 3}
       propertyPath: uiManager
@@ -14925,7 +14933,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 300, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &968163786
 MonoBehaviour:
@@ -18189,7 +18197,7 @@ MonoBehaviour:
   StartOnAwake: 1
   currentAnimationState: 0
   idealFrameRate: 0.041666668
-  AnimationSpeed: 44.6
+  AnimationSpeed: 30
   delayBetweenLoop: 0
 --- !u!1 &1113060644
 GameObject:
