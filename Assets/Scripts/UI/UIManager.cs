@@ -261,6 +261,7 @@ public class UIManager : MonoBehaviour
   [SerializeField] private GameObject SpinWinPanel;
   [SerializeField] private TMP_Text SpinWinText;
   [SerializeField] private GameObject SpinWinCoinSplash;
+  [SerializeField] private ImageAnimation SpinWinCoinSplashAnim;
   [SerializeField] private float spinWinCountDuration = 1f;
 
   [Header("Disconnection Popup")]
@@ -635,6 +636,7 @@ public class UIManager : MonoBehaviour
       SpinWinPanel.transform.DOScale(1.2f, spinWinCountDuration).SetEase(Ease.OutQuad);
     }
     if (SpinWinCoinSplash) SpinWinCoinSplash.SetActive(true);
+    if (SpinWinCoinSplashAnim) { SpinWinCoinSplashAnim.doLoopAnimation = false; SpinWinCoinSplashAnim.StartAnimation(); }
     float display = 0f;
     if (TotalWin_text) TotalWin_text.text = "0.000";
     if (TotalWin_text) DOTween.To(() => display, v => { TotalWin_text.text = v.ToString("F3"); }, (float)winAmount, spinWinCountDuration);

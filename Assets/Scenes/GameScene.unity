@@ -891,7 +891,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -254.9}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &78875509
@@ -2207,6 +2207,7 @@ MonoBehaviour:
   SpinWinPanel: {fileID: 65884113}
   SpinWinText: {fileID: 968163786}
   SpinWinCoinSplash: {fileID: 228852816}
+  SpinWinCoinSplashAnim: {fileID: 228852820}
   spinWinCountDuration: 1
   CloseDisconnect_Button: {fileID: 364195169}
   DisconnectPopup_Object: {fileID: 602194514}
@@ -4002,7 +4003,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 200}
+  m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &228852818
 MonoBehaviour:
@@ -4024,7 +4025,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7358f61a269d3684a8c0586512ca1a52, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4cf5c1c3c6c9f594c8f25dcbb2b35b39, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -4089,7 +4090,7 @@ MonoBehaviour:
   StartOnAwake: 1
   currentAnimationState: 0
   idealFrameRate: 0.041666668
-  AnimationSpeed: 14
+  AnimationSpeed: 28
   delayBetweenLoop: 0
 --- !u!1 &232207247
 GameObject:
@@ -14932,7 +14933,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -254.9}
   m_SizeDelta: {x: 300, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &968163786
