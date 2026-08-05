@@ -214,25 +214,26 @@ public class AudioManager : MonoBehaviour
 
     // ── Focus Handling ────────────────────────────────────────────────────────
 
+    private bool isForceMuted = false;
+
+    internal void SetMuteAll(bool forceMute)
+    {
+        if (forceMute == isForceMuted) return;
+        isForceMuted = forceMute;
+        if (bgMusicSource) bgMusicSource.mute = forceMute;
+        if (bonusBgSource) bonusBgSource.mute = forceMute;
+        if (spinSource) spinSource.mute = forceMute;
+        if (sfxSource) sfxSource.mute = forceMute;
+        if (overlapSource) overlapSource.mute = forceMute;
+    }
+
     private void OnApplicationFocus(bool hasFocus)
     {
-        HandleFocus(hasFocus);
+        SetMuteAll(!hasFocus);
     }
 
     private void OnApplicationPause(bool isPaused)
     {
-        HandleFocus(!isPaused);
-    }
-
-    private void HandleFocus(bool hasFocus)
-    {
-        if (!hasFocus)
-        {
-            AudioListener.volume = 0f;
-        }
-        else
-        {
-            AudioListener.volume = 1f;
-        }
+        SetMuteAll(isPaused);
     }
 }

@@ -404,6 +404,17 @@ public class SlotBehaviour : MonoBehaviour
     uiManager.AnimateBalanceDeduction(currentBalance, currentBalance - currentTotalBet);
   }
 
+  internal void UpdateBalanceDisplay(double newBalance)
+  {
+    currentBalance = newBalance;
+    uiManager.UpdateBalance(newBalance);
+    if (IsAutoSpin && currentBalance < currentTotalBet)
+    {
+      StopAutoSpin();
+      uiManager.LowBalPopup();
+    }
+  }
+
   private IEnumerator TweenRoutine()
   {
     Debug.Log($"[Spin] TweenRoutine start (isInFreeSpin={_isInFreeSpin}, isFeatureActive={_isFeatureActive}, isAutoSpin={IsAutoSpin})");

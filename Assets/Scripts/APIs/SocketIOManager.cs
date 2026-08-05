@@ -12,6 +12,7 @@ public class SocketIOManager : MonoBehaviour
   [SerializeField] private SlotBehaviour slotManager;
   [SerializeField] private UIManager uiManager;
   [SerializeField] internal JSFunctCalls JSManager;
+  [SerializeField] private AudioManager audioManager;
   [SerializeField] private string testToken;
   internal GameData InitialData = null;
   internal UiData UIData = null;
@@ -44,10 +45,23 @@ public class SocketIOManager : MonoBehaviour
   private int missedPongs = 0;
   private const int MaxMissedPongs = 15;
   private Coroutine PingRoutine; //Back2 end
+
+  private bool hasFocus = true;
+  private float focusLostTime = 0f;
+  private Coroutine focusCheckRoutine;
+  private const float maxBackgroundTime = 60f;
+  private bool isExiting = false;
+
   private void Awake()
   {
     //Debug.unityLogger.logEnabled = false;
     SetInit = false;
+    if (JSManager != null) JSManager.RegisterVisibilityListener(gameObject.name);
+  }
+
+  private void OnDestroy()
+  {
+    isExiting = true;
   }
 
   private void Start()
@@ -156,6 +170,7 @@ public class SocketIOManager : MonoBehaviour
     gameSocket.On<string>("alert", OnSocketAlert);
     gameSocket.On<string>("pong", OnPongReceived); //Back2 Start
     gameSocket.On<string>("AnotherDevice", OnSocketOtherDevice);
+    gameSocket.On<string>("balance:sync", OnBalanceSync);
 
     manager.Open(); //Back2 Start
   }
@@ -186,6 +201,15 @@ public class SocketIOManager : MonoBehaviour
     uiManager.DisconnectionPopup();
   } //Back2 end
 
+  private void OnBalanceSync(string data)
+  {
+    BalanceSyncPayload syncPayload = JsonConvert.DeserializeObject<BalanceSyncPayload>(data);
+    if (syncPayload == null) return;
+    if (PlayerData == null) PlayerData = new Player();
+    PlayerData.balance = syncPayload.balance;
+    if (slotManager != null) slotManager.UpdateBalanceDisplay(syncPayload.balance);
+  }
+
   private void OnPongReceived(string data) //Back2 Start
   {
     //Debug.Log("✅ Received pong from server.");
@@ -199,9 +223,67 @@ public class SocketIOManager : MonoBehaviour
 private void OnError(Error err)
   {
     Debug.LogError("Socket Error Message: " + err);
+    if (!string.IsNullOrEmpty(err?.message) && err.message.Contains("Session expired"))
+    {
+      Debug.LogWarning("Session expired detected");
+      OnDisconnected();
 #if UNITY_WEBGL && !UNITY_EDITOR
-    JSManager.SendCustomMessage("error");
+      JSManager.SendCustomMessage("session_expired");
 #endif
+    }
+    else
+    {
+#if UNITY_WEBGL && !UNITY_EDITOR
+      JSManager.SendCustomMessage("error");
+#endif
+    }
+  }
+
+  public void OnFocusChanged(string value)
+  {
+    bool focused = value == "1";
+    Debug.Log("UNITY FOCUS CHANGED: " + value + " (focused: " + focused + ")");
+    if (audioManager != null) audioManager.SetMuteAll(!focused);
+    HandleFocusChange(focused);
+  }
+
+  internal void HandleFocusChange(bool focus)
+  {
+    hasFocus = focus;
+    if (!focus)
+    {
+      focusLostTime = Time.time;
+      if (focusCheckRoutine == null && !isExiting)
+        focusCheckRoutine = StartCoroutine(FocusTimeoutCheck());
+    }
+    else if (focusCheckRoutine != null)
+    {
+      StopCoroutine(focusCheckRoutine);
+      focusCheckRoutine = null;
+    }
+  }
+
+  private IEnumerator FocusTimeoutCheck()
+  {
+    while (!hasFocus && !isExiting)
+    {
+      if (Time.time - focusLostTime >= maxBackgroundTime)
+      {
+        Debug.LogWarning("[SOCKET] Background timeout — closing connection");
+        isConnected = false;
+        ResetPingRoutine();
+        if (manager != null)
+        {
+          try { manager.Close(); }
+          catch (Exception e) { Debug.LogWarning($"[SOCKET] Focus close error: {e.Message}"); }
+        }
+        uiManager.DisconnectionPopup();
+        focusCheckRoutine = null;
+        yield break;
+      }
+      yield return new WaitForSecondsRealtime(1f);
+    }
+    focusCheckRoutine = null;
   }
 
   void OnResult(string data)
@@ -311,6 +393,7 @@ private void OnError(Error err)
 
   internal IEnumerator CloseSocket() //Back2 Start
   {
+    isExiting = true;
     ResetPingRoutine();
 
     Debug.Log("Closing Socket");
@@ -609,6 +692,12 @@ public class Symbol
 public class Player
 {
   public double balance { get; set; }
+}
+
+[Serializable]
+public class BalanceSyncPayload
+{
+  public double balance;
 }
 
 [Serializable]
