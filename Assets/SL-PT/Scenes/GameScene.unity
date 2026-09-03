@@ -13433,11 +13433,11 @@ PrefabInstance:
       objectReference: {fileID: 117472470}
     - target: {fileID: 7610637853776029503, guid: fbbc9264dc50de44589243147c5ea3dc, type: 3}
       propertyPath: slotManager
-      value:
+      value: 
       objectReference: {fileID: 2073624787}
     - target: {fileID: 7610637853776029503, guid: fbbc9264dc50de44589243147c5ea3dc, type: 3}
       propertyPath: audioManager
-      value:
+      value: 
       objectReference: {fileID: 7884539}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
