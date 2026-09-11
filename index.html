@@ -103,6 +103,7 @@
       });
     };
     document.body.appendChild(script);
+    window.addEventListener('load', resizeCanvas);
   </script>
   <!-- Inbound host messages (TokenReceived) are handled by CustomJsLib.jslib, registered from C#. -->
   <script>
