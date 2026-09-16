@@ -2213,8 +2213,8 @@ MonoBehaviour:
   DisconnectPopup_Object: {fileID: 602194514}
   CloseAD_Button: {fileID: 1951840350}
   ADPopup_Object: {fileID: 495977316}
-  ReconnectingText: {fileID: 345075975}
-  ReconnectingAttemptText: {fileID: 1642044297}
+  ReconnectingText: {fileID: 1642044297}
+  ReconnectingAttemptText: {fileID: 1073639596}
   ReconnectPopup_Object: {fileID: 1611228472}
   LBExit_Button: {fileID: 1238781945}
   LBPopup_Object: {fileID: 1831039501}
@@ -6302,7 +6302,7 @@ GameObject:
   - component: {fileID: 345075976}
   - component: {fileID: 345075975}
   m_Layer: 5
-  m_Name: ReconnectingText
+  m_Name: ConnectionLost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -22924,8 +22924,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 602194515}
   - {fileID: 1611228473}
+  - {fileID: 602194515}
   - {fileID: 495977317}
   - {fileID: 1831039502}
   - {fileID: 2093873939}
