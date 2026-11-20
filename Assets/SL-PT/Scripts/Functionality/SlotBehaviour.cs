@@ -1,68 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
 using UnityEngine.UI;
-using System.Linq;
-using TMPro;
-using System;
-using System.Reflection;
 
+// The round: bet, spin flow, Stop, autospin, the three features and the buttons. The board itself —
+// reels, icons and every animation over them — is SlotView, driven through its internal methods.
+// (Split pass 2 moves this class's contents into GameManager.)
 public class SlotBehaviour : MonoBehaviour
 {
-  // ── TEMP — split pass 1 copy source, removed in step C ─────────────────────────────────────────
-  // The board's fields now live on SlotView. These stay only until Tools > Pinata Trio > Split pass 1
-  // has copied their Inspector values across; nothing in this class reads them any more.
-  [Header("TEMP (pass 1 copy source) - Sprites")]
-  [SerializeField]
-  private Sprite[] myImages;  //images taken initially
-
-  [Header("TEMP (pass 1 copy source) - Slot Images")]
-  [SerializeField]
-  private List<SlotImage> images;
-  [SerializeField]
-  private List<SlotImage> Tempimages;
-  [SerializeField]
-  private List<SlotImage> Animimages;
-
-  [Header("TEMP (pass 1 copy source) - Slots Transforms")]
-  [SerializeField]
-  private Transform[] Slot_Transform;
-
-  [Header("TEMP (pass 1 copy source) - Animated Sprites")]
-  [SerializeField]
-  private Sprite[] Mini_Sprite;
-  [SerializeField]
-  private Sprite[] Minor_Sprite;
-  [SerializeField]
-  private Sprite[] Major_Sprite;
-  [SerializeField]
-  private Sprite[] Mega_Sprite;
-  [SerializeField]
-  private Sprite[] Grand_Sprite;
-  [SerializeField]
-  private Sprite[] GreenPinata_Sprite;
-  [SerializeField]
-  private Sprite[] RedPinata_Sprite;
-  [SerializeField]
-  private Sprite[] BluePinata_Sprite;
-  [SerializeField]
-  private Sprite[] YellowBubble_Sprite;
-  [SerializeField]
-  private Sprite[] PinkBubble_Sprite;
-
-  [Header("TEMP (pass 1 copy source) - Pinata Fly Targets")]
-  [SerializeField] private RectTransform GreenPinataTarget;
-  [SerializeField] private RectTransform RedPinataTarget;
-  [SerializeField] private RectTransform BluePinataTarget;
-  [SerializeField] private float pinataFlyDuration = 0.8f;
-  [SerializeField] private float pinataPeakScale = 1.8f;
-
-  [Header("TEMP (pass 1 copy source) - Reel Geometry")]
-  [SerializeField]
-  private int IconSizeFactor = 160;
-  // ── end TEMP ────────────────────────────────────────────────────────────────────────────────────
-
   [Header("Board")]
   [SerializeField]
   private SlotView slotView;
