@@ -298,6 +298,7 @@ public class SlotBehaviour : MonoBehaviour
         if (IsJackpotSymbol(val)) ShowOverlay(col, row, val);
       }
     }
+    RandomizeOffscreenIcons();
   }
 
   internal void SetInitialUI()
@@ -357,6 +358,7 @@ public class SlotBehaviour : MonoBehaviour
     uiManager.ResetTotalWin();
     uiManager.HideSpinWin();
     HideAllOverlays();
+    RandomizeOffscreenIcons();
     uiManager.ShowTicker();
     tweenroutine = StartCoroutine(TweenRoutine());
   }
@@ -766,14 +768,46 @@ public class SlotBehaviour : MonoBehaviour
     { 7, new Vector2(210f, 210f) },  // grand
   };
 
-  // The orbs stay at 200 with their current art until they move to their animation's first frame.
+  // myImages holds each orb's FIRST animation frame and each jackpot's LAST (the loop wraps from it
+  // to frame 0), so a reel icon and its overlay are the same sprite in the same rect, and a landing
+  // flows straight into the animation. Keep these sizes equal to OverlaySizes for those symbols.
   private static readonly Dictionary<int, Vector2> ReelIconSizes = new Dictionary<int, Vector2>
   {
+    { 0, new Vector2(330f, 330f) },  // yellow orb
+    { 1, new Vector2(330f, 330f) },  // pink orb
     { 3, new Vector2(210f, 210f) },  // mini
     { 4, new Vector2(210f, 210f) },  // minor
     { 5, new Vector2(210f, 210f) },  // major
     { 6, new Vector2(210f, 210f) },  // mega
     { 7, new Vector2(210f, 210f) },  // grand
+  };
+
+  // Orbs rest dark on the reels and light up (untinted overlay) when they animate. 0.702 is measured:
+  // the old yellow_orbs_dark / pink_orb_dark art is exactly 70.2% of the bright art on every channel.
+  // Anything not listed is white, written every time, because reel icons are reused across symbols.
+  private static readonly Color DarkOrbTint = new Color(0.702f, 0.702f, 0.702f, 1f);
+  private static readonly Dictionary<int, Color> ReelIconTints = new Dictionary<int, Color>
+  {
+    { 0, DarkOrbTint },  // yellow orb
+    { 1, DarkOrbTint },  // pink orb
+  };
+
+  // What the off-screen reel icons show while spinning: per reel, each symbol's weight from the
+  // server's own reel config (Config/pinata_config.json, reelsInstance). Blue (2) is left out — it
+  // belongs to the Link Bonus (owner). Mega only sits on reels 1, 3, 5 and Grand on reels 1, 3.
+  private static readonly int[][] OffscreenSymbolIds = new int[][]
+  {
+    new[] { 0, 1, 3, 4, 5, 6, 7, 8, 9, 10 },
+    new[] { 0, 1, 3, 4, 5, 8, 9, 10 },
+    new[] { 0, 1, 3, 4, 5, 6, 7, 8, 9, 10 },
+    new[] { 0, 1, 3, 4, 5, 8, 9, 10 },
+    new[] { 0, 1, 3, 4, 5, 6, 8, 9, 10 },
+  };
+  private static readonly Dictionary<int, int> OffscreenWeights = new Dictionary<int, int>
+  {
+    { 0, 100 }, { 1, 100 },                      // orbs
+    { 3, 1 }, { 4, 1 }, { 5, 1 }, { 6, 1 }, { 7, 1 },  // jackpots
+    { 8, 5 }, { 9, 5 }, { 10, 5 },               // pinatas
   };
 
   // NOT a frame rate: ImageAnimation runs one loop in frames² / (24 x speed) seconds. 19 is what every
@@ -846,12 +880,48 @@ public class SlotBehaviour : MonoBehaviour
     }
   }
 
-  // Writes one reel icon: its sprite and its size, together, every time.
+  // Writes one reel icon: its sprite, size and tint, together, every time.
   private void ApplyReelIcon(Image icon, int symbolId)
   {
     if (icon == null) return;
     if (symbolId >= 0 && symbolId < myImages.Length) icon.sprite = myImages[symbolId];
     icon.rectTransform.sizeDelta = ReelIconSizes.TryGetValue(symbolId, out Vector2 size) ? size : DefaultCellSize;
+    icon.color = ReelIconTints.TryGetValue(symbolId, out Color tint) ? tint : Color.white;
+  }
+
+  // Gives every reel icon outside the visible rows a weighted random symbol, through ApplyReelIcon so
+  // it gets the same sprite, size and tint as a landed one. The three visible icons are skipped: the
+  // board must not change before the reels move. Called at game start and at every spin start.
+  private void RandomizeOffscreenIcons()
+  {
+    for (int col = 0; col < Slot_Transform.Length && col < OffscreenSymbolIds.Length; col++)
+    {
+      Transform strip = Slot_Transform[col];
+      if (strip == null) continue;
+      List<Image> visible = col < Tempimages.Count ? Tempimages[col].slotImages : null;
+
+      for (int i = 0; i < strip.childCount; i++)
+      {
+        Image icon = strip.GetChild(i).GetComponent<Image>();
+        if (icon == null || (visible != null && visible.Contains(icon))) continue;
+        ApplyReelIcon(icon, PickOffscreenSymbol(col));
+      }
+    }
+  }
+
+  private static int PickOffscreenSymbol(int col)
+  {
+    int[] ids = OffscreenSymbolIds[col];
+    int total = 0;
+    foreach (int id in ids) total += OffscreenWeights[id];
+
+    int roll = UnityEngine.Random.Range(0, total);
+    foreach (int id in ids)
+    {
+      roll -= OffscreenWeights[id];
+      if (roll < 0) return id;
+    }
+    return ids[0];
   }
 
   // The one way an overlay cell comes on. Returns whether the cell is now showing.
