@@ -75,3 +75,7 @@ crashlytics-build.properties
 # Claude Code
 .claude/
 Assets/Scripts/.claude/
+
+# Context docs, not versioned
+/Assets/SL-PT/Scripts/docs/
+/Assets/SL-PT/Scripts/docs.meta
