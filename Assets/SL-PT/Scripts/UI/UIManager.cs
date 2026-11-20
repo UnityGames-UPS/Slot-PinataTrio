@@ -306,7 +306,7 @@ public class UIManager : MonoBehaviour
   [SerializeField] private Button Home_Button;
 
   [SerializeField]
-  private SlotBehaviour slotManager;
+  private GameManager gameManager;
 
   private CanvasGroup _payoutsCanvasGroup;
   private Tween _balanceTween;
@@ -540,7 +540,7 @@ public class UIManager : MonoBehaviour
     {
       isExit = true;
       if (audioManager) audioManager.PlayButton();
-      slotManager.CallCloseSocket();
+      gameManager.CallCloseSocket();
     }
   }
 

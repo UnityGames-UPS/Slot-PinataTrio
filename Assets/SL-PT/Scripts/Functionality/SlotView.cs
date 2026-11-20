@@ -7,9 +7,9 @@ using DG.Tweening;
 using TMPro;
 
 // The board: the five reel strips, the icons on them, and every animation that plays over them.
-// It knows nothing about rounds, bets or features. SlotBehaviour (GameManager after pass 2 of the
-// split) drives it through the internal methods in "Board API" and hands it each spin's result
-// through SetResult. The board never reads the server's data itself.
+// It knows nothing about rounds, bets or features. GameManager drives it through the internal
+// methods in "Board API" and hands it each spin's result through SetResult. The board never reads
+// the server's data itself.
 public class SlotView : MonoBehaviour
 {
   [Header("Sprites")]

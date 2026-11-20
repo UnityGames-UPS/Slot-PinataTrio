@@ -9,7 +9,7 @@ using DG.Tweening;
 
 public class SocketIOManager : MonoBehaviour
 {
-  [SerializeField] private SlotBehaviour slotManager;
+  [SerializeField] private GameManager gameManager;
   [SerializeField] private UIManager uiManager;
   [SerializeField] internal JSFunctCalls JSManager;
   [SerializeField] private AudioManager audioManager;
@@ -207,7 +207,7 @@ public class SocketIOManager : MonoBehaviour
     if (syncPayload == null) return;
     if (PlayerData == null) PlayerData = new Player();
     PlayerData.balance = syncPayload.balance;
-    if (slotManager != null) slotManager.UpdateBalanceDisplay(syncPayload.balance);
+    if (gameManager != null) gameManager.UpdateBalanceDisplay(syncPayload.balance);
   }
 
   private void OnPongReceived(string data) //Back2 Start
@@ -472,8 +472,8 @@ private void OnError(Error err)
 
   private void InitialiseGame()
   {
-    slotManager.InitializeMatrix();
-    slotManager.SetInitialUI();
+    gameManager.InitializeMatrix();
+    gameManager.SetInitialUI();
 #if UNITY_WEBGL && !UNITY_EDITOR
     JSManager.SendCustomMessage("OnEnter");
 #endif

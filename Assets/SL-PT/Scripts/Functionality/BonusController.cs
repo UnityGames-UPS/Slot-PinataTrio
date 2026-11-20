@@ -17,7 +17,6 @@ public class BonusController : MonoBehaviour
 
   [SerializeField] private TMP_Text WinAmountText;
   [SerializeField] private GameObject Bonus_Object;
-  [SerializeField] private SlotBehaviour slotManager;
   [SerializeField] private AudioManager _audioManager;
   [SerializeField] private GameObject PopupPanel;
   [SerializeField] private Transform Win_Transform;

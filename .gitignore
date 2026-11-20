@@ -79,7 +79,3 @@ Assets/Scripts/.claude/
 # Context docs, not versioned
 /Assets/SL-PT/Scripts/docs/
 /Assets/SL-PT/Scripts/docs.meta
-
-# One-off editor tools (SlotBehaviour split), not versioned
-/Assets/SL-PT/Scripts/editor/
-/Assets/SL-PT/Scripts/editor.meta
