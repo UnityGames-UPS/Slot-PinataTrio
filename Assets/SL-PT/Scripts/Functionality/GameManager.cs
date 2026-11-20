@@ -46,17 +46,23 @@ public class GameManager : MonoBehaviour
   [SerializeField] private LinkBonusController linkBonusController;
   [SerializeField] private float linkBonusPreSpinGlowDuration = 0.5f;
 
+  // What the round is doing. Every entry point (spin, bet, autospin, the info screen) checks this.
+  // - Idle:     no round running; the buttons are live.
+  // - Spinning: a base-game round — reels, result, landing, wins — for a manual or an autospin spin.
+  // - Feature:  inside HandlePendingFeatures — intros, the pick, the wheel, every free spin and every
+  //             Link Bonus round. A spin run inside a feature (Pick Jackpot's free spins) leaves the
+  //             state alone; TweenRoutine notes that as `featureSpin`.
+  internal enum GameState { Idle, Spinning, Feature }
+  internal GameState CurrentState { get; private set; } = GameState.Idle;
+
+  // Not round state, so kept apart from GameState:
+  internal bool IsAutoSpin = false;                // a mode the player toggles
+  private bool _inputLocked = false;               // the info screen is open
+  private bool stopRequested = false;              // Stop pressed during this spin (fast stop)
+  private bool resumeAutoSpinAfterFeature = false; // a feature parked autospin; resume it after the round
+
   private Coroutine AutoSpinRoutine = null;
   private Coroutine tweenroutine;
-  internal bool IsAutoSpin = false;
-  private bool _isFeatureActive = false;
-  private bool IsSpinning = false;
-  private bool _restoreAutoSpin = false;
-  private bool StopSpinToggle = false;
-  private bool CheckSpinAudio = false;
-  internal bool CheckPopups = false;
-  private bool _isInFreeSpin = false;
-  private bool _inputLocked = false;
   internal int BetCounter = 0;
   private double currentBalance = 0;
   private double currentTotalBet = 0;
@@ -66,7 +72,6 @@ public class GameManager : MonoBehaviour
   [SerializeField] private float naturalStopStagger = 0.2f;
   [SerializeField] private float stopButtonStagger = 0.05f;
   private float spinStartTime;
-  internal bool socketConnected = false;
 
   private void Start()
   {
@@ -103,8 +108,8 @@ public class GameManager : MonoBehaviour
     }
     else
     {
-      if (!IsSpinning) ToggleButtonGrp(true);
-      if (AutoSpin_Button) AutoSpin_Button.interactable = !_isFeatureActive;
+      if (CurrentState == GameState.Idle) ToggleButtonGrp(true);
+      if (AutoSpin_Button) AutoSpin_Button.interactable = CurrentState != GameState.Feature;
     }
   }
 
@@ -113,9 +118,9 @@ public class GameManager : MonoBehaviour
   {
     if (!IsAutoSpin)
     {
-      if (_isFeatureActive || IsSpinning)
+      if (CurrentState != GameState.Idle)
       {
-        Debug.Log($"[AutoSpin] Start blocked (featureActive={_isFeatureActive}, isSpinning={IsSpinning})");
+        Debug.Log($"[AutoSpin] Start blocked (state={CurrentState})");
         return;
       }
       if (currentBalance < currentTotalBet)
@@ -161,7 +166,7 @@ public class GameManager : MonoBehaviour
   {
     while (IsAutoSpin)
     {
-      yield return new WaitUntil(() => !CheckPopups && !IsSpinning && !_inputLocked);
+      yield return new WaitUntil(() => CurrentState == GameState.Idle && !_inputLocked);
       if (currentBalance < currentTotalBet)
       {
         StopAutoSpin();
@@ -170,27 +175,31 @@ public class GameManager : MonoBehaviour
       }
       Debug.Log("[AutoSpin] AutoSpinCoroutine -> StartSlots()");
       StartSlots();
-      yield return new WaitUntil(() => !IsSpinning);
+      // Waits out the whole round, features included. If a feature parked autospin, the round's end
+      // restarts it through AutoSpin(), which stops this coroutine and starts a fresh one.
+      yield return new WaitUntil(() => CurrentState == GameState.Idle);
       yield return new WaitForSeconds(SpinDelay);
     }
-    yield return new WaitUntil(() => !IsSpinning);
+    yield return new WaitUntil(() => CurrentState == GameState.Idle);
     Debug.Log("[AutoSpin] AutoSpinCoroutine exiting");
     ToggleButtonGrp(true);
     if (AutoSpin_Button) AutoSpin_Button.gameObject.SetActive(true);
   }
   #endregion
 
+  // One button: Stop while a base-game round is spinning, Spin when idle. During a feature the button
+  // is disabled anyway, and a press does nothing.
   private void OnSpinButtonPressed()
   {
-    if (IsSpinning)
+    if (CurrentState == GameState.Spinning)
       OnStopSpinPressed();
-    else
+    else if (CurrentState == GameState.Idle)
       StartSlots();
   }
 
   private void OnStopSpinPressed()
   {
-    StopSpinToggle = true;
+    stopRequested = true;
   }
 
   private void MaxBet()
@@ -255,16 +264,23 @@ public class GameManager : MonoBehaviour
   #region SlotSpin
   private void StartSlots()
   {
+    PrepareRound();
+    tweenroutine = StartCoroutine(TweenRoutine());
+  }
+
+  // The UI reset before every spin, base game or free spin.
+  private void PrepareRound()
+  {
     uiManager.ResetTotalWin();
     uiManager.HideSpinWin();
     slotView.PrepareSpin();
     uiManager.ShowTicker();
-    tweenroutine = StartCoroutine(TweenRoutine());
   }
 
-  private void BalanceDeduction()
+  // A spin inside a feature (a free spin) costs nothing.
+  private void BalanceDeduction(bool featureSpin)
   {
-    if (_isInFreeSpin) return;
+    if (featureSpin) return;
     uiManager.AnimateBalanceDeduction(currentBalance, currentBalance - currentTotalBet);
   }
 
@@ -281,8 +297,11 @@ public class GameManager : MonoBehaviour
 
   private IEnumerator TweenRoutine()
   {
-    Debug.Log($"[Spin] TweenRoutine start (isInFreeSpin={_isInFreeSpin}, isFeatureActive={_isFeatureActive}, isAutoSpin={IsAutoSpin})");
-    if (!_isInFreeSpin && currentBalance < currentTotalBet)
+    // A spin started inside a feature (Pick Jackpot's free spins) runs under the feature's state and
+    // leaves it alone. It is free, skips the low-balance check, and skips the end-of-spin wins.
+    bool featureSpin = CurrentState == GameState.Feature;
+    Debug.Log($"[Spin] TweenRoutine start (state={CurrentState}, featureSpin={featureSpin}, isAutoSpin={IsAutoSpin})");
+    if (!featureSpin && currentBalance < currentTotalBet)
     {
       Debug.Log("[Spin] Low balance, aborting TweenRoutine");
       StopAutoSpin();
@@ -291,13 +310,13 @@ public class GameManager : MonoBehaviour
       if (!_inputLocked) ToggleButtonGrp(true);
       yield break;
     }
-    IsSpinning = true;
+    if (!featureSpin) CurrentState = GameState.Spinning;
     if (audioManager) audioManager.PlaySpinLoop();
     spinStartTime = Time.time;
     Spin_Button.GetComponent<Image>().sprite = StopSprite;
     ToggleButtonGrp(false);
     yield return slotView.StartReels();
-    BalanceDeduction();
+    BalanceDeduction(featureSpin);
     SocketManager.AccumulateResult(BetCounter);
     yield return new WaitUntil(() => SocketManager.isResultdone && Time.time - spinStartTime >= minSpinDuration);
 
@@ -305,8 +324,7 @@ public class GameManager : MonoBehaviour
     {
       slotView.CancelSpin();
       Spin_Button.GetComponent<Image>().sprite = SpinSprite;
-      CheckPopups = false;
-      IsSpinning = false;
+      if (!featureSpin) CurrentState = GameState.Idle;
       if (!_inputLocked) ToggleButtonGrp(true);
       yield break;
     }
@@ -315,12 +333,12 @@ public class GameManager : MonoBehaviour
     float stopWindowEnd = Time.time + stopButtonWindow;
     while (Time.time < stopWindowEnd)
     {
-      if (StopSpinToggle) break;
+      if (stopRequested) break;
       yield return null;
     }
-    float stagger = StopSpinToggle ? stopButtonStagger : naturalStopStagger;
+    float stagger = stopRequested ? stopButtonStagger : naturalStopStagger;
     yield return slotView.StopReels(stagger);
-    StopSpinToggle = false;
+    stopRequested = false;
     if (audioManager) audioManager.StopSpinLoop();
     yield return slotView.WaitForLastReel();
     Spin_Button.GetComponent<Image>().sprite = SpinSprite;
@@ -345,23 +363,27 @@ public class GameManager : MonoBehaviour
     }
 
     yield return StartCoroutine(uiManager.ShowSpinWin(SocketManager.ResultData.payload.winAmount));
-    if (!_isInFreeSpin && !_isFeatureActive && !hadPendingFeature)
+    if (!featureSpin && !hadPendingFeature)
     {
       yield return StartCoroutine(CheckAndShowJackpotWin());
       yield return StartCoroutine(uiManager.ShowBonusWinSequence(SocketManager.ResultData.payload.winAmount, currentTotalBet));
     }
 
-    CheckPopups = false;
-    IsSpinning = false;
-    Debug.Log($"[Spin] TweenRoutine end (restoreAutoSpin={_restoreAutoSpin}, isAutoSpin={IsAutoSpin}, isFeatureActive={_isFeatureActive}, inputLocked={_inputLocked})");
-    if (_restoreAutoSpin) { _restoreAutoSpin = false; AutoSpin(); }
+    // Idle first: AutoSpin() refuses to start unless the round is over.
+    if (!featureSpin) CurrentState = GameState.Idle;
+    Debug.Log($"[Spin] TweenRoutine end (state={CurrentState}, featureSpin={featureSpin}, resumeAutoSpin={resumeAutoSpinAfterFeature}, isAutoSpin={IsAutoSpin}, inputLocked={_inputLocked})");
+    if (resumeAutoSpinAfterFeature) { resumeAutoSpinAfterFeature = false; AutoSpin(); }
     if (!_inputLocked) ToggleButtonGrp(true);
   }
   #endregion
 
   #region PendingFeatures
+  // Owns the Feature state for every feature the spin won, from the first intro to the last total.
+  // The previous state is put back at the end (Spinning, so the round finishes normally).
   private IEnumerator HandlePendingFeatures(List<PendingFeature> features)
   {
+    GameState previousState = CurrentState;
+    CurrentState = GameState.Feature;
     bool wasAutoSpinning = IsAutoSpin;
     Debug.Log($"[Feature] HandlePendingFeatures start (wasAutoSpinning={wasAutoSpinning})");
     StopAutoSpin();
@@ -383,16 +405,15 @@ public class GameManager : MonoBehaviour
       }
       uiManager.SetReelFrame("default");
     }
-    _restoreAutoSpin = wasAutoSpinning;
-    Debug.Log($"[Feature] HandlePendingFeatures done, _restoreAutoSpin={_restoreAutoSpin}");
+    resumeAutoSpinAfterFeature = wasAutoSpinning;
+    CurrentState = previousState;
+    Debug.Log($"[Feature] HandlePendingFeatures done (state={CurrentState}, resumeAutoSpin={resumeAutoSpinAfterFeature})");
   }
 
   private IEnumerator HandleWheelBonus(PendingFeature feature)
   {
-    _isFeatureActive = true;
     uiManager.LockFeatureUI(true);
     ToggleButtonGrp(false);
-    CheckPopups = true;
     uiManager.SetupFeaturePinata("wheelBonus");
     StartCoroutine(uiManager.SlideContentDown());
     yield return StartCoroutine(uiManager.PlayFeatureIntro("wheelBonus"));
@@ -422,7 +443,6 @@ public class GameManager : MonoBehaviour
     uiManager.UpdateBalance(SocketManager.ResultData.player.balance);
     currentBalance = SocketManager.PlayerData.balance;
 
-    _isFeatureActive = false;
     uiManager.LockFeatureUI(false);
   }
 
@@ -434,10 +454,8 @@ public class GameManager : MonoBehaviour
 
   private IEnumerator HandleRedPinataPick()
   {
-    _isFeatureActive = true;
     uiManager.LockFeatureUI(true);
     ToggleButtonGrp(false);
-    CheckPopups = true;
     StartCoroutine(SetupRedPinataAfterSlide());
     yield return StartCoroutine(uiManager.PlayFeatureIntro("pickJackpot"));
     if (audioManager) audioManager.PlayBonusBgMusic();
@@ -458,10 +476,8 @@ public class GameManager : MonoBehaviour
 
     yield return StartCoroutine(uiManager.RevealJackpot(goalJackpot));
 
-    _isInFreeSpin = true;
     if (audioManager) audioManager.PlayFreeGameStarted();
     yield return StartCoroutine(FreeSpinLoop());
-    _isInFreeSpin = false;
 
     uiManager.PlayBustedPinataOnce("red");
     double freeSpinTotalWin = SocketManager.ResultData.payload?.winAmount ?? 0;
@@ -469,18 +485,19 @@ public class GameManager : MonoBehaviour
     yield return StartCoroutine(uiManager.ShowBonusWinSequence(freeSpinTotalWin, currentTotalBet));
     if (audioManager) audioManager.StopBonusBgMusic();
     uiManager.CleanupFeaturePinata("pickJackpot");
-    _isFeatureActive = false;
     uiManager.LockFeatureUI(false);
   }
 
+  // Pick Jackpot's free spins. Each is a full TweenRoutine run under the Feature state (so it is free
+  // and leaves the state alone), waited on directly until the server says the round is over.
   private IEnumerator FreeSpinLoop()
   {
     while (true)
     {
       yield return new WaitForSeconds(SpinDelay);
-      Debug.Log("[Feature] FreeSpinLoop -> StartSlots()");
-      StartSlots();
-      yield return new WaitUntil(() => !IsSpinning);
+      Debug.Log("[Feature] FreeSpinLoop -> free spin");
+      PrepareRound();
+      yield return StartCoroutine(TweenRoutine());
 
       Debug.Log($"[Feature] FreeSpinLoop round done, isFreeSpinActive={SocketManager.ResultData.payload.isFreeSpinActive}");
       if (!SocketManager.ResultData.payload.isFreeSpinActive)
@@ -500,9 +517,7 @@ public class GameManager : MonoBehaviour
     double jackpotAmount = jackpotWin.jackpotPayout;
     double totalWin = SocketManager.ResultData.payload.winAmount;
 
-    CheckPopups = true;
     yield return StartCoroutine(uiManager.ShowJackpotWinSequence(tier, jackpotAmount, totalWin));
-    CheckPopups = false;
   }
 
   private IEnumerator HandleLinkBonus(PendingFeature feature)
@@ -511,10 +526,8 @@ public class GameManager : MonoBehaviour
     yield return StartCoroutine(uiManager.PlayFeatureIntro("linkBonus"));
     StartCoroutine(uiManager.SlideContentUp());
     if (audioManager) audioManager.PlayBonusBgMusic();
-    _isFeatureActive = true;
     uiManager.LockFeatureUI(true);
     ToggleButtonGrp(false);
-    CheckPopups = true;
 
     var targetZones = SocketManager.ResultData.payload?.linkBonusTargetZones;
     int initialSpins = SocketManager.ResultData.payload?.freeSpinsRemaining ?? 3;
@@ -524,10 +537,8 @@ public class GameManager : MonoBehaviour
 
     yield return StartCoroutine(linkBonusController.StartLinkBonus(targetZones));
 
-    _isInFreeSpin = true;
     if (audioManager) audioManager.PlayFreeGameStarted();
     yield return StartCoroutine(LinkBonusFreeSpinLoop());
-    _isInFreeSpin = false;
 
     var lbFeature = SocketManager.ResultData.payload?.triggeredFeatures?.Find(f => f.feature == "linkBonus");
     double awardValue = lbFeature?.awardValue ?? 0;
@@ -545,7 +556,6 @@ public class GameManager : MonoBehaviour
     uiManager.UpdateBalance(SocketManager.ResultData.player.balance);
     currentBalance = SocketManager.PlayerData.balance;
 
-    _isFeatureActive = false;
     uiManager.LockFeatureUI(false);
   }
 
@@ -590,10 +600,13 @@ public class GameManager : MonoBehaviour
   }
 
 
+  // The one place the spin and bet buttons are enabled. `toggle` false is the mid-spin case: the bet
+  // buttons go off, and Spin stays live as Stop — except in a feature, where everything is off.
   private void ToggleButtonGrp(bool toggle)
   {
-    bool active = toggle && !_isFeatureActive && !IsAutoSpin;
-    if (Spin_Button) Spin_Button.interactable = toggle ? active : !_isFeatureActive;
+    bool inFeature = CurrentState == GameState.Feature;
+    bool active = toggle && !inFeature && !IsAutoSpin;
+    if (Spin_Button) Spin_Button.interactable = toggle ? active : !inFeature;
     if (MaxBet_Button) MaxBet_Button.interactable = active;
     if (BetMinus_Button) BetMinus_Button.interactable = active;
     if (BetPlus_Button) BetPlus_Button.interactable = active;
