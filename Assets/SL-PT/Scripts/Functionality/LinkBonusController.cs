@@ -12,9 +12,9 @@ public class LinkBonusController : MonoBehaviour
   [Header("Cell Grid")]
   [SerializeField] private LinkBonusCell[] cells;
   [SerializeField] private GameObject LinkBonusGrid;
-  [SerializeField] private SlotBehaviour slotBehaviour;
+  [SerializeField] private SlotView slotView;
 
-  [Header("Symbols — same order as SlotBehaviour myImages")]
+  [Header("Symbols — same order as SlotView myImages")]
   [SerializeField] private Sprite[] symbolSprites;
 
   [Header("Setup Animation")]
@@ -161,8 +161,8 @@ public class LinkBonusController : MonoBehaviour
           bool isJackpot = symbolId >= 3 && symbolId <= 7;
           Sprite displaySprite = (hasPrize || isJackpot) ? GetSprite(symbolId) : GetSprite(2);
 
-          if (isJackpot && slotBehaviour != null)
-            slotBehaviour.PopulateAnimationSprites(cell.CellAnim, symbolId);
+          if (isJackpot && slotView != null)
+            slotView.PopulateAnimationSprites(cell.CellAnim, symbolId);
 
           cell.TriggerFlashPinkGlow();
           cell.StopAt(displaySprite, prizeValue, isJackpot);
