@@ -27,6 +27,16 @@ public class GameManager : MonoBehaviour
   private Sprite SpinSprite;
   [SerializeField]
   private Sprite StopSprite;
+  // The Spin button's state sprites for each face (see SetSpinButtonFace). Code sets them; the
+  // Button's own sprite states in the Inspector are overwritten at Start.
+  [SerializeField]
+  private Sprite SpinPressedSprite;   // PRESSED_btns_GLOW_6
+  [SerializeField]
+  private Sprite StopPressedSprite;   // PRESSED_btns_GLOW_4
+  [SerializeField]
+  private Sprite SpinDisabledSprite;  // btns_DARK_6
+  [SerializeField]
+  private Sprite StopDisabledSprite;  // btns_DARK_4
   [SerializeField]
   private Sprite AutoSpinIdleSprite;
   [SerializeField]
@@ -79,6 +89,7 @@ public class GameManager : MonoBehaviour
 
   if (Spin_Button) Spin_Button.onClick.RemoveAllListeners();
   if (Spin_Button) Spin_Button.onClick.AddListener(OnSpinButtonPressed);
+  SetSpinButtonFace(false);
 
   if (BetPlus_Button) BetPlus_Button.onClick.RemoveAllListeners();
   if (BetPlus_Button) BetPlus_Button.onClick.AddListener(() => ChangeBet(true));
@@ -197,9 +208,31 @@ public class GameManager : MonoBehaviour
       StartSlots();
   }
 
+  // STOP is one press per spin: the button goes dark (dark STOP) and stays off until the round ends.
   private void OnStopSpinPressed()
   {
     stopRequested = true;
+    if (Spin_Button) Spin_Button.interactable = false;
+  }
+
+  // The Spin button has two faces: SPIN when idle, STOP while the reels turn. A Unity Button holds
+  // only one set of state sprites, so they are swapped with the face, and pressed / disabled always
+  // match what the button shows. No hover: highlighted and selected stay empty, so they show the
+  // face itself. The image is set first; assigning spriteState then re-applies the button's current
+  // state, so a face change while disabled shows the right dark sprite at once.
+  private void SetSpinButtonFace(bool showStop)
+  {
+    if (Spin_Button == null) return;
+
+    Image image = Spin_Button.GetComponent<Image>();
+    if (image) image.sprite = showStop ? StopSprite : SpinSprite;
+
+    SpriteState states = Spin_Button.spriteState;
+    states.pressedSprite = showStop ? StopPressedSprite : SpinPressedSprite;
+    states.disabledSprite = showStop ? StopDisabledSprite : SpinDisabledSprite;
+    states.highlightedSprite = null;
+    states.selectedSprite = null;
+    Spin_Button.spriteState = states;
   }
 
   private void MaxBet()
@@ -314,7 +347,7 @@ public class GameManager : MonoBehaviour
     if (!featureSpin) CurrentState = GameState.Spinning;
     if (audioManager) audioManager.PlaySpinLoop();
     spinStartTime = Time.time;
-    Spin_Button.GetComponent<Image>().sprite = StopSprite;
+    SetSpinButtonFace(true);
     ToggleButtonGrp(false);
     yield return slotView.StartReels();
     BalanceDeduction(featureSpin);
@@ -327,7 +360,7 @@ public class GameManager : MonoBehaviour
     if (spin == null || !spin.HasPayload || spin.Matrix == null)
     {
       slotView.CancelSpin();
-      Spin_Button.GetComponent<Image>().sprite = SpinSprite;
+      SetSpinButtonFace(false);
       if (!featureSpin) CurrentState = GameState.Idle;
       if (!_inputLocked) ToggleButtonGrp(true);
       yield break;
@@ -345,7 +378,8 @@ public class GameManager : MonoBehaviour
     stopRequested = false;
     if (audioManager) audioManager.StopSpinLoop();
     yield return slotView.WaitForLastReel();
-    Spin_Button.GetComponent<Image>().sprite = SpinSprite;
+    // Dark SPIN from here until the round is over (count-up, popups, features).
+    SetSpinButtonFace(false);
     if (Spin_Button) Spin_Button.interactable = false;
     yield return slotView.WaitForLandingEffects();
     slotView.ShowJackpotOverlays();

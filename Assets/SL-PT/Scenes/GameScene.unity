@@ -3237,6 +3237,10 @@ MonoBehaviour:
   BetMinus_Button: {fileID: 1420531925}
   SpinSprite: {fileID: -5837608266073338380, guid: d82be21c0f86eb54aadb8b5d1e9e3fe3, type: 3}
   StopSprite: {fileID: 8522716768120736018, guid: d82be21c0f86eb54aadb8b5d1e9e3fe3, type: 3}
+  SpinPressedSprite: {fileID: 8416363877207195326, guid: 3fe10e5abf7426340b71115030dc0148, type: 3}
+  StopPressedSprite: {fileID: 47888883218877337, guid: 3fe10e5abf7426340b71115030dc0148, type: 3}
+  SpinDisabledSprite: {fileID: -7709580045799199164, guid: b42b9dd6b24e11f48bc0865d9e3c959c, type: 3}
+  StopDisabledSprite: {fileID: -6328113749240147886, guid: b42b9dd6b24e11f48bc0865d9e3c959c, type: 3}
   AutoSpinIdleSprite: {fileID: 9020875966068025692, guid: d82be21c0f86eb54aadb8b5d1e9e3fe3, type: 3}
   AutoSpinActiveSprite: {fileID: -1693664698324600153, guid: 3fe10e5abf7426340b71115030dc0148, type: 3}
   audioManager: {fileID: 7884539}
@@ -12592,7 +12596,6 @@ GameObject:
   - component: {fileID: 764743824}
   - component: {fileID: 764743823}
   - component: {fileID: 764743822}
-  - component: {fileID: 764743825}
   m_Layer: 5
   m_Name: SpinButton
   m_TagString: Untagged
@@ -12702,18 +12705,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 764743820}
   m_CullTransparentMesh: 1
---- !u!114 &764743825
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 764743820}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f3cdb2432f1242ab9ba58e3264daa2f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ButtonAnimator
 --- !u!1 &789843089
 GameObject:
   m_ObjectHideFlags: 0
@@ -17412,7 +17403,6 @@ GameObject:
   - component: {fileID: 1079263715}
   - component: {fileID: 1079263714}
   - component: {fileID: 1079263713}
-  - component: {fileID: 1079263716}
   m_Layer: 5
   m_Name: MaxBetButton
   m_TagString: Untagged
@@ -17522,18 +17512,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1079263711}
   m_CullTransparentMesh: 1
---- !u!114 &1079263716
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1079263711}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f3cdb2432f1242ab9ba58e3264daa2f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ButtonAnimator
 --- !u!1 &1080383590
 GameObject:
   m_ObjectHideFlags: 0
@@ -23261,7 +23239,6 @@ GameObject:
   - component: {fileID: 1420531927}
   - component: {fileID: 1420531926}
   - component: {fileID: 1420531925}
-  - component: {fileID: 1420531928}
   m_Layer: 5
   m_Name: ReduceBetButton
   m_TagString: Untagged
@@ -23371,18 +23348,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1420531923}
   m_CullTransparentMesh: 1
---- !u!114 &1420531928
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1420531923}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f3cdb2432f1242ab9ba58e3264daa2f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ButtonAnimator
 --- !u!114 &1438780720 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6521602466046524270, guid: 5e75cc6ecfcea8b47893d43cd558824f, type: 3}
@@ -24278,7 +24243,6 @@ GameObject:
   - component: {fileID: 1498183828}
   - component: {fileID: 1498183827}
   - component: {fileID: 1498183826}
-  - component: {fileID: 1498183829}
   m_Layer: 5
   m_Name: InfoButton
   m_TagString: Untagged
@@ -24388,18 +24352,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1498183824}
   m_CullTransparentMesh: 1
---- !u!114 &1498183829
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1498183824}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f3cdb2432f1242ab9ba58e3264daa2f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ButtonAnimator
 --- !u!1 &1499872603
 GameObject:
   m_ObjectHideFlags: 0
@@ -26190,7 +26142,6 @@ GameObject:
   - component: {fileID: 1630318946}
   - component: {fileID: 1630318945}
   - component: {fileID: 1630318944}
-  - component: {fileID: 1630318947}
   m_Layer: 5
   m_Name: AutoBetButton
   m_TagString: Untagged
@@ -26300,18 +26251,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1630318942}
   m_CullTransparentMesh: 1
---- !u!114 &1630318947
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1630318942}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f3cdb2432f1242ab9ba58e3264daa2f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ButtonAnimator
 --- !u!1 &1634428831
 GameObject:
   m_ObjectHideFlags: 0
@@ -32831,7 +32770,6 @@ GameObject:
   - component: {fileID: 2020818277}
   - component: {fileID: 2020818276}
   - component: {fileID: 2020818275}
-  - component: {fileID: 2020818278}
   m_Layer: 5
   m_Name: IncreaseBetButton
   m_TagString: Untagged
@@ -32941,18 +32879,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2020818273}
   m_CullTransparentMesh: 1
---- !u!114 &2020818278
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2020818273}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f3cdb2432f1242ab9ba58e3264daa2f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ButtonAnimator
 --- !u!1 &2027165473
 GameObject:
   m_ObjectHideFlags: 0
