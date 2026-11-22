@@ -607,9 +607,12 @@ public class SlotView : MonoBehaviour
                          : BluePinataTarget;
     if (target == null) yield break;
 
-    // Sizes it, starts it, and hides the reel icon: the pinata leaves its cell rather than a copy
-    // flying off while the original stays behind.
+    // Sizes it and starts it. ShowOverlay hides the reel icon, as it does for every overlay; for a
+    // pinata it is shown again straight away (owner): the static pinata stays in its cell while the
+    // animated copy flies to the meter.
     if (!ShowOverlay(col, row, colorId)) yield break;
+    Image reelIcon = GetReelIcon(col, row);
+    if (reelIcon) reelIcon.gameObject.SetActive(true);
     if (audioManager) audioManager.PlayBubblePop();
 
     Image animImg = GetOverlayImage(col, row);
@@ -634,7 +637,8 @@ public class SlotView : MonoBehaviour
     animRT.anchoredPosition = overlayHomePos[row, col];
     animRT.localScale = Vector3.one;
 
-    // The reel icon stays hidden: the cell is empty until the next spin.
+    // The copy is gone; the static pinata stays in its cell until the next spin. Marked flown so nothing
+    // later this spin (a coin on the same cell) brings the animated copy back.
     overlayShown[row, col] = false;
     cellFlown[row, col] = true;
   }
