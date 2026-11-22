@@ -43,7 +43,7 @@ public class LinkBonusController : MonoBehaviour
   [SerializeField] private float winFlyDuration = 0.4f;
   [SerializeField] private float winFlyStagger = 0.1f;
 
-  private List<LockedCell> _currentLockedCells = new List<LockedCell>();
+  private List<LinkCell> _currentLockedCells = new List<LinkCell>();
   private Vector2 _spinRemainingAreaOriginalPos;
   private Vector2 _totalWinFrameOriginalPos;
 
@@ -55,12 +55,7 @@ public class LinkBonusController : MonoBehaviour
     return symbolSprites.Length > 2 ? symbolSprites[2] : null;
   }
 
-  private Sprite GetSprite(string symbolId)
-  {
-    return int.TryParse(symbolId, out int id) ? GetSprite(id) : GetSprite(2);
-  }
-
-  public IEnumerator StartLinkBonus(List<LinkBonusZone> targetZones)
+  internal IEnumerator StartLinkBonus(List<LinkZone> targetZones)
   {
     if (SpinRemainingArea) _spinRemainingAreaOriginalPos = SpinRemainingArea.anchoredPosition;
     if (TotalWinFrame) _totalWinFrameOriginalPos = TotalWinFrame.anchoredPosition;
@@ -110,11 +105,11 @@ public class LinkBonusController : MonoBehaviour
     }
   }
 
-  private IEnumerator RevealZone(LinkBonusZone zone)
+  private IEnumerator RevealZone(LinkZone zone)
   {
     if (BlueCircle == null) yield break;
 
-    LinkBonusCell targetCell = GetCell(zone.position[0], zone.position[1]);
+    LinkBonusCell targetCell = GetCell(zone.Row, zone.Col);
     Vector3 centerPos = LinkBonusGridCenter != null ? LinkBonusGridCenter.position : transform.position;
 
     BlueCircle.gameObject.SetActive(true);
@@ -125,7 +120,7 @@ public class LinkBonusController : MonoBehaviour
     yield return BlueCircle.DOScale(Vector3.one, blueCircleRevealDuration).SetEase(Ease.InCubic).WaitForCompletion();
 
     BlueCircle.gameObject.SetActive(false);
-    targetCell.ShowZoneMultiplier(zone.zoneMultiplier);
+    targetCell.ShowZoneMultiplier(zone.Multiplier);
   }
 
   public void ShowPreSpinGlow()
@@ -144,8 +139,10 @@ public class LinkBonusController : MonoBehaviour
       if (!cell.IsLocked) cell.StartSpin();
   }
 
-  public IEnumerator StopCellsSequential(List<List<string>> matrix, List<LockedCell> lockedCells)
+  // matrix is the round's board, already parsed ([3,5], row-major); null if the response had none.
+  internal IEnumerator StopCellsSequential(int[,] matrix, List<LinkCell> lockedCells)
   {
+    if (matrix == null) yield break;
     for (int col = 0; col < 5; col++)
     {
       for (int row = 0; row < 3; row++)
@@ -154,8 +151,8 @@ public class LinkBonusController : MonoBehaviour
 
         if (!cell.IsLocked)
         {
-          int symbolId = int.Parse(matrix[row][col]);
-          double? prizeValue = lockedCells?.Find(c => c.position[0] == row && c.position[1] == col)?.prizeValue;
+          int symbolId = matrix[row, col];
+          double? prizeValue = lockedCells?.Find(c => c.Row == row && c.Col == col)?.Prize;
 
           bool hasPrize = prizeValue.HasValue && prizeValue.Value > 0;
           bool isJackpot = symbolId >= 3 && symbolId <= 7;
@@ -173,20 +170,20 @@ public class LinkBonusController : MonoBehaviour
     }
   }
 
-  public void UpdateLockedCells(List<LockedCell> newLockedCells)
+  internal void UpdateLockedCells(List<LinkCell> newLockedCells)
   {
     if (newLockedCells == null) return;
     foreach (var locked in newLockedCells)
     {
       bool alreadyLocked = _currentLockedCells.Exists(
-        c => c.position[0] == locked.position[0] && c.position[1] == locked.position[1]);
+        c => c.Row == locked.Row && c.Col == locked.Col);
       if (!alreadyLocked)
-        GetCell(locked.position[0], locked.position[1]).Freeze();
+        GetCell(locked.Row, locked.Col).Freeze();
     }
-    _currentLockedCells = new List<LockedCell>(newLockedCells);
+    _currentLockedCells = new List<LinkCell>(newLockedCells);
   }
 
-  public IEnumerator PlayTotalWinSequence(List<LockedCell> allLockedCells, double totalWin)
+  internal IEnumerator PlayTotalWinSequence(List<LinkCell> allLockedCells, double totalWin)
   {
     if (SpinRemainingArea)
     {
@@ -210,12 +207,12 @@ public class LinkBonusController : MonoBehaviour
     {
       foreach (var locked in allLockedCells)
       {
-        LinkBonusCell cell = GetCell(locked.position[0], locked.position[1]);
+        LinkBonusCell cell = GetCell(locked.Row, locked.Col);
 
         GameObject copy = new GameObject("WinFlyCopy");
         copy.transform.SetParent(transform.root, false);
         Image copyImg = copy.AddComponent<Image>();
-        copyImg.sprite = GetSprite(locked.symbolId ?? "2");
+        copyImg.sprite = GetSprite(locked.SymbolId);
         RectTransform copyRT = copy.GetComponent<RectTransform>();
         copyRT.sizeDelta = new Vector2(80f, 80f);
         copyRT.position = cell.CellRect.position;
@@ -223,7 +220,7 @@ public class LinkBonusController : MonoBehaviour
         cell.DimCell();
 
         double startVal = runningTotal;
-        if (locked.prizeValue.HasValue) runningTotal += locked.prizeValue.Value;
+        if (locked.Prize.HasValue) runningTotal += locked.Prize.Value;
         double endVal = runningTotal;
 
         copyRT.DOMove(targetPos, winFlyDuration).SetEase(Ease.InOutQuad).OnComplete(() => Destroy(copy));

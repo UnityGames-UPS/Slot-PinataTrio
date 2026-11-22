@@ -950,14 +950,12 @@ public class UIManager : MonoBehaviour
     }
   }
 
-  internal void InitialiseUI(List<double> bets, List<Symbol> symbols)
+  // jackpotMultipliers: Mini, Minor, Major, Mega, Grand (GameConfig.JackpotMultipliers).
+  internal void InitialiseUI(List<double> bets, double[] jackpotMultipliers)
   {
     betAmounts = bets;
-    foreach (var symbol in symbols)
-    {
-      if (symbol.id >= 3 && symbol.id <= 7 && symbol.multiplier?[0] != null)
-        jackpotMultipliers[symbol.id - 3] = symbol.multiplier[0].Value;
-    }
+    for (int i = 0; i < this.jackpotMultipliers.Length && i < jackpotMultipliers.Length; i++)
+      this.jackpotMultipliers[i] = jackpotMultipliers[i];
     UpdateBetDisplay(betAmounts[0]);
   }
 

@@ -74,7 +74,7 @@ public class SlotView : MonoBehaviour
   // This spin's result, captured once by SetResult before any reel lands, so nothing that draws a
   // landing ever reads the server's data.
   private int[,] currentMatrix;
-  private List<CoinValue> currentCoins;
+  private List<CoinWin> currentCoins;
 
   private int[,] initialMatrix = new int[,]
 {
@@ -130,7 +130,7 @@ public class SlotView : MonoBehaviour
 
   // Takes this spin's result: the row-major symbol matrix and the coin values. Writes the visible
   // reel icons now (the reels are still spinning) and keeps both for the landing.
-  internal void SetResult(int[,] matrix, List<CoinValue> coins)
+  internal void SetResult(int[,] matrix, List<CoinWin> coins)
   {
     currentMatrix = matrix;
     currentCoins = coins;
@@ -554,12 +554,12 @@ public class SlotView : MonoBehaviour
     if (coins == null || col >= Tempimages.Count) return;
     foreach (var coin in coins)
     {
-      if (coin.position[1] != col) continue;
-      int row = coin.position[0];
+      if (coin.Col != col) continue;
+      int row = coin.Row;
       if (row < Tempimages[col].coinValueTexts.Count)
       {
         TMP_Text txt = Tempimages[col].coinValueTexts[row];
-        if (txt) { txt.text = coin.value.ToString("F2"); txt.gameObject.SetActive(true); if (audioManager) audioManager.PlayCoinValueAppear(); }
+        if (txt) { txt.text = coin.Value.ToString("F2"); txt.gameObject.SetActive(true); if (audioManager) audioManager.PlayCoinValueAppear(); }
       }
     }
   }
@@ -587,8 +587,8 @@ public class SlotView : MonoBehaviour
     if (coins == null) return;
     foreach (var coin in coins)
     {
-      if (coin.position[1] != col) continue;
-      int row = coin.position[0];
+      if (coin.Col != col) continue;
+      int row = coin.Row;
       int symbolId = currentMatrix[row, col];
 
       // A symbol with no frames switches nothing on. The reel icon stays, with the coin text it was
@@ -596,7 +596,7 @@ public class SlotView : MonoBehaviour
       if (!ShowOverlay(col, row, symbolId)) continue;
 
       TMP_Text txt = GetCoinText(Animimages, col, row);
-      if (txt) { txt.text = coin.value.ToString("F2"); txt.gameObject.SetActive(true); }
+      if (txt) { txt.text = coin.Value.ToString("F2"); txt.gameObject.SetActive(true); }
     }
   }
 

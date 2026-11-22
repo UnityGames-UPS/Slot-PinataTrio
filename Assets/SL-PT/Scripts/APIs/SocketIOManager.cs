@@ -14,12 +14,12 @@ public class SocketIOManager : MonoBehaviour
   [SerializeField] internal JSFunctCalls JSManager;
   [SerializeField] private AudioManager audioManager;
   [SerializeField] private string testToken;
-  internal GameData InitialData = null;
-  internal UiData UIData = null;
-  internal Features GameFeatures = null;
-  internal MeterCurrentState CurrentMeterState = null;
-  internal ServerResponse ResultData = null;
-  internal Player PlayerData = null;
+  // What the game reads — client models, converted from the server's JSON by GameDataConverter
+  // (Core/GameDataModels.cs). Nothing outside this class and the converter sees a wire model.
+  internal GameConfig Config = null;          // from game:init
+  internal RoundResult LatestResult = null;   // replaced by every result, wheel and pick response
+  internal MeterValues CurrentMeters = null;  // from the init; updated only by responses that carry meters
+  private double lastKnownBalance = 0;        // the fallback for a response without a player block
   internal bool isResultdone = false;
   internal bool isWheelBonusDone = false;
   internal bool isPickJackpotDone = false;
@@ -205,8 +205,7 @@ public class SocketIOManager : MonoBehaviour
   {
     BalanceSyncPayload syncPayload = JsonConvert.DeserializeObject<BalanceSyncPayload>(data);
     if (syncPayload == null) return;
-    if (PlayerData == null) PlayerData = new Player();
-    PlayerData.balance = syncPayload.balance;
+    lastKnownBalance = syncPayload.balance;
     if (gameManager != null) gameManager.UpdateBalanceDisplay(syncPayload.balance);
   }
 
@@ -424,11 +423,9 @@ private void OnError(Error err)
       case "initData":
         {
           Debug.Log("OC Fix Build");
-          InitialData = myData.gameData;
-          UIData = myData.uiData;
-          PlayerData = myData.player;
-          GameFeatures = myData.features;
-          CurrentMeterState = myData.features?.pinataMeters?.currentState;
+          Config = GameDataConverter.ToConfig(myData);
+          CurrentMeters = Config.InitialMeters;
+          lastKnownBalance = Config.InitialBalance;
 
           if (!SetInit)
           {
@@ -439,35 +436,28 @@ private void OnError(Error err)
         }
       case "ResultData":
         {
-          ResultData = myData;
-          PlayerData = myData.player;
-          UpdateMeterState(myData.payload?.meters);
+          LatestResult = GameDataConverter.ToResult(myData, lastKnownBalance);
+          lastKnownBalance = LatestResult.Balance;
+          // Only spin results move the meters (as before), and only when the init set them up.
+          if (LatestResult.Meters != null && CurrentMeters != null) CurrentMeters = LatestResult.Meters;
           isResultdone = true;
           break;
         }
       case "WheelBonusResult":
         {
-          ResultData = myData;
-          PlayerData = myData.player;
+          LatestResult = GameDataConverter.ToResult(myData, lastKnownBalance);
+          lastKnownBalance = LatestResult.Balance;
           isWheelBonusDone = true;
           break;
         }
       case "PickJackpotResult":
         {
-          ResultData = myData;
-          PlayerData = myData.player;
+          LatestResult = GameDataConverter.ToResult(myData, lastKnownBalance);
+          lastKnownBalance = LatestResult.Balance;
           isPickJackpotDone = true;
           break;
         }
     }
-  }
-
-  private void UpdateMeterState(MetersUpdate meters)
-  {
-    if (meters == null || CurrentMeterState == null) return;
-    CurrentMeterState.greenMeter = meters.greenMeter;
-    CurrentMeterState.redMeter = meters.redMeter;
-    CurrentMeterState.blueMeter = meters.blueMeter;
   }
 
   private void InitialiseGame()
@@ -509,216 +499,4 @@ private void OnError(Error err)
     SendDataWithNamespace("request", json);
   }
 
-}
-
-// ─── Emit Models ────────────────────────────────────────────────────────────
-[Serializable]
-public class MessageData
-{
-  public string type;
-  public Data payload = new();
-}
-
-[Serializable]
-public class Data
-{
-  public int betIndex;
-  public string Event;
-  public List<int> index;
-  public int option;
-}
-
-// ─── SL-PT Server Response Models ───────────────────────────────────────────
-
-// Top-level wrapper — handles initData, ResultData, WheelBonusResult, PickJackpotResult
-[Serializable]
-public class ServerResponse
-{
-  public string id { get; set; }
-  public bool success { get; set; }
-  // initData fields
-  public GameData gameData { get; set; }
-  public Features features { get; set; }
-  public UiData uiData { get; set; }
-  // ResultData fields
-  public List<List<string>> matrix { get; set; }
-  public SpinPayload payload { get; set; }
-  // Shared
-  public Player player { get; set; }
-}
-
-[Serializable]
-public class GameData
-{
-  public List<double> bets { get; set; }
-}
-
-[Serializable]
-public class Features
-{
-  public PinataMeters pinataMeters { get; set; }
-}
-
-[Serializable]
-public class PinataMeters
-{
-  public bool enabled { get; set; }
-  public MeterCurrentState currentState { get; set; }
-}
-
-[Serializable]
-public class MeterCurrentState
-{
-  [JsonConverter(typeof(BoolOrIntConverter))] public int greenMeter { get; set; }
-  [JsonConverter(typeof(BoolOrIntConverter))] public int redMeter { get; set; }
-  [JsonConverter(typeof(BoolOrIntConverter))] public int blueMeter { get; set; }
-  public int greenThreshold { get; set; }
-  public int redThreshold { get; set; }
-  public int blueThreshold { get; set; }
-}
-
-[Serializable]
-public class SpinPayload
-{
-  public double winAmount { get; set; }
-  public List<WaysWin> waysWins { get; set; }
-  public List<CoinValue> coinWins { get; set; }
-  public MetersUpdate meters { get; set; }
-  public List<TriggeredFeature> triggeredFeatures { get; set; }
-  public List<PendingFeature> pendingFeatures { get; set; }
-  public bool isFreeSpinActive { get; set; }
-  public int freeSpinsRemaining { get; set; }
-  public bool isRedPinataFreeSpin { get; set; }
-  public bool isBluePinataLinkBonus { get; set; }
-  public bool isBluePinataFreeSpin { get; set; }
-  public List<LinkBonusZone> linkBonusTargetZones { get; set; }
-  public List<LockedCell> linkBonusLockedCells { get; set; }
-}
-
-[Serializable]
-public class WaysWin
-{
-  public int symbolId { get; set; }
-  public string symbolName { get; set; }
-  public int matchCount { get; set; }
-  public List<List<int>> positions { get; set; }
-  public double payout { get; set; }
-  public double basePayout { get; set; }
-  public double jackpotPayout { get; set; }
-}
-
-[Serializable]
-public class CoinValue
-{
-  public List<int> position { get; set; }
-  public double value { get; set; }
-}
-
-[Serializable]
-public class MetersUpdate
-{
-  [JsonConverter(typeof(BoolOrIntConverter))] public int greenMeter { get; set; }
-  [JsonConverter(typeof(BoolOrIntConverter))] public int redMeter { get; set; }
-  [JsonConverter(typeof(BoolOrIntConverter))] public int blueMeter { get; set; }
-}
-
-[Serializable]
-public class TriggeredFeature
-{
-  public string feature { get; set; }
-  public bool triggered { get; set; }
-  public double awardValue { get; set; }
-  // wheelBonus
-  public string jackpotTier { get; set; }
-  public List<string> spinHistory { get; set; }
-  // pickJackpot
-  public string goalJackpot { get; set; }
-  // linkBonus
-  public List<LockedCell> lockedCells { get; set; }
-  public int respinsRemaining { get; set; }
-  public bool grandTriggered { get; set; }
-  public double grandBonus { get; set; }
-  public double jackpotBonus { get; set; }
-  public double baseWin { get; set; }
-}
-
-[Serializable]
-public class PendingFeature
-{
-  public string feature { get; set; }
-  public bool triggered { get; set; }
-  public double bet { get; set; }
-}
-
-[Serializable]
-public class LinkBonusZone
-{
-  public List<int> position { get; set; }
-  public int zoneMultiplier { get; set; }
-}
-
-[Serializable]
-public class LockedCell
-{
-  public List<int> position { get; set; }
-  public int zoneMultiplier { get; set; }
-  public string symbolId { get; set; }
-  public double? prizeValue { get; set; }
-}
-
-// ─── Shared Models ───────────────────────────────────────────────────────────
-[Serializable]
-public class UiData
-{
-  public Paylines paylines { get; set; }
-}
-
-[Serializable]
-public class Paylines
-{
-  public List<Symbol> symbols { get; set; }
-}
-
-[Serializable]
-public class Symbol
-{
-  public int id { get; set; }
-  public string name { get; set; }
-  public List<double?> multiplier { get; set; }
-  public string description { get; set; }
-}
-
-[Serializable]
-public class Player
-{
-  public double balance { get; set; }
-}
-
-[Serializable]
-public class BalanceSyncPayload
-{
-  public double balance;
-}
-
-[Serializable]
-public class AuthTokenData
-{
-  public string cookie;
-  public string socketURL;
-  public string nameSpace;
-}
-
-public class BoolOrIntConverter : JsonConverter<int>
-{
-  public override int ReadJson(JsonReader reader, Type objectType, int existingValue, bool hasExistingValue, JsonSerializer serializer)
-  {
-    if (reader.TokenType == JsonToken.Boolean)
-      return (bool)reader.Value ? 1 : 0;
-    return Convert.ToInt32(reader.Value);
-  }
-
-  public override void WriteJson(JsonWriter writer, int value, JsonSerializer serializer)
-  {
-    writer.WriteValue(value);
-  }
 }

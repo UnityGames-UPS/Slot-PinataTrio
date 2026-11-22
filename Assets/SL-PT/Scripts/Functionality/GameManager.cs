@@ -247,13 +247,14 @@ public class GameManager : MonoBehaviour
   {
     BetCounter = 0;
     if (audioManager) audioManager.PlayGameStarted();
-    uiManager.InitialiseUI(SocketManager.InitialData.bets, SocketManager.UIData.paylines.symbols);
-    uiManager.InitialiseBalanceAndWin(SocketManager.PlayerData.balance, SocketManager.InitialData.bets[BetCounter]);
-    currentBalance = SocketManager.PlayerData.balance;
-    currentTotalBet = SocketManager.InitialData.bets[BetCounter];
+    GameConfig config = SocketManager.Config;
+    uiManager.InitialiseUI(config.Bets, config.JackpotMultipliers);
+    uiManager.InitialiseBalanceAndWin(config.InitialBalance, config.Bets[BetCounter]);
+    currentBalance = config.InitialBalance;
+    currentTotalBet = config.Bets[BetCounter];
 
-    var meterState = SocketManager.CurrentMeterState;
-    if (meterState != null) uiManager.SetMeterThresholds(meterState.greenThreshold, meterState.redThreshold, meterState.blueThreshold);
+    MeterValues thresholds = config.MeterThresholds;
+    if (thresholds != null) uiManager.SetMeterThresholds(thresholds.Green, thresholds.Red, thresholds.Blue);
   }
   #endregion
 
@@ -320,7 +321,10 @@ public class GameManager : MonoBehaviour
     SocketManager.AccumulateResult(BetCounter);
     yield return new WaitUntil(() => SocketManager.isResultdone && Time.time - spinStartTime >= minSpinDuration);
 
-    if (SocketManager.ResultData?.payload == null)
+    // This spin's own result, captured once. Everything below that belongs to the spin reads `spin`;
+    // the features capture their own responses (Wild Jokers' structure).
+    RoundResult spin = SocketManager.LatestResult;
+    if (spin == null || !spin.HasPayload || spin.Matrix == null)
     {
       slotView.CancelSpin();
       Spin_Button.GetComponent<Image>().sprite = SpinSprite;
@@ -329,7 +333,7 @@ public class GameManager : MonoBehaviour
       yield break;
     }
 
-    slotView.SetResult(ParseMatrix(SocketManager.ResultData.matrix), SocketManager.ResultData.payload.coinWins);
+    slotView.SetResult(spin.Matrix, spin.Coins);
     float stopWindowEnd = Time.time + stopButtonWindow;
     while (Time.time < stopWindowEnd)
     {
@@ -346,27 +350,32 @@ public class GameManager : MonoBehaviour
     yield return slotView.WaitForLandingEffects();
     slotView.ShowJackpotOverlays();
 
-    var meterState = SocketManager.CurrentMeterState;
-    if (meterState != null) uiManager.UpdateMeters(meterState.greenMeter, meterState.redMeter, meterState.blueMeter);
+    MeterValues meters = SocketManager.CurrentMeters;
+    if (meters != null) uiManager.UpdateMeters(meters.Green, meters.Red, meters.Blue);
 
-    uiManager.UpdateTotalWin(SocketManager.ResultData.payload.winAmount);
-    uiManager.UpdateBalance(SocketManager.ResultData.player.balance);
-    currentBalance = SocketManager.PlayerData.balance;
-    SpinDelay = SocketManager.ResultData.payload.winAmount > 0 ? 1.2f : 0.2f;
+    uiManager.UpdateTotalWin(spin.WinAmount);
+    uiManager.UpdateBalance(spin.Balance);
+    currentBalance = spin.Balance;
+    SpinDelay = spin.WinAmount > 0 ? 1.2f : 0.2f;
 
-    var pendingFeatures = SocketManager.ResultData.payload?.pendingFeatures;
-    bool hadPendingFeature = pendingFeatures != null && pendingFeatures.Exists(f => f.triggered);
+    bool hadPendingFeature = spin.TriggeredFeatures.Count > 0;
     if (hadPendingFeature)
     {
       Debug.Log("[Spin] Pending feature triggered -> HandlePendingFeatures");
-      yield return StartCoroutine(HandlePendingFeatures(pendingFeatures));
+      yield return StartCoroutine(HandlePendingFeatures(spin));
     }
 
-    yield return StartCoroutine(uiManager.ShowSpinWin(SocketManager.ResultData.payload.winAmount));
+    // Deliberately the LATEST response, not `spin`: after a feature that is the feature's last response
+    // (the wheel reply, the last free spin, the last Link Bonus round), which is what this popup has
+    // always shown. With no feature it is `spin` itself. Wild Jokers shows the trigger spin's own win
+    // here instead; switching is this one line, once the backend confirms what those responses'
+    // winAmount means (GameExplanation §7, open question).
+    RoundResult shown = SocketManager.LatestResult;
+    yield return StartCoroutine(uiManager.ShowSpinWin(shown.WinAmount));
     if (!featureSpin && !hadPendingFeature)
     {
-      yield return StartCoroutine(CheckAndShowJackpotWin());
-      yield return StartCoroutine(uiManager.ShowBonusWinSequence(SocketManager.ResultData.payload.winAmount, currentTotalBet));
+      yield return StartCoroutine(CheckAndShowJackpotWin(shown));
+      yield return StartCoroutine(uiManager.ShowBonusWinSequence(shown.WinAmount, currentTotalBet));
     }
 
     // Idle first: AutoSpin() refuses to start unless the round is over.
@@ -380,27 +389,28 @@ public class GameManager : MonoBehaviour
   #region PendingFeatures
   // Owns the Feature state for every feature the spin won, from the first intro to the last total.
   // The previous state is put back at the end (Spinning, so the round finishes normally).
-  private IEnumerator HandlePendingFeatures(List<PendingFeature> features)
+  // `trigger` is the spin that won them; each feature reads what it needs from it, or captures its
+  // own response right after waiting for it.
+  private IEnumerator HandlePendingFeatures(RoundResult trigger)
   {
     GameState previousState = CurrentState;
     CurrentState = GameState.Feature;
     bool wasAutoSpinning = IsAutoSpin;
     Debug.Log($"[Feature] HandlePendingFeatures start (wasAutoSpinning={wasAutoSpinning})");
     StopAutoSpin();
-    foreach (var feature in features)
+    foreach (string feature in trigger.TriggeredFeatures)
     {
-      if (!feature.triggered) continue;
-      uiManager.SetReelFrame(feature.feature);
-      switch (feature.feature)
+      uiManager.SetReelFrame(feature);
+      switch (feature)
       {
         case "pickJackpot":
           yield return StartCoroutine(HandleRedPinataPick());
           break;
         case "wheelBonus":
-          yield return StartCoroutine(HandleWheelBonus(feature));
+          yield return StartCoroutine(HandleWheelBonus());
           break;
         case "linkBonus":
-          yield return StartCoroutine(HandleLinkBonus(feature));
+          yield return StartCoroutine(HandleLinkBonus(trigger));
           break;
       }
       uiManager.SetReelFrame("default");
@@ -410,7 +420,7 @@ public class GameManager : MonoBehaviour
     Debug.Log($"[Feature] HandlePendingFeatures done (state={CurrentState}, resumeAutoSpin={resumeAutoSpinAfterFeature})");
   }
 
-  private IEnumerator HandleWheelBonus(PendingFeature feature)
+  private IEnumerator HandleWheelBonus()
   {
     uiManager.LockFeatureUI(true);
     ToggleButtonGrp(false);
@@ -423,25 +433,26 @@ public class GameManager : MonoBehaviour
     yield return new WaitUntil(() => SocketManager.isWheelBonusDone);
     SocketManager.isWheelBonusDone = false;
 
-    var wbFeature = SocketManager.ResultData.payload?.triggeredFeatures
-      ?.Find(f => f.feature == "wheelBonus");
-    double awardValue = wbFeature?.awardValue ?? 0;
-    List<string> spinHistory = wbFeature?.spinHistory ?? new List<string> { wbFeature?.jackpotTier ?? "mini" };
+    // The wheel's own response, captured once.
+    RoundResult wheelResponse = SocketManager.LatestResult;
+    WheelBonusResult wheel = wheelResponse?.Wheel ?? WheelBonusResult.Fallback();
 
-    if (bonusController != null) bonusController.StartWheelBonus(spinHistory, awardValue);
+    if (bonusController != null) bonusController.StartWheelBonus(wheel.SpinHistory, wheel.Award);
     yield return new WaitUntil(() => bonusController == null || bonusController.isBonusDone);
 
     yield return StartCoroutine(uiManager.SlideContentUp());
 
-    string wheelTier = wbFeature?.jackpotTier ?? "mini";
-    yield return StartCoroutine(uiManager.ShowJackpotWinSequence(wheelTier, awardValue, awardValue));
-    yield return StartCoroutine(uiManager.ShowBonusWinSequence(awardValue, currentTotalBet));
+    yield return StartCoroutine(uiManager.ShowJackpotWinSequence(wheel.Tier, wheel.Award, wheel.Award));
+    yield return StartCoroutine(uiManager.ShowBonusWinSequence(wheel.Award, currentTotalBet));
 
     if (audioManager) audioManager.StopBonusBgMusic();
     uiManager.CleanupFeaturePinata("wheelBonus");
 
-    uiManager.UpdateBalance(SocketManager.ResultData.player.balance);
-    currentBalance = SocketManager.PlayerData.balance;
+    if (wheelResponse != null)
+    {
+      uiManager.UpdateBalance(wheelResponse.Balance);
+      currentBalance = wheelResponse.Balance;
+    }
 
     uiManager.LockFeatureUI(false);
   }
@@ -469,10 +480,10 @@ public class GameManager : MonoBehaviour
     yield return new WaitUntil(() => SocketManager.isPickJackpotDone);
     SocketManager.isPickJackpotDone = false;
 
-    var pjFeature = SocketManager.ResultData.payload?.triggeredFeatures
-      ?.Find(f => f.feature == "pickJackpot");
-    string goalJackpot = pjFeature?.goalJackpot;
-    double awardValue = pjFeature?.awardValue ?? 0;
+    // The pick's own response, captured once.
+    PickJackpotResult pick = SocketManager.LatestResult?.Pick;
+    string goalJackpot = pick?.GoalJackpot;
+    double awardValue = pick?.Award ?? 0;
 
     yield return StartCoroutine(uiManager.RevealJackpot(goalJackpot));
 
@@ -480,7 +491,8 @@ public class GameManager : MonoBehaviour
     yield return StartCoroutine(FreeSpinLoop());
 
     uiManager.PlayBustedPinataOnce("red");
-    double freeSpinTotalWin = SocketManager.ResultData.payload?.winAmount ?? 0;
+    // The last free spin's winAmount is the round's total (GameExplanation §3).
+    double freeSpinTotalWin = SocketManager.LatestResult?.WinAmount ?? 0;
     yield return StartCoroutine(uiManager.ShowJackpotWinSequence(goalJackpot, awardValue, freeSpinTotalWin));
     yield return StartCoroutine(uiManager.ShowBonusWinSequence(freeSpinTotalWin, currentTotalBet));
     if (audioManager) audioManager.StopBonusBgMusic();
@@ -499,28 +511,24 @@ public class GameManager : MonoBehaviour
       PrepareRound();
       yield return StartCoroutine(TweenRoutine());
 
-      Debug.Log($"[Feature] FreeSpinLoop round done, isFreeSpinActive={SocketManager.ResultData.payload.isFreeSpinActive}");
-      if (!SocketManager.ResultData.payload.isFreeSpinActive)
+      // The free spin that just ran is the latest response.
+      bool roundGoesOn = SocketManager.LatestResult != null && SocketManager.LatestResult.IsFreeSpinActive;
+      Debug.Log($"[Feature] FreeSpinLoop round done, isFreeSpinActive={roundGoesOn}");
+      if (!roundGoesOn)
         break;
     }
   }
 
-  private IEnumerator CheckAndShowJackpotWin()
+  // The base game's jackpot win, if the result has one (the converter picks the first jackpot win).
+  private IEnumerator CheckAndShowJackpotWin(RoundResult result)
   {
-    var waysWins = SocketManager.ResultData.payload?.waysWins;
-    if (waysWins == null) yield break;
+    JackpotWin jackpot = result?.BaseJackpot;
+    if (jackpot == null) yield break;
 
-    var jackpotWin = waysWins.Find(w => w.symbolId >= 3 && w.symbolId <= 7);
-    if (jackpotWin == null) yield break;
-
-    string tier = jackpotWin.symbolName;
-    double jackpotAmount = jackpotWin.jackpotPayout;
-    double totalWin = SocketManager.ResultData.payload.winAmount;
-
-    yield return StartCoroutine(uiManager.ShowJackpotWinSequence(tier, jackpotAmount, totalWin));
+    yield return StartCoroutine(uiManager.ShowJackpotWinSequence(jackpot.Tier, jackpot.Amount, result.WinAmount));
   }
 
-  private IEnumerator HandleLinkBonus(PendingFeature feature)
+  private IEnumerator HandleLinkBonus(RoundResult trigger)
   {
     StartCoroutine(uiManager.SlideContentDown());
     yield return StartCoroutine(uiManager.PlayFeatureIntro("linkBonus"));
@@ -529,8 +537,9 @@ public class GameManager : MonoBehaviour
     uiManager.LockFeatureUI(true);
     ToggleButtonGrp(false);
 
-    var targetZones = SocketManager.ResultData.payload?.linkBonusTargetZones;
-    int initialSpins = SocketManager.ResultData.payload?.freeSpinsRemaining ?? 3;
+    // The zones and the opening spin count come from the spin that triggered the Link Bonus.
+    List<LinkZone> targetZones = trigger.LinkTargetZones;
+    int initialSpins = trigger.HasPayload ? trigger.FreeSpinsRemaining : 3;
 
     uiManager.SetupFeaturePinata("linkBonus");
     uiManager.UpdateLinkBonusSpinsRemaining(initialSpins);
@@ -540,9 +549,10 @@ public class GameManager : MonoBehaviour
     if (audioManager) audioManager.PlayFreeGameStarted();
     yield return StartCoroutine(LinkBonusFreeSpinLoop());
 
-    var lbFeature = SocketManager.ResultData.payload?.triggeredFeatures?.Find(f => f.feature == "linkBonus");
-    double awardValue = lbFeature?.awardValue ?? 0;
-    var allLockedCells = lbFeature?.lockedCells ?? SocketManager.ResultData.payload?.linkBonusLockedCells;
+    // The total comes from the Link Bonus's last round, the latest response.
+    RoundResult lastRound = SocketManager.LatestResult;
+    double awardValue = lastRound?.Link?.Award ?? 0;
+    List<LinkCell> allLockedCells = lastRound?.Link?.LockedCells ?? lastRound?.LinkLockedCells;
 
     yield return StartCoroutine(linkBonusController.PlayTotalWinSequence(allLockedCells, awardValue));
     yield return StartCoroutine(uiManager.ShowBonusWinSequence(awardValue, currentTotalBet));
@@ -553,8 +563,11 @@ public class GameManager : MonoBehaviour
     slotView.ReplayOverlays();
     linkBonusController.ResetAll();
 
-    uiManager.UpdateBalance(SocketManager.ResultData.player.balance);
-    currentBalance = SocketManager.PlayerData.balance;
+    if (lastRound != null)
+    {
+      uiManager.UpdateBalance(lastRound.Balance);
+      currentBalance = lastRound.Balance;
+    }
 
     uiManager.LockFeatureUI(false);
   }
@@ -565,7 +578,8 @@ public class GameManager : MonoBehaviour
     {
       yield return new WaitForSeconds(SpinDelay);
       yield return StartCoroutine(LinkBonusSpinRound());
-      if (!(SocketManager.ResultData.payload?.isBluePinataLinkBonus ?? false)) break;
+      // The round that just ran is the latest response.
+      if (!(SocketManager.LatestResult?.IsLinkBonusActive ?? false)) break;
     }
   }
 
@@ -581,16 +595,19 @@ public class GameManager : MonoBehaviour
     SocketManager.AccumulateResult(BetCounter);
     yield return new WaitUntil(() => SocketManager.isResultdone);
 
-    var matrix = SocketManager.ResultData.matrix;
-    var lockedCells = SocketManager.ResultData.payload?.linkBonusLockedCells;
-    int spinsRemaining = SocketManager.ResultData.payload?.freeSpinsRemaining ?? 0;
+    // This round's own response, captured once.
+    RoundResult round = SocketManager.LatestResult;
+    List<LinkCell> lockedCells = round?.LinkLockedCells;
 
-    yield return StartCoroutine(linkBonusController.StopCellsSequential(matrix, lockedCells));
+    yield return StartCoroutine(linkBonusController.StopCellsSequential(round?.Matrix, lockedCells));
     linkBonusController.UpdateLockedCells(lockedCells);
-    uiManager.UpdateLinkBonusSpinsRemaining(spinsRemaining);
+    uiManager.UpdateLinkBonusSpinsRemaining(round?.FreeSpinsRemaining ?? 0);
 
-    uiManager.UpdateBalance(SocketManager.ResultData.player.balance);
-    currentBalance = SocketManager.PlayerData.balance;
+    if (round != null)
+    {
+      uiManager.UpdateBalance(round.Balance);
+      currentBalance = round.Balance;
+    }
   }
   #endregion
 
@@ -610,15 +627,5 @@ public class GameManager : MonoBehaviour
     if (MaxBet_Button) MaxBet_Button.interactable = active;
     if (BetMinus_Button) BetMinus_Button.interactable = active;
     if (BetPlus_Button) BetPlus_Button.interactable = active;
-  }
-
-  // The server sends the matrix row-major as strings. Parsed once here, before the board sees it.
-  private static int[,] ParseMatrix(List<List<string>> matrix)
-  {
-    var result = new int[3, 5];
-    for (int row = 0; row < 3; row++)
-      for (int col = 0; col < 5; col++)
-        result[row, col] = int.Parse(matrix[row][col]);
-    return result;
   }
 }
