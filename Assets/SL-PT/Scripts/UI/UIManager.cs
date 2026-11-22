@@ -308,6 +308,25 @@ public class UIManager : MonoBehaviour
   [SerializeField]
   private GameManager gameManager;
 
+  // The control panel (GameButtons): UIManager owns the buttons and how they look; GameManager decides
+  // what a press means and when they change. See the "Control panel" region.
+  [Header("Control Panel")]
+  [SerializeField] private Button Spin_Button;
+  [SerializeField] private Button MaxBet_Button;
+  [SerializeField] private Button AutoSpin_Button;
+  [SerializeField] private Button BetPlus_Button;
+  [SerializeField] private Button BetMinus_Button;
+  [SerializeField] private Sprite SpinSprite;
+  [SerializeField] private Sprite StopSprite;
+  // The Spin button's state sprites for each face (see SetSpinButtonFace). Code sets them; the
+  // Button's own sprite states in the Inspector are overwritten at Start.
+  [SerializeField] private Sprite SpinPressedSprite;   // PRESSED_btns_GLOW_6
+  [SerializeField] private Sprite StopPressedSprite;   // PRESSED_btns_GLOW_4
+  [SerializeField] private Sprite SpinDisabledSprite;  // btns_DARK_6
+  [SerializeField] private Sprite StopDisabledSprite;  // btns_DARK_4
+  [SerializeField] private Sprite AutoSpinIdleSprite;
+  [SerializeField] private Sprite AutoSpinActiveSprite;
+
   private CanvasGroup _payoutsCanvasGroup;
   private Tween _balanceTween;
   private bool isMusic = true;
@@ -336,6 +355,7 @@ public class UIManager : MonoBehaviour
 
   private void Start()
   {
+    WireControlPanel();
     if (PickJackpotPanel) _pickJackpotPanelOrigin = PickJackpotPanel.GetComponent<RectTransform>().anchoredPosition;
     if (JackpotRevealImages != null)
     {
@@ -1330,4 +1350,89 @@ public class UIManager : MonoBehaviour
       SlideContainer.sprite = InfoSlides[index];
   }
 
+  #region Control panel
+  // The control-panel buttons. UIManager owns them, their sprites and their interactable state;
+  // GameManager decides what a press means (the listeners below call it) and when the panel changes
+  // (it calls the internal methods here). Sprite swap only: no hover, no shrinking.
+
+  private void WireControlPanel()
+  {
+    if (Spin_Button) Spin_Button.onClick.RemoveAllListeners();
+    if (Spin_Button) Spin_Button.onClick.AddListener(() => gameManager.OnSpinButtonPressed());
+
+    if (BetPlus_Button) BetPlus_Button.onClick.RemoveAllListeners();
+    if (BetPlus_Button) BetPlus_Button.onClick.AddListener(() => gameManager.ChangeBet(true));
+
+    if (BetMinus_Button) BetMinus_Button.onClick.RemoveAllListeners();
+    if (BetMinus_Button) BetMinus_Button.onClick.AddListener(() => gameManager.ChangeBet(false));
+
+    if (MaxBet_Button) MaxBet_Button.onClick.RemoveAllListeners();
+    if (MaxBet_Button) MaxBet_Button.onClick.AddListener(() => gameManager.MaxBet());
+
+    if (AutoSpin_Button) AutoSpin_Button.onClick.RemoveAllListeners();
+    if (AutoSpin_Button) AutoSpin_Button.onClick.AddListener(() => gameManager.AutoSpin());
+
+    SetSpinButtonFace(false);
+  }
+
+  // The Spin button has two faces: SPIN when idle, STOP while the reels turn. A Unity Button holds
+  // only one set of state sprites, so they are swapped with the face, and pressed / disabled always
+  // match what the button shows. No hover: highlighted and selected stay empty, so they show the
+  // face itself. The image is set first; assigning spriteState then re-applies the button's current
+  // state, so a face change while disabled shows the right dark sprite at once.
+  internal void SetSpinButtonFace(bool showStop)
+  {
+    if (Spin_Button == null) return;
+
+    Image image = Spin_Button.GetComponent<Image>();
+    if (image) image.sprite = showStop ? StopSprite : SpinSprite;
+
+    SpriteState states = Spin_Button.spriteState;
+    states.pressedSprite = showStop ? StopPressedSprite : SpinPressedSprite;
+    states.disabledSprite = showStop ? StopDisabledSprite : SpinDisabledSprite;
+    states.highlightedSprite = null;
+    states.selectedSprite = null;
+    Spin_Button.spriteState = states;
+  }
+
+  // Auto shows its pressed glow while autospin is on.
+  internal void SetAutoSpinButtonSprite(bool active)
+  {
+    if (AutoSpin_Button == null) return;
+    var img = AutoSpin_Button.GetComponent<Image>();
+    if (img == null) return;
+    img.sprite = active ? AutoSpinActiveSprite : AutoSpinIdleSprite;
+  }
+
+  // GameManager.ToggleButtonGrp's rule, applied. `toggle` false is the mid-spin case: the bet buttons
+  // go off, and Spin stays live as Stop — except in a feature, where everything is off.
+  internal void SetControls(bool toggle, bool inFeature, bool autoSpin)
+  {
+    bool active = toggle && !inFeature && !autoSpin;
+    if (Spin_Button) Spin_Button.interactable = toggle ? active : !inFeature;
+    if (MaxBet_Button) MaxBet_Button.interactable = active;
+    if (BetMinus_Button) BetMinus_Button.interactable = active;
+    if (BetPlus_Button) BetPlus_Button.interactable = active;
+  }
+
+  internal void SetSpinInteractable(bool interactable)
+  {
+    if (Spin_Button) Spin_Button.interactable = interactable;
+  }
+
+  internal void SetAutoSpinInteractable(bool interactable)
+  {
+    if (AutoSpin_Button) AutoSpin_Button.interactable = interactable;
+  }
+
+  // All five off, while the info screen is open.
+  internal void DisableControls()
+  {
+    if (Spin_Button) Spin_Button.interactable = false;
+    if (MaxBet_Button) MaxBet_Button.interactable = false;
+    if (BetMinus_Button) BetMinus_Button.interactable = false;
+    if (BetPlus_Button) BetPlus_Button.interactable = false;
+    if (AutoSpin_Button) AutoSpin_Button.interactable = false;
+  }
+  #endregion
 }

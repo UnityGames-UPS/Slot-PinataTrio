@@ -79,3 +79,7 @@ Assets/Scripts/.claude/
 # Context docs, not versioned
 /Assets/SL-PT/Scripts/docs/
 /Assets/SL-PT/Scripts/docs.meta
+
+# One-off editor tools (UIManager move), not versioned
+/Assets/SL-PT/Scripts/editor/
+/Assets/SL-PT/Scripts/editor.meta

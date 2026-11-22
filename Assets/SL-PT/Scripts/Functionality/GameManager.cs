@@ -3,16 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-// The controller: the round. Bet, spin flow, Stop, autospin, the three features and the buttons.
-// The board itself — reels, icons and every animation over them — is SlotView, driven through its
-// internal methods. (Moved here unchanged from SlotBehaviour in split pass 2.)
+// The controller: the round. Bet, spin flow, Stop, autospin and the three features. It decides what
+// a button press means and when the control panel changes; UIManager owns the buttons themselves and
+// how they look. The board — reels, icons and every animation over them — is SlotView, driven through
+// its internal methods. (Moved here unchanged from SlotBehaviour in split pass 2.)
 public class GameManager : MonoBehaviour
 {
   [Header("Board")]
   [SerializeField]
   private SlotView slotView;
 
-  [Header("Buttons")]
+  // ── TEMP — UIManagerMove copy source, removed in step C ─────────────────────────────────────────
+  // The control panel now lives on UIManager. These stay only until Tools > Pinata Trio > Move control
+  // panel to UIManager has copied their Inspector values across; nothing in this class reads them.
+  [Header("TEMP (UIManagerMove copy source) - Buttons")]
   [SerializeField]
   private Button Spin_Button;
   [SerializeField]
@@ -27,20 +31,19 @@ public class GameManager : MonoBehaviour
   private Sprite SpinSprite;
   [SerializeField]
   private Sprite StopSprite;
-  // The Spin button's state sprites for each face (see SetSpinButtonFace). Code sets them; the
-  // Button's own sprite states in the Inspector are overwritten at Start.
   [SerializeField]
-  private Sprite SpinPressedSprite;   // PRESSED_btns_GLOW_6
+  private Sprite SpinPressedSprite;
   [SerializeField]
-  private Sprite StopPressedSprite;   // PRESSED_btns_GLOW_4
+  private Sprite StopPressedSprite;
   [SerializeField]
-  private Sprite SpinDisabledSprite;  // btns_DARK_6
+  private Sprite SpinDisabledSprite;
   [SerializeField]
-  private Sprite StopDisabledSprite;  // btns_DARK_4
+  private Sprite StopDisabledSprite;
   [SerializeField]
   private Sprite AutoSpinIdleSprite;
   [SerializeField]
   private Sprite AutoSpinActiveSprite;
+  // ── end TEMP ────────────────────────────────────────────────────────────────────────────────────
 
   [Header("Audio Management")]
   [SerializeField]
@@ -87,23 +90,8 @@ public class GameManager : MonoBehaviour
   {
     IsAutoSpin = false;
 
-  if (Spin_Button) Spin_Button.onClick.RemoveAllListeners();
-  if (Spin_Button) Spin_Button.onClick.AddListener(OnSpinButtonPressed);
-  SetSpinButtonFace(false);
-
-  if (BetPlus_Button) BetPlus_Button.onClick.RemoveAllListeners();
-  if (BetPlus_Button) BetPlus_Button.onClick.AddListener(() => ChangeBet(true));
-
-  if (BetMinus_Button) BetMinus_Button.onClick.RemoveAllListeners();
-  if (BetMinus_Button) BetMinus_Button.onClick.AddListener(() => ChangeBet(false));
-
-  if (MaxBet_Button) MaxBet_Button.onClick.RemoveAllListeners();
-  if (MaxBet_Button) MaxBet_Button.onClick.AddListener(() => MaxBet());
-
-  if (AutoSpin_Button) AutoSpin_Button.onClick.RemoveAllListeners();
-  if (AutoSpin_Button) AutoSpin_Button.onClick.AddListener(AutoSpin);
-
-  if (uiManager) uiManager.OnInfoScreenToggled += SetGameInputLocked;
+    // UIManager wires the control-panel buttons to OnSpinButtonPressed / ChangeBet / MaxBet / AutoSpin.
+    if (uiManager) uiManager.OnInfoScreenToggled += SetGameInputLocked;
   }
 
   private void SetGameInputLocked(bool locked)
@@ -111,21 +99,18 @@ public class GameManager : MonoBehaviour
     _inputLocked = locked;
     if (locked)
     {
-      if (Spin_Button) Spin_Button.interactable = false;
-      if (MaxBet_Button) MaxBet_Button.interactable = false;
-      if (BetMinus_Button) BetMinus_Button.interactable = false;
-      if (BetPlus_Button) BetPlus_Button.interactable = false;
-      if (AutoSpin_Button) AutoSpin_Button.interactable = false;
+      uiManager.DisableControls();
     }
     else
     {
       if (CurrentState == GameState.Idle) ToggleButtonGrp(true);
-      if (AutoSpin_Button) AutoSpin_Button.interactable = CurrentState != GameState.Feature;
+      uiManager.SetAutoSpinInteractable(CurrentState != GameState.Feature);
     }
   }
 
   #region Autospin
-  private void AutoSpin()
+  // The Auto button (wired by UIManager): starts autospin, or stops it if it is running.
+  internal void AutoSpin()
   {
     if (!IsAutoSpin)
     {
@@ -141,7 +126,7 @@ public class GameManager : MonoBehaviour
       }
       Debug.Log("[AutoSpin] Starting AutoSpinCoroutine");
       IsAutoSpin = true;
-      SetAutoSpinButtonSprite(true);
+      uiManager.SetAutoSpinButtonSprite(true);
       if (AutoSpinRoutine != null)
       {
         StopCoroutine(AutoSpinRoutine);
@@ -161,16 +146,8 @@ public class GameManager : MonoBehaviour
     {
       Debug.Log("[AutoSpin] Stopping autospin");
       IsAutoSpin = false;
-      SetAutoSpinButtonSprite(false);
+      uiManager.SetAutoSpinButtonSprite(false);
     }
-  }
-
-  private void SetAutoSpinButtonSprite(bool active)
-  {
-    if (AutoSpin_Button == null) return;
-    var img = AutoSpin_Button.GetComponent<Image>();
-    if (img == null) return;
-    img.sprite = active ? AutoSpinActiveSprite : AutoSpinIdleSprite;
   }
 
   private IEnumerator AutoSpinCoroutine()
@@ -194,13 +171,12 @@ public class GameManager : MonoBehaviour
     yield return new WaitUntil(() => CurrentState == GameState.Idle);
     Debug.Log("[AutoSpin] AutoSpinCoroutine exiting");
     ToggleButtonGrp(true);
-    if (AutoSpin_Button) AutoSpin_Button.gameObject.SetActive(true);
   }
   #endregion
 
-  // One button: Stop while a base-game round is spinning, Spin when idle. During a feature the button
-  // is disabled anyway, and a press does nothing.
-  private void OnSpinButtonPressed()
+  // The Spin button (wired by UIManager): Stop while a base-game round is spinning, Spin when idle.
+  // During a feature the button is disabled anyway, and a press does nothing.
+  internal void OnSpinButtonPressed()
   {
     if (CurrentState == GameState.Spinning)
       OnStopSpinPressed();
@@ -212,30 +188,11 @@ public class GameManager : MonoBehaviour
   private void OnStopSpinPressed()
   {
     stopRequested = true;
-    if (Spin_Button) Spin_Button.interactable = false;
+    uiManager.SetSpinInteractable(false);
   }
 
-  // The Spin button has two faces: SPIN when idle, STOP while the reels turn. A Unity Button holds
-  // only one set of state sprites, so they are swapped with the face, and pressed / disabled always
-  // match what the button shows. No hover: highlighted and selected stay empty, so they show the
-  // face itself. The image is set first; assigning spriteState then re-applies the button's current
-  // state, so a face change while disabled shows the right dark sprite at once.
-  private void SetSpinButtonFace(bool showStop)
-  {
-    if (Spin_Button == null) return;
-
-    Image image = Spin_Button.GetComponent<Image>();
-    if (image) image.sprite = showStop ? StopSprite : SpinSprite;
-
-    SpriteState states = Spin_Button.spriteState;
-    states.pressedSprite = showStop ? StopPressedSprite : SpinPressedSprite;
-    states.disabledSprite = showStop ? StopDisabledSprite : SpinDisabledSprite;
-    states.highlightedSprite = null;
-    states.selectedSprite = null;
-    Spin_Button.spriteState = states;
-  }
-
-  private void MaxBet()
+  // The Max Bet button (wired by UIManager).
+  internal void MaxBet()
   {
     if (uiManager.BetCount == 0) return;
     if (audioManager) audioManager.PlayButton();
@@ -244,7 +201,8 @@ public class GameManager : MonoBehaviour
     uiManager.SetBet(BetCounter);
   }
 
-  private void ChangeBet(bool IncDec)
+  // The + / − buttons (wired by UIManager). Wraps around at either end.
+  internal void ChangeBet(bool IncDec)
   {
     if (uiManager.BetCount == 0) return;
     if (audioManager) audioManager.PlayButton();
@@ -347,7 +305,7 @@ public class GameManager : MonoBehaviour
     if (!featureSpin) CurrentState = GameState.Spinning;
     if (audioManager) audioManager.PlaySpinLoop();
     spinStartTime = Time.time;
-    SetSpinButtonFace(true);
+    uiManager.SetSpinButtonFace(true);
     ToggleButtonGrp(false);
     yield return slotView.StartReels();
     BalanceDeduction(featureSpin);
@@ -360,7 +318,7 @@ public class GameManager : MonoBehaviour
     if (spin == null || !spin.HasPayload || spin.Matrix == null)
     {
       slotView.CancelSpin();
-      SetSpinButtonFace(false);
+      uiManager.SetSpinButtonFace(false);
       if (!featureSpin) CurrentState = GameState.Idle;
       if (!_inputLocked) ToggleButtonGrp(true);
       yield break;
@@ -379,8 +337,8 @@ public class GameManager : MonoBehaviour
     if (audioManager) audioManager.StopSpinLoop();
     yield return slotView.WaitForLastReel();
     // Dark SPIN from here until the round is over (count-up, popups, features).
-    SetSpinButtonFace(false);
-    if (Spin_Button) Spin_Button.interactable = false;
+    uiManager.SetSpinButtonFace(false);
+    uiManager.SetSpinInteractable(false);
     yield return slotView.WaitForLandingEffects();
     slotView.ShowJackpotOverlays();
 
@@ -653,13 +611,9 @@ public class GameManager : MonoBehaviour
 
   // The one place the spin and bet buttons are enabled. `toggle` false is the mid-spin case: the bet
   // buttons go off, and Spin stays live as Stop — except in a feature, where everything is off.
+  // GameManager knows the state; UIManager applies it to the buttons.
   private void ToggleButtonGrp(bool toggle)
   {
-    bool inFeature = CurrentState == GameState.Feature;
-    bool active = toggle && !inFeature && !IsAutoSpin;
-    if (Spin_Button) Spin_Button.interactable = toggle ? active : !inFeature;
-    if (MaxBet_Button) MaxBet_Button.interactable = active;
-    if (BetMinus_Button) BetMinus_Button.interactable = active;
-    if (BetPlus_Button) BetPlus_Button.interactable = active;
+    uiManager.SetControls(toggle, CurrentState == GameState.Feature, IsAutoSpin);
   }
 }

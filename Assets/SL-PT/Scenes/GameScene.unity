@@ -2226,6 +2226,19 @@ MonoBehaviour:
   GameExit_Button: {fileID: 0}
   Home_Button: {fileID: 1035774565}
   gameManager: {fileID: 170904904}
+  Spin_Button: {fileID: 764743822}
+  MaxBet_Button: {fileID: 1079263713}
+  AutoSpin_Button: {fileID: 1630318944}
+  BetPlus_Button: {fileID: 2020818275}
+  BetMinus_Button: {fileID: 1420531925}
+  SpinSprite: {fileID: -5837608266073338380, guid: d82be21c0f86eb54aadb8b5d1e9e3fe3, type: 3}
+  StopSprite: {fileID: 8522716768120736018, guid: d82be21c0f86eb54aadb8b5d1e9e3fe3, type: 3}
+  SpinPressedSprite: {fileID: 8416363877207195326, guid: 3fe10e5abf7426340b71115030dc0148, type: 3}
+  StopPressedSprite: {fileID: 47888883218877337, guid: 3fe10e5abf7426340b71115030dc0148, type: 3}
+  SpinDisabledSprite: {fileID: -7709580045799199164, guid: b42b9dd6b24e11f48bc0865d9e3c959c, type: 3}
+  StopDisabledSprite: {fileID: -6328113749240147886, guid: b42b9dd6b24e11f48bc0865d9e3c959c, type: 3}
+  AutoSpinIdleSprite: {fileID: 9020875966068025692, guid: d82be21c0f86eb54aadb8b5d1e9e3fe3, type: 3}
+  AutoSpinActiveSprite: {fileID: -1693664698324600153, guid: 3fe10e5abf7426340b71115030dc0148, type: 3}
 --- !u!1 &119028216
 GameObject:
   m_ObjectHideFlags: 0
