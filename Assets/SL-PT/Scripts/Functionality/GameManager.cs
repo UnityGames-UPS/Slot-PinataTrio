@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 // The controller: the round. Bet, spin flow, Stop, autospin and the three features. It decides what
 // a button press means and when the control panel changes; UIManager owns the buttons themselves and
@@ -12,38 +11,6 @@ public class GameManager : MonoBehaviour
   [Header("Board")]
   [SerializeField]
   private SlotView slotView;
-
-  // ── TEMP — UIManagerMove copy source, removed in step C ─────────────────────────────────────────
-  // The control panel now lives on UIManager. These stay only until Tools > Pinata Trio > Move control
-  // panel to UIManager has copied their Inspector values across; nothing in this class reads them.
-  [Header("TEMP (UIManagerMove copy source) - Buttons")]
-  [SerializeField]
-  private Button Spin_Button;
-  [SerializeField]
-  private Button MaxBet_Button;
-  [SerializeField]
-  private Button AutoSpin_Button;
-  [SerializeField]
-  private Button BetPlus_Button;
-  [SerializeField]
-  private Button BetMinus_Button;
-  [SerializeField]
-  private Sprite SpinSprite;
-  [SerializeField]
-  private Sprite StopSprite;
-  [SerializeField]
-  private Sprite SpinPressedSprite;
-  [SerializeField]
-  private Sprite StopPressedSprite;
-  [SerializeField]
-  private Sprite SpinDisabledSprite;
-  [SerializeField]
-  private Sprite StopDisabledSprite;
-  [SerializeField]
-  private Sprite AutoSpinIdleSprite;
-  [SerializeField]
-  private Sprite AutoSpinActiveSprite;
-  // ── end TEMP ────────────────────────────────────────────────────────────────────────────────────
 
   [Header("Audio Management")]
   [SerializeField]
